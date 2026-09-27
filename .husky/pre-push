@@ -1,0 +1,4 @@
+bun audit
+bun test --randomize
+bun lint
+bun typecheck

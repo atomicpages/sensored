@@ -1,0 +1,96 @@
+{
+  "name": "sensored",
+  "version": "0.0.0",
+  "description": "A streaming-first PII redaction library for TypeScript",
+  "keywords": [
+    "pii",
+    "redaction",
+    "privacy",
+    "gdpr",
+    "hipaa",
+    "ccpa",
+    "pci-dss",
+    "security",
+    "compliance",
+    "streaming"
+  ],
+  "homepage": "https://github.com/atomicpages/sensored",
+  "bugs": {
+    "url": "https://github.com/atomicpages/sensored/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomicpages/sensored.git"
+  },
+  "license": "MIT",
+  "author": "Dennis Thompson",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "bench": "bun run bench/benchmark.ts",
+    "build": "tsdown",
+    "docs:build": "vitepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:preview": "vitepress preview docs",
+    "eval:gate": "bun eval/cli.ts gate eval/corpus.json eval/after.json eval/baseline.json",
+    "eval:generate": "bun eval/generate-corpus.ts",
+    "eval:score": "bun eval/cli.ts score eval/corpus.json eval/report.json",
+    "format": "biome format . --write --unsafe",
+    "generate:bloom": "bun scripts/generate-bloom-filter.ts",
+    "lint": "biome check . --fix --diagnostic-level error",
+    "prepare": "husky",
+    "test": "bun test --randomize",
+    "typecheck": "tsc --noEmit --incremental"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/core": "^0.18.5",
+    "@biomejs/biome": "2.5.14",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@faker-js/faker": "^10.6.0",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/github": "^12.0.10",
+    "@semantic-release/npm": "^13.2.0",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "@types/bun": "1.4.2",
+    "@typesafe-ai/sdk": "^0.6.0",
+    "commitizen": "^4.3.2",
+    "compromise": "^14.17.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "efrt": "^2.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "mitata": "^1.0.34",
+    "prettier": "3.9.8",
+    "publint": "^0.3.24",
+    "semantic-release": "^25.0.9",
+    "tsdown": "^0.23.0",
+    "vitepress": "^2.0.0-alpha.20",
+    "vitepress-plugin-llms": "^1.14.0",
+    "wikidata-names": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@typesafe-ai/sdk": "^1.0.0",
+    "compromise": "^14.17.0",
+    "typescript": "^7"
+  },
+  "peerDependenciesMeta": {
+    "@typesafe-ai/sdk": {
+      "optional": true
+    },
+    "compromise": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

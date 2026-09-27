@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "person_name_lite": { "action": "redact" }
+  },
+  "semantic": {
+    "provider": "jev",
+    "apiKey": "TYPESAFE_API_KEY"
+  }
+}

@@ -1,0 +1,430 @@
+MEMORIAL REGIONAL MEDICAL CENTER
+Department of Internal Medicine
+4200 University Drive, Suite 310
+Springfield, IL 62704
+Phone: [PHONE_1] | Fax: [PHONE_2]
+
+================================================================================
+                        CONFIDENTIAL MEDICAL RECORD
+                    HIPAA PROTECTED HEALTH INFORMATION
+================================================================================
+
+Patient: [PERSON_NAME_1]
+Date of Birth: 03/15/1958
+Age: 67
+Sex: Female
+SSN: [US_SSN_1]
+Medical Record Number: MRN-7482931
+Insurance ID: BCBS-IL-X84729301
+Phone: (217) 555-1847
+Email: [EMAIL_1]
+Address: [ADDRESS_1], Springfield, IL 62704
+
+Attending Physician: [PERSON_NAME_2]
+NPI: [US_NPI_1]
+Physician Phone: [PHONE_3]
+Physician Email: [EMAIL_2]
+
+================================================================================
+                              ADMISSION RECORD
+================================================================================
+
+Date of Admission: September 12, 2024
+Admitting Diagnosis: Acute decompensated heart failure with reduced ejection
+                     fraction (I50.32)
+Admission Type: Emergency
+Source: Emergency Department
+Attending: [PERSON_NAME_3]
+Admitting Resident: [PERSON_NAME_4]
+
+Chief Complaint (per patient):
+"I can't catch my breath when I lie flat and my legs have been swelling up
+for the past four days."
+
+History of Present Illness:
+[PERSON_NAME_5] is a 67-year-old female with a past medical history significant
+for ischemic cardiomyopathy (EF 28% per echocardiogram dated 06/04/2024),
+Type 2 diabetes mellitus (E11.22 with diabetic chronic kidney disease,
+Stage 3b), hypertension, and hyperlipidemia who presents to the Emergency
+Department with four days of progressive dyspnea on exertion, orthopnea
+(requiring four pillows), bilateral lower extremity edema, and a 12-pound
+weight gain over one week.
+
+She reports decreased urine output despite increased fluid intake and
+occasional palpitations without chest pain, syncope, or presyncope. She
+has been compliant with her home medications: carvedilol 12.5 mg BID,
+lisinopril 20 mg daily, furosemide 40 mg daily, spironolactone 25 mg daily,
+metformin 1000 mg BID, and atorvastatin 40 mg daily. She admits to dietary
+non-adherence with increased salt intake over the Labor Day weekend.
+
+Review of Systems:
+Constitutional: Negative for fever, chills, or night sweats. Positive for
+  fatigue and recent weight gain.
+Cardiovascular: Positive for dyspnea, orthopnea, lower extremity edema,
+  and palpitations. Negative for chest pain or syncope.
+Respiratory: Positive for shortness of breath. Negative for cough or
+  hemoptysis.
+Gastrointestinal: Positive for early satiety. Negative for nausea,
+  vomiting, or abdominal pain.
+Genitourinary: Positive for decreased urine output. Negative for dysuria
+  or hematuria.
+Neurological: Negative for focal weakness, numbness, or tingling.
+Musculoskeletal: Negative for joint pain or stiffness.
+Endocrine: No new symptoms. Last HbA1c 7.8% (08/02/2024).
+
+================================================================================
+                            PAST MEDICAL HISTORY
+================================================================================
+
+1. Ischemic cardiomyopathy — diagnosed 03/2021, EF 28% (06/04/2024)
+2. Type 2 diabetes mellitus with diabetic chronic kidney disease, Stage 3b
+3. Hypertension — since 2009
+4. Hyperlipidemia
+5. Atrial fibrillation — paroxysmal, last episode 01/2024
+6. Obstructive sleep apnea — on CPAP, nightly
+7. Gastroesophageal reflux disease
+8. Degenerative joint disease, bilateral knees
+
+================================================================================
+                              MEDICATIONS
+================================================================================
+
+Home Medications:
+1. Carvedilol 12.5 mg PO BID
+2. Lisinopril 20 mg PO daily
+3. Furosemide 40 mg PO daily
+4. Spironolactone 25 mg PO daily
+5. Metformin 1000 mg PO BID
+6. Atorvastatin 40 mg PO daily
+7. Apixaban 5 mg PO BID (for atrial fibrillation)
+8. Pantoprazole 40 mg PO daily
+
+Hospital Medications (admission orders):
+1. Carvedilol 12.5 mg PO BID — continued
+2. Lisinopril 20 mg PO daily — held due to acute kidney injury
+3. Furosemide 80 mg IV Q8H — increased from home dose
+4. Spironolactone 25 mg PO daily — continued
+5. Metformin 1000 mg PO BID — held due to AKI
+6. Atorvastatin 40 mg PO daily — continued
+7. Apixaban 5 mg PO BID — continued
+8. Pantoprazole 40 mg IV daily
+9. Insulin sliding scale per protocol
+
+================================================================================
+                              ALLERGIES
+================================================================================
+
+1. Penicillin — hives and swelling of lips
+2. Sulfa drugs — rash
+3. Codeine — nausea and vomiting
+4. No known food or environmental allergies
+
+================================================================================
+                            SOCIAL HISTORY
+================================================================================
+
+[PERSON_NAME_6] is a retired schoolteacher who taught at [PERSON_NAME_7] Elementary
+School in Springfield for 32 years. She lives with her husband, [PERSON_NAME_8]
+Thornton, age 70, at their home on Maplewood Lane. They have two adult
+children: [PERSON_NAME_9] (age 41, lives in Chicago) and
+[PERSON_NAME_10] (age 38, lives in Peoria).
+
+She smoked one pack per day for 25 years but quit in 2008. She does not
+consume alcohol. She does not use illicit drugs. She is independent in
+activities of daily living but has been limiting activity due to dyspnea.
+She uses a CPAP machine nightly for obstructive sleep apnea, diagnosed in
+2019 at the Springfield Sleep Medicine Center.
+
+================================================================================
+                            FAMILY HISTORY
+================================================================================
+
+Father: [PERSON_NAME_11] deceased at age 78, myocardial infarction
+Mother: [PERSON_NAME_12] deceased at age 82, Alzheimer's disease
+Brother: [PERSON_NAME_13] age 72, Type 2 diabetes, hypertension
+Sister: [PERSON_NAME_14] age 64, breast cancer survivor, in remission
+since 2019
+
+================================================================================
+                            PHYSICAL EXAM
+================================================================================
+
+Vital Signs:
+  BP: 168/94 mmHg (right arm, seated)
+  HR: 96 bpm, irregular
+  RR: 24 breaths/min
+  SpO2: 92% on room air, 97% on 4L nasal cannula
+  Temp: 98.4°F (36.9°C)
+  Weight: 178 lbs (81.0 kg) — up 12 lbs from baseline of 166 lbs (75.4 kg)
+  Height: 5'4" (163 cm)
+  BMI: 30.5 kg/m²
+
+General: Well-appearing female in mild respiratory distress, able to speak
+  in full sentences but pauses to catch breath.
+HEENT: Normocephalic, atraumatic. Sclerae anicteric. Conjunctivae pink.
+  Oropharynx clear. No jugular venous distension noted at 45 degrees.
+Neck: Supple, no cervical lymphadenopathy. Thyroid not palpably enlarged.
+Cardiovascular: Irregularly irregular rhythm. S1 and S2 present. No S3
+  gallop appreciated. Soft 2/6 holosystolic murmur at the apex, radiating
+  to the axilla. No rubs. No carotid bruits. Capillary refill less than
+  2 seconds. 2+ bilateral radial and pedal pulses.
+Pulmonary: Bibasilar crackles, approximately one-third up bilaterally.
+  No wheezing. No consolidation. No pleural rub.
+Abdomen: Soft, non-tender, non-distended. Bowel sounds normoactive. No
+  hepatosplenomegaly. No shifting dullness or fluid wave.
+Extremities: 3+ pitting edema bilaterally to mid-shin. Warm and well
+  perfused. No calf tenderness or asymmetry.
+Neurological: Alert and oriented x3. Cranial nerves II-XII grossly intact.
+  No focal deficits. No asterixis.
+Skin: Warm and dry. No rashes, petechiae, or breakdown. No chronic ulcers.
+  Surgical scar well-healed from 2019 left knee replacement.
+
+================================================================================
+                            LABORATORY RESULTS
+================================================================================
+
+09/12/2024 (Admission):
+
+Complete Blood Count:
+  WBC: 9.2 K/uL (reference: 4.0-11.0)
+  Hgb: 12.1 g/dL (reference: 12.0-16.0)
+  Hct: 36.8% (reference: 36.0-46.0)
+  Platelets: 238 K/uL (reference: 150-400)
+
+Comprehensive Metabolic Panel:
+  Na: 134 mEq/L (reference: 135-145) — LOW
+  K: 4.8 mEq/L (reference: 3.5-5.0)
+  Cl: 98 mEq/L (reference: 98-107)
+  CO2: 24 mEq/L (reference: 22-29)
+  BUN: 42 mg/dL (reference: 7-20) — HIGH
+  Creatinine: 2.1 mg/dL (reference: 0.6-1.2) — HIGH
+  (Baseline creatinine: 1.4 mg/dL per 06/2024 labs)
+  eGFR: 28 mL/min/1.73m² — LOW (Stage 4 CKD)
+  Glucose: 214 mg/dL (reference: 70-99) — HIGH
+  Calcium: 8.6 mg/dL (reference: 8.5-10.5)
+  Albumin: 3.2 g/dL (reference: 3.5-5.0) — LOW
+  Total Bilirubin: 0.7 mg/dL (reference: 0.2-1.3)
+  AST: 34 U/L (reference: 10-40)
+  ALT: 28 U/L (reference: 7-56)
+
+Cardiac Biomarkers:
+  Troponin I: 0.03 ng/mL (reference: <0.04) — negative
+  BNP: 1840 pg/mL (reference: <100) — HIGH
+
+Coagulation:
+  PT: 14.2 sec (reference: 11-13.5)
+  INR: 1.4 (reference: 0.8-1.2) — on apixaban
+  PTT: 38 sec (reference: 25-35)
+
+Urinalysis:
+  Specific gravity: 1.020
+  pH: 5.5
+  Protein: 2+
+  Glucose: 1+
+  Blood: negative
+  Leukocyte esterase: negative
+  Nitrite: negative
+
+HbA1c: 7.9% (reference: <5.7%) — drawn 09/12/2024
+
+Lipid Panel (drawn 09/12/2024):
+  Total cholesterol: 168 mg/dL (reference: <200)
+  LDL: 92 mg/dL (reference: <100)
+  HDL: 38 mg/dL (reference: >40) — LOW
+  Triglycerides: 190 mg/dL (reference: <150) — HIGH
+
+================================================================================
+                            IMAGING STUDIES
+================================================================================
+
+Chest X-Ray (09/12/2024, 14:30):
+Bilateral pulmonary edema with moderate-sized bilateral pleural effusions.
+Cardiomegaly with a cardiothoracic ratio of 0.62. No pneumothorax.
+
+Echocardiogram (09/12/2024, 16:00):
+Left ventricular ejection fraction: 25% (severely reduced), unchanged from
+06/04/2024 study. Dilated left ventricle with global hypokinesis. Left
+atrial enlargement. Moderate mitral regurgitation. No pericardial effusion.
+Right ventricular systolic pressure estimated at 38 mmHg (mild pulmonary
+hypertension). Inferior vena cava dilated with minimal respiratory
+variation, consistent with elevated right atrial pressure.
+
+EKG (09/12/2024, 13:45):
+Atrial fibrillation with ventricular rate of 96. Left bundle branch block.
+QRS duration 128 [PERSON_NAME_15] 440 ms. No acute ischemic changes.
+
+================================================================================
+                            HOSPITAL COURSE
+================================================================================
+
+Day 1 (09/12/2024):
+Patient admitted to telemetry unit. IV furosemide initiated at 80 mg Q8H
+given poor response to oral diuretics. Lisinopril and metformin held due
+to acute kidney injury with creatinine 2.1 (baseline 1.4). Insulin sliding
+scale started. Sodium restricted to 2g daily. Fluid restriction 1.5L daily.
+Continuous telemetry monitoring showed paroxysmal atrial fibrillation with
+rates up to 130s; rate control with carvedilol maintained.
+
+Day 2 (09/13/2024):
+Patient had urine output of 2800 mL in first 24 hours. Weight decreased to
+174 lbs (down 4 lbs). Dyspnea improving. Creatinine improved to 1.8.
+Potassium 4.5. BNP trending down to 1520. Bilateral lower extremity edema
+decreased to 2+. Patient ambulated in hallway without significant dyspnea.
+[PERSON_NAME_16] rounded and noted clinical improvement. Case manager contacted
+patient's daughter [PERSON_NAME_17] at [PHONE_4] to
+discuss discharge planning and home health services.
+
+Day 3 (09/14/2024):
+Continued diuresis with urine output 2400 mL. Weight 171 lbs (down 7 lbs
+total). Creatinine stable at 1.7. BNP 1180. Oxygen weaned to 2L nasal
+cannula. Echocardiogram findings reviewed with patient and family. [PERSON_NAME_18]
+[PERSON_NAME_19] discussed the possibility of upgrade to CRT-D (cardiac
+resynchronization therapy defibrillator) given LBBB and EF <35%. Cardiology
+consult requested.
+
+Cardiology [PERSON_NAME_20] [PERSON_NAME_21], Springfield Cardiology
+Associates, phone [PHONE_5]):
+Evaluated patient. Agreed with CRT-D evaluation. Recommended optimization
+of GDMT (guideline-directed medical therapy) prior to device implantation.
+Recommended adding sacubitril/valsartan 49/51 mg BID once renal function
+stabilizes. Will follow as outpatient.
+
+Day 4 (09/15/2024):
+Weight 169 lbs (down 9 lbs total). Creatinine 1.6. Patient comfortable on
+room air with SpO2 96%. Dyspnea resolved. Edema 1+ bilaterally. Transitioned
+to oral furosemide 80 mg daily. Sacubitril/valsartan 49/51 mg BID started.
+Lisinopril discontinued permanently. Patient educated on low-sodium diet
+and daily weight monitoring. Diabetes educator consulted; recommended
+continuing insulin sliding scale in hospital and resuming metformin as
+outpatient once renal function stable.
+
+Day 5 (09/16/2024):
+Weight 168 lbs (down 10 lbs total). Stable on oral diuretics. Creatinine
+1.5, approaching baseline. Patient ambulating without difficulty. Patient
+and family meeting held with [PERSON_NAME_22], [PERSON_NAME_23], case manager [PERSON_NAME_24]
+Marquez, and social worker [PERSON_NAME_25]. Discussed discharge
+plan, follow-up appointments, medication reconciliation, and home health
+services. Patient and family expressed understanding and agreement.
+
+================================================================================
+                          DISCHARGE SUMMARY
+================================================================================
+
+Date of Discharge: September 17, 2024
+Length of Stay: 5 days
+Discharge Disposition: Home with home health services
+
+Discharge Diagnoses:
+1. Acute decompensated heart failure, reduced ejection fraction (I50.32)
+   — resolved with diuresis
+2. Ischemic cardiomyopathy, EF 25% (I25.5)
+3. Type 2 diabetes mellitus with diabetic chronic kidney disease,
+   Stage 3b (E11.22)
+4. Acute kidney injury, Volume Overload (N17.9) — resolved, creatinine
+   1.5 at discharge
+5. Hypertension (I10)
+6. Hyperlipidemia (E78.5)
+7. Atrial fibrillation, paroxysmal (I48.0)
+8. Obstructive sleep apnea (G47.33)
+9. Anemia of chronic disease (D63.8)
+10. Degenerative joint disease, bilateral knees (M19.16)
+
+Discharge Medications:
+1. Carvedilol 12.5 mg PO BID
+2. Sacubitril/valsartan 49/51 mg PO BID — new
+3. Furosemide 80 mg PO daily — increased from 40 mg
+4. Spironolactone 25 mg PO daily
+5. Metformin 1000 mg PO BID — resume as outpatient
+6. Atorvastatin 40 mg PO daily
+7. Apixaban 5 mg PO BID
+8. Pantoprazole 40 mg PO daily
+9. Insulin glargine 20 units SC at bedtime — temporary
+10. Insulin lispro sliding scale per protocol — temporary
+
+Discharge Instructions:
+1. Follow low-sodium diet (2g sodium daily)
+2. Daily weight monitoring; call if gain of 3+ lbs in 24 hours or 5+ lbs
+   in one week
+3. Home health nurse to visit 3x/week for first 2 weeks
+4. Check blood pressure daily; maintain log
+5. Check blood glucose 4x daily; maintain log
+6. Restrict fluids to 1.5L daily
+7. Continue CPAP nightly
+8. Activity: no heavy lifting; walk as tolerated
+9. Follow up with [PERSON_NAME_26] in 7 days
+10. Follow up with [PERSON_NAME_27]) in 14 days for CRT-D evaluation
+
+Follow-Up Appointments:
+1. [PERSON_NAME_28]
+   September 24, 2024 at 10:00 AM
+   Memorial Regional Medical Center, Suite 310
+   Phone: [PHONE_6]
+
+2. [PERSON_NAME_29]
+   October 1, 2024 at 2:00 PM
+   Springfield Cardiology Associates, 1200 North Sixth Street
+   Phone: [PHONE_7]
+
+3. [PERSON_NAME_30]
+   October 8, 2024 at 9:00 AM
+   Springfield Kidney Care, 905 South Grand Avenue East
+   Phone: [PHONE_8]
+
+4. Diabetes Education Follow-Up — October 3, 2024
+   Memorial Regional Diabetes Center, 4150 Conestoga Drive
+   Phone: [PHONE_9]
+
+Home Health Agency:
+Heritage Home Health Services
+Contact: [PERSON_NAME_31], RN
+Phone: [PHONE_10]
+Fax: [PHONE_11]
+
+================================================================================
+                         PROBLEM LIST (ACTIVE)
+================================================================================
+
+1. Ischemic cardiomyopathy, EF 25% — on GDMT, CRT-D evaluation pending
+2. Type 2 diabetes mellitus — HbA1c 7.9%, on insulin temporarily
+3. Chronic kidney disease, Stage 3b — eGFR 28, improving post-AKI
+4. Hypertension — controlled on current regimen
+5. Hyperlipidemia — LDL 92 on atorvastatin
+6. Atrial fibrillation, paroxysmal — on apixaban
+7. Obstructive sleep apnea — on CPAP
+8. GERD — on pantoprazole
+9. Degenerative joint disease, bilateral knees
+10. Anemia of chronic disease
+
+================================================================================
+                         IMMUNIZATION RECORD
+================================================================================
+
+1. Influenza vaccine (quadrivalent) — 10/15/2023
+2. Pneumococcal vaccine (PCV20) — 03/2022
+3. COVID-19 booster (2024-2025 formula) — 09/05/2024
+4. Tdap — 08/2021
+5. Shingrix (2 doses) — 09/2022 and 01/2023
+
+================================================================================
+                         ADVANCE DIRECTIVES
+================================================================================
+
+Patient has a Durable Power of Attorney for Health Care on file.
+Healthcare proxy: [PERSON_NAME_32] (spouse)
+Phone: (217) 555-1847
+Alternate: [PERSON_NAME_33] (daughter)
+Phone: [PHONE_12]
+
+Code Status: Full code (patient confirmed during this admission)
+
+================================================================================
+
+This document contains Protected Health Information (PHI) as defined by
+HIPAA regulations. Unauthorized access, use, or disclosure is prohibited
+under federal law (45 CFR Parts 160 and 164).
+
+Prepared by: [PERSON_NAME_34], PGY-3
+Reviewed by: [PERSON_NAME_35], Attending Physician
+Date: September 17, 2024
+
+================================================================================

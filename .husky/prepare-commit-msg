@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# Only run commitizen when git commit is executed without a message (no -m flag)
+# This prevents running commitizen in a loop
+if [ -z "$2" ] || [ "$2" = "commit" ]; then
+  exec < /dev/tty && bunx cz --hook || true
+fi
