@@ -21,8 +21,7 @@ redactor.redact("Server: 192.168.1.100");
 
 ## ipv6
 
-Detects IPv6 addresses (8 groups of 4 hex digits with zero-compression
-support).
+Detects IPv6 addresses (8 groups of 4 hex digits with zero-compression support).
 
 ```ts
 const redactor = createRedactor({

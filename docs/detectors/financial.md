@@ -117,7 +117,8 @@ redactor.redact("Routing: 021000021");
 - **Entity type**: `us_routing`
 - **Context required**: Yes (labels: Routing, ABA, ACH, Bank)
 - **Stream supported**: Yes
-- **Validation**: 9 digits, prefix range check (0-1, 1-2, 2-1, 2-2), checksum validation
+- **Validation**: 9 digits, prefix range check (0-1, 1-2, 2-1, 2-2), checksum
+  validation
 
 ## uk_bank_account
 
@@ -154,7 +155,8 @@ redactor.redact("CVV: 123");
 
 - **ID**: `card_data`
 - **Entity type**: `card_data`
-- **Context required**: Yes (labels: Card, Payment, Credit, Debit, Visa, Mastercard, Amex, CVV, CVC, Expiry, Track, Magnetic, Stripe)
+- **Context required**: Yes (labels: Card, Payment, Credit, Debit, Visa,
+  Mastercard, Amex, CVV, CVC, Expiry, Track, Magnetic, Stripe)
 - **Stream supported**: Yes (maxMatchLength: 100)
 - **Validation**: Context label presence
 
@@ -175,15 +177,15 @@ redactor.redact("Transaction ID: TXN12345678");
 
 - **ID**: `financial_reference`
 - **Entity type**: `financial_reference`
-- **Context required**: Yes (labels: Transaction, TXN, Wire, Transfer, Remittance, Statement, Payment, Financial, Banking)
+- **Context required**: Yes (labels: Transaction, TXN, Wire, Transfer,
+  Remittance, Statement, Payment, Financial, Banking)
 - **Stream supported**: Yes (maxMatchLength: 30)
 - **Validation**: Context label presence
 
 ## investment_account
 
 Detects investment account numbers including ISA, SIPP, pension, 401K, IRA,
-trading, brokerage, loan, and mortgage accounts. Requires nearby context
-labels.
+trading, brokerage, loan, and mortgage accounts. Requires nearby context labels.
 
 ```ts
 const redactor = createRedactor({
@@ -196,7 +198,8 @@ redactor.redact("ISA Account No: INV123456");
 
 - **ID**: `investment_account`
 - **Entity type**: `investment_account`
-- **Context required**: Yes (labels: ISA, SIPP, Invest, Pension, 401K, IRA, Account, Fund, Trading, Brokerage, Stock, Loan, Mortgage, Credit)
+- **Context required**: Yes (labels: ISA, SIPP, Invest, Pension, 401K, IRA,
+  Account, Fund, Trading, Brokerage, Stock, Loan, Mortgage, Credit)
 - **Stream supported**: Yes (maxMatchLength: 30)
 - **Validation**: Context label presence
 
@@ -216,6 +219,7 @@ redactor.redact("Customer ID: cus_abc123def456");
 
 - **ID**: `payment_gateway_id`
 - **Entity type**: `payment_gateway_id`
-- **Context required**: Yes (labels: Stripe, Payment, Gateway, Token, Customer, Subscription, Merchant, Terminal, POS)
+- **Context required**: Yes (labels: Stripe, Payment, Gateway, Token, Customer,
+  Subscription, Merchant, Terminal, POS)
 - **Stream supported**: Yes (maxMatchLength: 50)
 - **Validation**: Context label presence

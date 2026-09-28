@@ -1,23 +1,23 @@
 # Presets
 
-Presets are documented rule selections that bundle commonly-needed detectors
-for specific use cases. They are not compliance guarantees — they're starting
-points you can customize with explicit rule overrides.
+Presets are documented rule selections that bundle commonly-needed detectors for
+specific use cases. They are not compliance guarantees — they're starting points
+you can customize with explicit rule overrides.
 
 ## Built-in presets
 
-| Preset | Rules | Use case |
-|---|---|---|
-| `pii` | 96 | Personally identifiable information |
-| `gdpr` | 39 | EU privacy regulation |
-| `hipaa` | 29 | US healthcare |
-| `ccpa` | 86 | California privacy |
-| `pci-dss` | 6 | Payment card industry |
-| `healthcare` | 19 | Healthcare identifiers |
-| `finance` | 15 | Financial identifiers |
-| `education` | 6 | Education sector |
-| `soc2` | 30 | SOC 2 security controls |
-| `security` | 14 | Secrets and network identifiers |
+| Preset       | Rules | Use case                            |
+| ------------ | ----- | ----------------------------------- |
+| `pii`        | 96    | Personally identifiable information |
+| `gdpr`       | 39    | EU privacy regulation               |
+| `hipaa`      | 29    | US healthcare                       |
+| `ccpa`       | 86    | California privacy                  |
+| `pci-dss`    | 6     | Payment card industry               |
+| `healthcare` | 19    | Healthcare identifiers              |
+| `finance`    | 15    | Financial identifiers               |
+| `education`  | 6     | Education sector                    |
+| `soc2`       | 30    | SOC 2 security controls             |
+| `security`   | 14    | Secrets and network identifiers     |
 
 ## Combining presets
 

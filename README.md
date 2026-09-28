@@ -174,6 +174,29 @@ redactor.redact("Contact john@example.com or jane@example.com");
 // "Contact john@example.com or [EMAIL_1]."
 ```
 
+## CLI
+
+The `sensored` package includes a CLI for redacting, inspecting, and restoring
+PII in text files and pipelines.
+
+```bash
+# Redact from stdin
+echo "Contact john@example.com" | bunx sensored --preset pii
+# Contact [EMAIL]
+
+# Redact a file
+bunx sensored input.txt output.txt --preset pii
+
+# Inspect detections
+echo "Contact john@example.com" | bunx sensored inspect --preset pii
+
+# Restore with a map
+bunx sensored restore redacted.txt --map map.json restored.txt
+```
+
+See the [CLI guide](https://atomicpages.github.io/sensored/guide/cli) for full
+documentation.
+
 ## Development
 
 ```bash

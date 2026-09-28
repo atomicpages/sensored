@@ -72,8 +72,8 @@ context: { before: 20, after: 0 }
 
 ### stream
 
-Stream metadata that enables the detector to work with the streaming engine.
-All four fields are required for streaming support:
+Stream metadata that enables the detector to work with the streaming engine. All
+four fields are required for streaming support:
 
 - **maxMatchLength** — Maximum length of a single match
 - **leftContext** — Characters of context needed before the match
@@ -85,8 +85,8 @@ If `stream` is omitted, the detector cannot be used in streaming mode. Calling
 
 ### validate
 
-Optional validation function. Returns `false` to reject a candidate, or an
-array of reason strings to accept it. Reasons appear in inspection reports:
+Optional validation function. Returns `false` to reject a candidate, or an array
+of reason strings to accept it. Reasons appear in inspection reports:
 
 ```ts
 validate({ value, before, after }) {
@@ -168,9 +168,9 @@ detected at creation time, an `INVALID_CONFIG` error is thrown.
 
 ## contextHint
 
-Optional metadata that describes the context labels your detector requires.
-When provided, `listDetectors()` and `redactor.describe()` will include it so
-LLM steering pipelines can discover the requirement.
+Optional metadata that describes the context labels your detector requires. When
+provided, `listDetectors()` and `redactor.describe()` will include it so LLM
+steering pipelines can discover the requirement.
 
 ```ts
 interface DetectorDefinition {
@@ -186,11 +186,11 @@ interface DetectorDefinition {
 
 - **labels** — Human-readable label strings the detector looks for (e.g.
   `["Customer ID", "Account No"]`).
-- **position** — Where labels must appear relative to the candidate. Defaults
-  to `"both"` when omitted.
-- **instructions** — Free-text steering guidance for detectors with
-  non-standard context rules. Use this as an escape hatch when the labels array
-  isn't expressive enough.
+- **position** — Where labels must appear relative to the candidate. Defaults to
+  `"both"` when omitted.
+- **instructions** — Free-text steering guidance for detectors with non-standard
+  context rules. Use this as an escape hatch when the labels array isn't
+  expressive enough.
 
 ### Example
 
@@ -218,7 +218,7 @@ const customerDetector: DetectorDefinition = {
 When `contextHint` is provided, `redactor.describe()` returns a `ContextHint`
 object with `required: true`, the `labels` array, the `position`, the `window`
 (derived from `context`), and the optional `instructions`. See
-  [LLM Steering](./llm-steering) for the full `ContextHint` shape.
+[LLM Steering](./llm-steering) for the full `ContextHint` shape.
 
 ### semanticConfirm
 
@@ -227,8 +227,8 @@ provided, `redactAsync()` sends each candidate to Jev for verification before
 redacting it. See [AI Confirmation](./semantic-confirmation) for the full
 workflow.
 
-The function receives `{ value, before, after }` and returns a `SemanticQuestion`
-with `instructions` and optional `criteria`:
+The function receives `{ value, before, after }` and returns a
+`SemanticQuestion` with `instructions` and optional `criteria`:
 
 ```ts
 const customDetector: DetectorDefinition = {

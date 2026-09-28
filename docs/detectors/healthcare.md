@@ -2,8 +2,8 @@
 
 ## us_npi
 
-Detects US National Provider Identifier (10 digits with Luhn check using
-prefix 80840).
+Detects US National Provider Identifier (10 digits with Luhn check using prefix
+80840).
 
 ```ts
 const redactor = createRedactor({
@@ -35,14 +35,15 @@ redactor.redact("DEA: AB1234563");
 
 - **ID**: `us_dea`
 - **Entity type**: `us_dea`
-- **Context required**: Yes (labels: DEA, Drug Enforcement, Controlled Substance)
+- **Context required**: Yes (labels: DEA, Drug Enforcement, Controlled
+  Substance)
 - **Stream supported**: Yes
 - **Validation**: 2-letter prefix + 7 digits with checksum
 
 ## medical_record_number
 
-Detects medical record numbers with context labels. Requires nearby labels
-like "MRN", "Medical Record", or "Medical Record Number".
+Detects medical record numbers with context labels. Requires nearby labels like
+"MRN", "Medical Record", or "Medical Record Number".
 
 ```ts
 const redactor = createRedactor({
@@ -75,14 +76,15 @@ redactor.redact("Trial ID: NCT12345678");
 
 - **ID**: `clinical_trial_id`
 - **Entity type**: `clinical_trial_id`
-- **Context required**: Yes (labels: Trial, Study, Protocol, Research, Clinical, Participant, Subject)
+- **Context required**: Yes (labels: Trial, Study, Protocol, Research, Clinical,
+  Participant, Subject)
 - **Stream supported**: Yes (maxMatchLength: 25)
 - **Validation**: Context label presence
 
 ## medical_device_id
 
-Detects medical device identifiers including implant serial numbers,
-pacemaker IDs, and defibrillator IDs. Requires nearby context labels.
+Detects medical device identifiers including implant serial numbers, pacemaker
+IDs, and defibrillator IDs. Requires nearby context labels.
 
 ```ts
 const redactor = createRedactor({
@@ -95,14 +97,15 @@ redactor.redact("Device Serial: IMPL12345678");
 
 - **ID**: `medical_device_id`
 - **Entity type**: `medical_device_id`
-- **Context required**: Yes (labels: Device, Implant, Pacemaker, Defibrillator, Serial, Medical)
+- **Context required**: Yes (labels: Device, Implant, Pacemaker, Defibrillator,
+  Serial, Medical)
 - **Stream supported**: Yes (maxMatchLength: 35)
 - **Validation**: Context label presence
 
 ## medical_code
 
-Detects medical codes including ICD-10 diagnosis codes and CPT procedure
-codes. Requires nearby context labels.
+Detects medical codes including ICD-10 diagnosis codes and CPT procedure codes.
+Requires nearby context labels.
 
 ```ts
 const redactor = createRedactor({
@@ -115,7 +118,8 @@ redactor.redact("Diagnosis: J45.909");
 
 - **ID**: `medical_code`
 - **Entity type**: `medical_code`
-- **Context required**: Yes (labels: Diagnosis, Condition, Disease, Disorder, ICD, Code, Procedure, CPT, Billing, Treatment, Service)
+- **Context required**: Yes (labels: Diagnosis, Condition, Disease, Disorder,
+  ICD, Code, Procedure, CPT, Billing, Treatment, Service)
 - **Stream supported**: Yes (maxMatchLength: 8)
 - **Validation**: Context label presence, CPT code range validation (100–99499)
 
@@ -135,7 +139,8 @@ redactor.redact("Lab ID: LAB123456");
 
 - **ID**: `medical_reference`
 - **Entity type**: `medical_reference`
-- **Context required**: Yes (labels: Lab, Test, Sample, Specimen, Pathology, Prescription, RX, Vaccine, Vaccination, Immunization)
+- **Context required**: Yes (labels: Lab, Test, Sample, Specimen, Pathology,
+  Prescription, RX, Vaccine, Vaccination, Immunization)
 - **Stream supported**: Yes (maxMatchLength: 30)
 - **Validation**: Context label presence
 
@@ -155,7 +160,8 @@ redactor.redact("Gene: rs123456789");
 
 - **ID**: `genetic_info`
 - **Entity type**: `genetic_info`
-- **Context required**: Yes (labels: Genetic, Gene, SNP, Marker, Genome, DNA, Variant, Allele, Sequence, Nucleotide)
+- **Context required**: Yes (labels: Genetic, Gene, SNP, Marker, Genome, DNA,
+  Variant, Allele, Sequence, Nucleotide)
 - **Stream supported**: Yes (maxMatchLength: 100)
 - **Validation**: Context label presence
 
@@ -175,6 +181,7 @@ redactor.redact("Claim No: CLM12345678");
 
 - **ID**: `health_insurance_id`
 - **Entity type**: `health_insurance_id`
-- **Context required**: Yes (labels: Insurance, Claim, Medical, Health, Policy, Plan, Beneficiary, Member)
+- **Context required**: Yes (labels: Insurance, Claim, Medical, Health, Policy,
+  Plan, Beneficiary, Member)
 - **Stream supported**: Yes (maxMatchLength: 30)
 - **Validation**: Context label presence

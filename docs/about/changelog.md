@@ -4,8 +4,7 @@
 
 ### Detectors
 
-**Identity (3):** vin, imei, imsi
-**Logistics (1):** tracking_number
+**Identity (3):** vin, imei, imsi **Logistics (1):** tracking_number
 
 ### Presets
 
@@ -30,7 +29,8 @@
 
 ### Features
 
-- 5 transformation actions (redact, mask, remove, format-preserve, token-replace)
+- 5 transformation actions (redact, mask, remove, format-preserve,
+  token-replace)
 - Streaming with boundary buffering and context windows
 - Restoration mode with numbered placeholders
 - Idempotency (re-redacting is a no-op)

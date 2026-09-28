@@ -2,8 +2,8 @@
 
 ## person_name
 
-Person name detection using compromise.js Named Entity Recognition. Requires
-the optional `compromise` peer dependency.
+Person name detection using compromise.js Named Entity Recognition. Requires the
+optional `compromise` peer dependency.
 
 ```bash
 bun add compromise
@@ -25,16 +25,15 @@ redactor.redact("The meeting was chaired by Dr. Sarah Johnson.");
 - **Validation**: compromise.js NER
 - **Detection reason**: `person_name.ner`
 
-::: warning Performance impact
-The `person_name` detector adds ~178 MiB RSS and reduces throughput by ~4
-orders of magnitude (0.06 MiB/s vs 505 MiB/s without it). Only use this when
-you need maximum recall and can accept the performance trade-off.
-:::
+::: warning Performance impact The `person_name` detector adds ~178 MiB RSS and
+reduces throughput by ~4 orders of magnitude (0.06 MiB/s vs 505 MiB/s without
+it). Only use this when you need maximum recall and can accept the performance
+trade-off. :::
 
 ### Not in any preset
 
-`person_name` is opt-in only. It's not included in any built-in preset.
-You must add an explicit rule to enable it.
+`person_name` is opt-in only. It's not included in any built-in preset. You must
+add an explicit rule to enable it.
 
 ### Trailing punctuation
 

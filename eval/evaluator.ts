@@ -88,27 +88,35 @@ export interface Report {
     outcomes: { tp: string[]; fp: string[]; fn: string[] };
   }[];
 }
+
 function object(value: unknown): Record<string, unknown> {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
     throw new Error("Expected an object");
   }
+
   return value as Record<string, unknown>;
 }
+
 function identifier(value: unknown): string {
   if (typeof value !== "string" || !/^[A-Za-z0-9_.-]{1,100}$/.test(value)) {
     throw new Error("Expected a safe identifier");
   }
+
   return value;
 }
+
 function list(value: unknown): unknown[] {
   if (!Array.isArray(value)) {
     throw new Error("Expected an array");
   }
+
   return value;
 }
+
 function tuple(value: unknown, length: number, rules: string[]): Tuple {
   const item = object(value);
   const ruleId = identifier(item.ruleId);
+
   if (
     !rules.includes(ruleId) ||
     typeof item.start !== "number" ||
@@ -121,32 +129,42 @@ function tuple(value: unknown, length: number, rules: string[]): Tuple {
   ) {
     throw new Error("Invalid detection tuple");
   }
+
   return { ruleId, start: item.start, end: item.end };
 }
+
 const key = (match: Tuple) => `${match.ruleId}:${match.start}:${match.end}`;
+
 function unique(values: string[]): void {
   if (new Set(values).size !== values.length) {
     throw new Error("Duplicate identifier or tuple");
   }
 }
+
 export function parseCorpus(value: unknown): Corpus {
   const data = object(value);
   const revision = identifier(data.revision);
+
   if (data.provenance !== "independent" && data.provenance !== "synthetic") {
     throw new Error("Invalid provenance");
   }
+
   if (typeof data.reviewed !== "boolean") {
     throw new Error("Invalid reviewed flag");
   }
+
   const reviewed = data.reviewed;
   const rules = list(data.rules).map(identifier);
   unique(rules);
+
   if (rules.length === 0) {
     throw new Error("Rules cannot be empty");
   }
+
   const cases = list(data.cases).map((value): Case => {
     const row = object(value);
     const id = identifier(row.id);
+
     if (
       typeof row.text !== "string" ||
       (row.kind !== "supported" &&
@@ -155,22 +173,31 @@ export function parseCorpus(value: unknown): Corpus {
     ) {
       throw new Error("Invalid case");
     }
+
     const input = row.text;
+
     const expected = list(row.expected).map((value) =>
       tuple(value, input.length, rules),
     );
+
     unique(expected.map(key));
+
     if (row.kind !== "supported" && expected.length !== 0) {
       throw new Error(
         "Negative and deferred cases cannot declare covered occurrences",
       );
     }
+
     return { id, text: row.text, kind: row.kind, expected };
   });
+
   unique(cases.map((row) => row.id));
+
   return { revision, provenance: data.provenance, reviewed, rules, cases };
 }
+
 const counts = (): Counts => ({ tp: 0, fp: 0, fn: 0 });
+
 function metrics(c: Counts): Metrics {
   return {
     ...c,
@@ -186,59 +213,76 @@ export async function evaluate(
   const totals = Object.fromEntries(
     corpus.rules.map((rule) => [rule, counts()]),
   );
+
   const cases: Report["cases"] = [];
   let fpDocuments = 0;
   const scored = corpus.cases.filter((row) => row.kind !== "deferred");
   let done = 0;
+
   for (const row of scored) {
     const actual = (await detect(row.text)).map((value) =>
       tuple(value, row.text.length, corpus.rules),
     );
+
     unique(actual.map(key));
+
     const expectedKeys = new Set(row.expected.map(key));
     const actualKeys = new Set(actual.map(key));
     const document = counts();
+
     const outcomes: Report["cases"][number]["outcomes"] = {
       tp: [],
       fp: [],
       fn: [],
     };
+
     for (const match of actual) {
       const field = expectedKeys.has(key(match)) ? "tp" : "fp";
       const total = totals[match.ruleId];
+
       if (!total) {
         throw new Error("Unknown rule");
       }
+
       total[field]++;
       document[field]++;
       outcomes[field].push(key(match));
     }
+
     for (const match of row.expected) {
       if (!actualKeys.has(key(match))) {
         const total = totals[match.ruleId];
+
         if (!total) {
           throw new Error("Unknown rule");
         }
+
         total.fn++;
         document.fn++;
         outcomes.fn.push(key(match));
       }
     }
+
     if (document.fp > 0) {
       fpDocuments++;
     }
+
     cases.push({ id: row.id, counts: document, outcomes });
     done++;
     onProgress?.(done, scored.length);
   }
+
   const rules = Object.fromEntries(
     Object.entries(totals).map(([id, value]) => [id, metrics(value)]),
   );
+
   const all = Object.values(rules);
+
   const mean = (field: "precision" | "recall"): number | null =>
     all.some((rule) => rule[field] === null)
       ? null
       : all.reduce((sum, rule) => sum + (rule[field] ?? 0), 0) / all.length;
+
   return {
     version: 1,
     revision: corpus.revision,
@@ -274,16 +318,20 @@ export async function evaluate(
 /** Baselines are previous reports from this tool, stored in owner-controlled review history. */
 export function releaseGate(report: Report, baseline?: Report): string[] {
   const failures: string[] = [];
+
   if (!report.independentReviewed) {
     failures.push("Independent owner-reviewed corpus is missing");
   }
+
   if (report.documents.negative < 1000) {
     failures.push("At least 1000 negative documents required");
   }
+
   for (const rule of EVAL_RULES) {
     const score = Object.hasOwn(report.rules, rule)
       ? report.rules[rule]
       : undefined;
+
     if (
       !score ||
       score.tp + score.fn < 200 ||
@@ -295,6 +343,7 @@ export function releaseGate(report: Report, baseline?: Report): string[] {
       failures.push(`Coverage or quality target unmet: ${rule}`);
     }
   }
+
   if (!baseline) {
     failures.push("Reviewed baseline is missing");
   } else if (
@@ -308,14 +357,18 @@ export function releaseGate(report: Report, baseline?: Report): string[] {
     if (!baseline.independentReviewed) {
       failures.push("Baseline must use owner-reviewed independent data");
     }
+
     if (baseline.cases.length !== report.cases.length) {
       failures.push("Baseline case coverage differs");
     }
+
     const previous = new Map(
       baseline.cases.map((row) => [row.id, row.outcomes]),
     );
+
     for (const row of report.cases) {
       const before = previous.get(row.id);
+
       if (
         !before ||
         row.outcomes.fp.some((key) => !before.fp.includes(key)) ||
@@ -326,12 +379,14 @@ export function releaseGate(report: Report, baseline?: Report): string[] {
       }
     }
   }
+
   return failures;
 }
 
 /** Validate baseline fields used by the gate; ignore summaries and never copy input text. */
 export function parseBaseline(value: unknown): Report {
   const data = object(value);
+
   if (
     data.version !== 1 ||
     typeof data.fingerprint !== "string" ||
@@ -339,12 +394,15 @@ export function parseBaseline(value: unknown): Report {
   ) {
     throw new Error("Invalid baseline identity");
   }
+
   const cases = list(data.cases).map((value) => {
     const row = object(value);
     const raw = object(row.counts);
     const checked = counts();
+
     for (const field of ["tp", "fp", "fn"] as const) {
       const number = raw[field];
+
       if (
         typeof number !== "number" ||
         !Number.isSafeInteger(number) ||
@@ -352,14 +410,18 @@ export function parseBaseline(value: unknown): Report {
       ) {
         throw new Error("Invalid baseline counts");
       }
+
       checked[field] = number;
     }
+
     const rawOutcomes = object(row.outcomes);
+
     const outcomes: Report["cases"][number]["outcomes"] = {
       tp: [],
       fp: [],
       fn: [],
     };
+
     for (const field of ["tp", "fp", "fn"] as const) {
       outcomes[field] = list(rawOutcomes[field]).map((value) => {
         if (
@@ -368,16 +430,22 @@ export function parseBaseline(value: unknown): Report {
         ) {
           throw new Error("Invalid baseline tuple");
         }
+
         return value;
       });
+
       unique(outcomes[field]);
+
       if (outcomes[field].length !== checked[field]) {
         throw new Error("Baseline counts disagree with outcomes");
       }
     }
+
     return { id: identifier(row.id), counts: checked, outcomes };
   });
+
   unique(cases.map((row) => row.id));
+
   return {
     version: 1,
     revision: identifier(data.revision),

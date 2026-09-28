@@ -8,7 +8,9 @@ which detectors are active, how they transform matches, and operational limits.
 ```ts
 interface RedactorConfig {
   presets?: readonly string[];
-  customPresets?: Readonly<Record<string, Readonly<Record<string, RuleSetting | "off">>>>;
+  customPresets?: Readonly<
+    Record<string, Readonly<Record<string, RuleSetting | "off">>>
+  >;
   limits?: { maxInputLength?: number };
   rules: Readonly<Record<string, RuleSetting | "off">>;
   detectors?: readonly DetectorDefinition[];
@@ -29,7 +31,8 @@ createRedactor({ presets: ["pii", "security"], rules: {} });
 
 ### customPresets
 
-Define your own named presets. Custom presets do not support the `@N` version syntax.
+Define your own named presets. Custom presets do not support the `@N` version
+syntax.
 
 ```ts
 createRedactor({
@@ -46,8 +49,8 @@ createRedactor({
 
 ### rules
 
-Explicit rule settings that override or supplement preset rules. Use `"off"`
-to disable a rule from a preset.
+Explicit rule settings that override or supplement preset rules. Use `"off"` to
+disable a rule from a preset.
 
 ```ts
 createRedactor({
@@ -121,8 +124,7 @@ createRedactor({
 
 Optional semantic confirmation configuration. When provided, `redactAsync()`
 uses Jev (TypeSafe System One) to verify detected PII candidates before
-redacting them. See [AI Confirmation](./semantic-confirmation) for
-details.
+redacting them. See [AI Confirmation](./semantic-confirmation) for details.
 
 ```ts
 createRedactor({
@@ -153,7 +155,8 @@ See [Transformations](./transformations) for examples of each action.
 
 Configuration is validated at creation time. Common errors:
 
-- **EMPTY_POLICY** — No rules are enabled (all set to `"off"` or no presets/rules provided)
+- **EMPTY_POLICY** — No rules are enabled (all set to `"off"` or no
+  presets/rules provided)
 - **UNKNOWN_RULE** — A rule or preset name doesn't exist
 - **POLICY_CONFLICT** — Two presets assign different actions to the same rule
 - **INVALID_CONFIG** — Configuration shape is invalid

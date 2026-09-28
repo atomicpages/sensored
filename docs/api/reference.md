@@ -6,7 +6,9 @@ Creates an immutable redactor instance. The redactor is frozen and cannot be
 modified after creation.
 
 ```ts
-function createRedactor(config: RedactorConfig & { restore: true }): RedactorWithRestore;
+function createRedactor(
+  config: RedactorConfig & { restore: true },
+): RedactorWithRestore;
 function createRedactor(config: RedactorConfig): RedactorWithoutRestore;
 ```
 
@@ -102,9 +104,9 @@ readonly policy: Readonly<Record<string, RuleSetting>>
 
 ### describe
 
-Returns descriptions of the detectors active in this redactor's resolved
-policy. Each description includes an optional `contextHint` for
-context-dependent detectors. See [LLM Steering](../guide/llm-steering).
+Returns descriptions of the detectors active in this redactor's resolved policy.
+Each description includes an optional `contextHint` for context-dependent
+detectors. See [LLM Steering](../guide/llm-steering).
 
 ```ts
 describe(): readonly DetectorDescription[]
@@ -119,7 +121,9 @@ describe(): readonly DetectorDescription[]
 ```ts
 interface RedactorConfig {
   presets?: readonly string[];
-  customPresets?: Readonly<Record<string, Readonly<Record<string, RuleSetting | "off">>>>;
+  customPresets?: Readonly<
+    Record<string, Readonly<Record<string, RuleSetting | "off">>>
+  >;
   limits?: { maxInputLength?: number };
   rules: Readonly<Record<string, RuleSetting | "off">>;
   detectors?: readonly DetectorDefinition[];
@@ -145,11 +149,7 @@ interface SemanticConfig {
 
 ```ts
 type RuleSetting =
-  | RedactRule
-  | FormatPreserveRule
-  | TokenReplaceRule
-  | MaskRule
-  | RemoveRule;
+  RedactRule | FormatPreserveRule | TokenReplaceRule | MaskRule | RemoveRule;
 ```
 
 ### RedactRule
@@ -268,12 +268,14 @@ interface DetectorDefinition {
 
 ```ts
 interface SemanticQuestion {
-  readonly instructions: string | {
-    readonly task: string;
-    readonly candidate: string;
-    readonly before?: string;
-    readonly after?: string;
-  };
+  readonly instructions:
+    | string
+    | {
+        readonly task: string;
+        readonly candidate: string;
+        readonly before?: string;
+        readonly after?: string;
+      };
   readonly criteria?: {
     readonly true: string;
     readonly false: string;
@@ -283,8 +285,8 @@ interface SemanticQuestion {
 
 ### ContextHint
 
-Describes the context labels a detector requires. Returned by
-`listDetectors()` and `redactor.describe()`.
+Describes the context labels a detector requires. Returned by `listDetectors()`
+and `redactor.describe()`.
 
 ```ts
 interface ContextHint {
@@ -382,7 +384,9 @@ class SensoredError extends Error {
   readonly path?: string;
   readonly info?: Readonly<Record<string, unknown>>;
 
-  toProblemDetails(statusMap?: Partial<Record<ErrorCode, number>>): ProblemDetails;
+  toProblemDetails(
+    statusMap?: Partial<Record<ErrorCode, number>>,
+  ): ProblemDetails;
 }
 ```
 

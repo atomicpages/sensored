@@ -12,7 +12,9 @@ const redactor = createRedactor({
   restore: true,
 });
 
-const { text, map } = redactor.redact("Email: john@example.com, Phone: 555-123-4567");
+const { text, map } = redactor.redact(
+  "Email: john@example.com, Phone: 555-123-4567",
+);
 // text: "Email: [EMAIL_1], Phone: [PHONE_1]"
 // map: {
 //   "[EMAIL_1]": "john@example.com",
@@ -86,9 +88,9 @@ for await (const event of stream) {
 
 ## Idempotency
 
-Restoration is idempotent. Calling `restore()` on already-restored text is
-safe — the placeholder pattern only matches `[UPPERCASE_N]` formats, so
-original text won't be accidentally modified.
+Restoration is idempotent. Calling `restore()` on already-restored text is safe
+— the placeholder pattern only matches `[UPPERCASE_N]` formats, so original text
+won't be accidentally modified.
 
 Redaction is also idempotent: re-redacting already-redacted text is a no-op
 because the library detects existing placeholders and skips detection within

@@ -108,6 +108,8 @@ interface RedactorWithRestore extends RedactorBase {
   redact(text: string): RedactResult;
 }
 
+export type Redactor = RedactorWithRestore | RedactorWithoutRestore;
+
 export function createRedactor(
   config: RedactorConfig & { restore: true },
 ): RedactorWithRestore;

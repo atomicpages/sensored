@@ -72,9 +72,9 @@ redactor.redact("Call 555-123-4567 now");
 
 ## format-preserve
 
-Transforms digits to `X` and letters to `*` while preserving separators,
-spaces, and structural characters. Useful when you need to maintain the format
-of the original text for downstream parsing.
+Transforms digits to `X` and letters to `*` while preserving separators, spaces,
+and structural characters. Useful when you need to maintain the format of the
+original text for downstream parsing.
 
 ```ts
 const redactor = createRedactor({
@@ -120,5 +120,5 @@ const redactor = createRedactor({
 ## Idempotency
 
 All transformations are idempotent. Re-redacting already-redacted text is a
-no-op — the library detects placeholder patterns like `[EMAIL]` and
-`[EMAIL_1]` and skips detection within those spans.
+no-op — the library detects placeholder patterns like `[EMAIL]` and `[EMAIL_1]`
+and skips detection within those spans.

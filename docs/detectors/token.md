@@ -29,7 +29,9 @@ const redactor = createRedactor({
   rules: { jwt_token: { action: "redact" } },
 });
 
-redactor.redact("Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123");
+redactor.redact(
+  "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123",
+);
 // "Authorization: Bearer [JWT_TOKEN_1]"
 ```
 
@@ -48,7 +50,9 @@ const redactor = createRedactor({
   rules: { private_key: { action: "redact" } },
 });
 
-redactor.redact("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA...\n-----END RSA PRIVATE KEY-----");
+redactor.redact(
+  "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA...\n-----END RSA PRIVATE KEY-----",
+);
 // "[PRIVATE_KEY_1]"
 ```
 

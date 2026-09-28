@@ -54,6 +54,7 @@ export default defineConfig({
             { text: "Presets", link: "/guide/presets" },
             { text: "Transformations", link: "/guide/transformations" },
             { text: "Configuration", link: "/guide/configuration" },
+            { text: "CLI", link: "/guide/cli" },
           ],
         },
         {

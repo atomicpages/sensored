@@ -2,11 +2,11 @@
 
 ## us_ssn
 
-Detects US Social Security Numbers (9-digit compact or 3-2-4 hyphenated
-format). Requires nearby context labels to reduce false positives.
+Detects US Social Security Numbers (9-digit compact or 3-2-4 hyphenated format).
+Requires nearby context labels to reduce false positives.
 
-Structural exclusions: area numbers 000, 666, 900–999; group numbers 00;
-serial numbers 0000.
+Structural exclusions: area numbers 000, 666, 900–999; group numbers 00; serial
+numbers 0000.
 
 ```ts
 const redactor = createRedactor({
@@ -19,7 +19,8 @@ redactor.redact("SSN: 123-45-6789");
 
 - **ID**: `us_ssn`
 - **Entity type**: `us_ssn`
-- **Context required**: Yes (labels: SSN, Social Security Number, Social Security No.)
+- **Context required**: Yes (labels: SSN, Social Security Number, Social
+  Security No.)
 - **Stream supported**: Yes
 - **Validation**: Structural exclusions, context label qualification
 
@@ -68,8 +69,8 @@ redactor.redact("SIN: 123-456-789");
 
 ## au_tfn
 
-Detects Australian Tax File Numbers (8–9 digits, compact or spaced format)
-with weighted sum mod 11 validation (weights: 1, 4, 3, 7, 5, 8, 6, 9, 10).
+Detects Australian Tax File Numbers (8–9 digits, compact or spaced format) with
+weighted sum mod 11 validation (weights: 1, 4, 3, 7, 5, 8, 6, 9, 10).
 
 ```ts
 const redactor = createRedactor({
@@ -201,7 +202,8 @@ redactor.redact("Personalausweis: L01X00T47");
 
 - **ID**: `de_id`
 - **Entity type**: `de_id`
-- **Context required**: Yes (labels: Personalausweis, German ID, National ID, Identity Card, Ausweis)
+- **Context required**: Yes (labels: Personalausweis, German ID, National ID,
+  Identity Card, Ausweis)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: Length (10 or 11 chars)
 
@@ -221,7 +223,8 @@ redactor.redact("INSEE: 1234567890123 45");
 
 - **ID**: `fr_insee`
 - **Entity type**: `fr_insee`
-- **Context required**: Yes (labels: INSEE, NIR, Numéro de Sécurité Sociale, Social Security Number, Numéro INSEE)
+- **Context required**: Yes (labels: INSEE, NIR, Numéro de Sécurité Sociale,
+  Social Security Number, Numéro INSEE)
 - **Stream supported**: Yes (maxMatchLength: 15)
 - **Validation**: Mod-97 checksum
 
@@ -241,9 +244,11 @@ redactor.redact("Codice Fiscale: RSSMRA85M01H501Z");
 
 - **ID**: `it_codice_fiscale`
 - **Entity type**: `it_codice_fiscale`
-- **Context required**: Yes (labels: Codice Fiscale, Fiscal Code, Tax Code, Italian ID)
+- **Context required**: Yes (labels: Codice Fiscale, Fiscal Code, Tax Code,
+  Italian ID)
 - **Stream supported**: Yes (maxMatchLength: 16)
-- **Validation**: Italian Codice Fiscale checksum (odd/even character value lookup, control character)
+- **Validation**: Italian Codice Fiscale checksum (odd/even character value
+  lookup, control character)
 
 ## es_dni
 
@@ -261,9 +266,11 @@ redactor.redact("DNI: 12345678Z");
 
 - **ID**: `es_dni`
 - **Entity type**: `es_dni`
-- **Context required**: Yes (labels: DNI, Documento Nacional de Identidad, Spanish ID, National ID)
+- **Context required**: Yes (labels: DNI, Documento Nacional de Identidad,
+  Spanish ID, National ID)
 - **Stream supported**: Yes (maxMatchLength: 9)
-- **Validation**: Control letter using mod-23 lookup table (TRWAGMYFPDXBNJZSQVHLCKE)
+- **Validation**: Control letter using mod-23 lookup table
+  (TRWAGMYFPDXBNJZSQVHLCKE)
 
 ## nl_bsn
 
@@ -281,7 +288,8 @@ redactor.redact("BSN: 123.456.782");
 
 - **ID**: `nl_bsn`
 - **Entity type**: `nl_bsn`
-- **Context required**: Yes (labels: BSN, Burgerservicenummer, Dutch ID, Citizen Service Number)
+- **Context required**: Yes (labels: BSN, Burgerservicenummer, Dutch ID, Citizen
+  Service Number)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: Mod-11 checksum (weighted sum with weights 9..1)
 
@@ -300,9 +308,11 @@ redactor.redact("PESEL: 12345678901");
 
 - **ID**: `pl_pesel`
 - **Entity type**: `pl_pesel`
-- **Context required**: Yes (labels: PESEL, Polish ID, National ID, Identity Number)
+- **Context required**: Yes (labels: PESEL, Polish ID, National ID, Identity
+  Number)
 - **Stream supported**: Yes (maxMatchLength: 11)
-- **Validation**: PESEL checksum (weights [1,3,7,9,1,3,7,9,1,3,1], sum mod 10 = 0)
+- **Validation**: PESEL checksum (weights [1,3,7,9,1,3,7,9,1,3,1], sum mod 10
+  = 0)
 
 ## za_id
 
@@ -319,7 +329,8 @@ redactor.redact("National ID: 1234567890123");
 
 - **ID**: `za_id`
 - **Entity type**: `za_id`
-- **Context required**: Yes (labels: South Africa, RSA, ZA, National ID, Identity, ID Number)
+- **Context required**: Yes (labels: South Africa, RSA, ZA, National ID,
+  Identity, ID Number)
 - **Stream supported**: Yes (maxMatchLength: 13)
 - **Validation**: 13-digit length, month field (1–12), day field (1–31)
 
@@ -339,7 +350,8 @@ redactor.redact("NIN: 12345678901");
 
 - **ID**: `ng_nin`
 - **Entity type**: `ng_nin`
-- **Context required**: Yes (labels: Nigeria, NIN, National ID, Identity, Nigerian)
+- **Context required**: Yes (labels: Nigeria, NIN, National ID, Identity,
+  Nigerian)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: 11-digit format
 
@@ -359,7 +371,8 @@ redactor.redact("BVN: 12345678901");
 
 - **ID**: `ng_bvn`
 - **Entity type**: `ng_bvn`
-- **Context required**: Yes (labels: BVN, Bank Verification, Nigeria, Nigerian, Banking)
+- **Context required**: Yes (labels: BVN, Bank Verification, Nigeria, Nigerian,
+  Banking)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: 11-digit format
 
@@ -398,7 +411,8 @@ redactor.redact("KRA PIN: A123456789B");
 
 - **ID**: `ke_kra_pin`
 - **Entity type**: `ke_kra_pin`
-- **Context required**: Yes (labels: KRA, Kenya, Revenue, Authority, Tax, PIN, Taxpayer)
+- **Context required**: Yes (labels: KRA, Kenya, Revenue, Authority, Tax, PIN,
+  Taxpayer)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: Format (A + 9 digits + letter)
 
@@ -436,7 +450,8 @@ redactor.redact("Ghana Card: GHA-123456789-0");
 
 - **ID**: `gh_card`
 - **Entity type**: `gh_card`
-- **Context required**: Yes (labels: Ghana, Ghanaian, Ghana Card, National ID, Identity)
+- **Context required**: Yes (labels: Ghana, Ghanaian, Ghana Card, National ID,
+  Identity)
 - **Stream supported**: Yes (maxMatchLength: 15)
 - **Validation**: Format (GHA + 9 digits + check digit)
 
@@ -455,7 +470,8 @@ redactor.redact("CNIE: AB123456");
 
 - **ID**: `ma_id`
 - **Entity type**: `ma_id`
-- **Context required**: Yes (labels: Morocco, Moroccan, CNIE, National ID, Identity)
+- **Context required**: Yes (labels: Morocco, Moroccan, CNIE, National ID,
+  Identity)
 - **Stream supported**: Yes (maxMatchLength: 10)
 - **Validation**: Format (1–2 letters + 6–8 digits, or 8 digits)
 
@@ -475,7 +491,8 @@ redactor.redact("IIN: 123456789012");
 
 - **ID**: `kz_iin`
 - **Entity type**: `kz_iin`
-- **Context required**: Yes (labels: Kazakhstan, Kazakh, IIN, Individual Identification, ЖСН)
+- **Context required**: Yes (labels: Kazakhstan, Kazakh, IIN, Individual
+  Identification, ЖСН)
 - **Stream supported**: Yes (maxMatchLength: 12)
 - **Validation**: 12-digit length, month field (1–12), day field (1–31)
 
@@ -534,7 +551,8 @@ redactor.redact("PIN: 12345678901234");
 
 - **ID**: `kg_pin`
 - **Entity type**: `kg_pin`
-- **Context required**: Yes (labels: Kyrgyz, Kyrgyzstan, PIN, Personal ID, Личный, Номер)
+- **Context required**: Yes (labels: Kyrgyz, Kyrgyzstan, PIN, Personal ID,
+  Личный, Номер)
 - **Stream supported**: Yes (maxMatchLength: 14)
 - **Validation**: 14-digit format
 
@@ -591,7 +609,8 @@ redactor.redact("Passport: 1234 567890");
 
 - **ID**: `ru_passport`
 - **Entity type**: `ru_passport`
-- **Context required**: Yes (labels: Russia, Russian, Passport, Паспорт, Российский)
+- **Context required**: Yes (labels: Russia, Russian, Passport, Паспорт,
+  Российский)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: Format (4 digits + 6 digits)
 
@@ -611,7 +630,8 @@ redactor.redact("SNILS: 123-456-789 00");
 
 - **ID**: `ru_snils`
 - **Entity type**: `ru_snils`
-- **Context required**: Yes (labels: Russia, Russian, SNILS, СНИЛС, Pension, Пенсионный)
+- **Context required**: Yes (labels: Russia, Russian, SNILS, СНИЛС, Pension,
+  Пенсионный)
 - **Stream supported**: Yes (maxMatchLength: 14)
 - **Validation**: Format (3-3-3 2 digit groups)
 
@@ -669,7 +689,8 @@ redactor.redact("Rodné číslo: 123456/7890");
 
 - **ID**: `cz_id`
 - **Entity type**: `cz_id`
-- **Context required**: Yes (labels: Czech, Czechia, Republic, Rodné, Číslo, National ID)
+- **Context required**: Yes (labels: Czech, Czechia, Republic, Rodné, Číslo,
+  National ID)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: 10-digit length, month field (1–12 or 51–62), day field (1–31)
 
@@ -689,9 +710,11 @@ redactor.redact("CNP: 1234567890123");
 
 - **ID**: `ro_cnp`
 - **Entity type**: `ro_cnp`
-- **Context required**: Yes (labels: Romania, Romanian, CNP, Cod Numeric, Personal)
+- **Context required**: Yes (labels: Romania, Romanian, CNP, Cod Numeric,
+  Personal)
 - **Stream supported**: Yes (maxMatchLength: 13)
-- **Validation**: 13-digit length, first digit (1–9), month field (1–12), day field (1–31)
+- **Validation**: 13-digit length, first digit (1–9), month field (1–12), day
+  field (1–31)
 
 ## hu_id
 
@@ -709,7 +732,8 @@ redactor.redact("Személyi: 123456AB");
 
 - **ID**: `hu_id`
 - **Entity type**: `hu_id`
-- **Context required**: Yes (labels: Hungarian, Magyar, Személyi, Igazolvány, Personal ID)
+- **Context required**: Yes (labels: Hungarian, Magyar, Személyi, Igazolvány,
+  Personal ID)
 - **Stream supported**: Yes (maxMatchLength: 8)
 - **Validation**: Format (6 digits + 2 letters)
 
@@ -748,9 +772,11 @@ redactor.redact("EGN: 1234567890");
 
 - **ID**: `bg_egn`
 - **Entity type**: `bg_egn`
-- **Context required**: Yes (labels: Bulgaria, Bulgarian, EGN, Personal Number, Единен)
+- **Context required**: Yes (labels: Bulgaria, Bulgarian, EGN, Personal Number,
+  Единен)
 - **Stream supported**: Yes (maxMatchLength: 10)
-- **Validation**: 10-digit length, month field (1–12, 21–32, or 41–52), day field (1–31)
+- **Validation**: 10-digit length, month field (1–12, 21–32, or 41–52), day
+  field (1–31)
 
 ## rs_jmbg
 
@@ -768,7 +794,8 @@ redactor.redact("JMBG: 1234567890123");
 
 - **ID**: `rs_jmbg`
 - **Entity type**: `rs_jmbg`
-- **Context required**: Yes (labels: Serbian, Serbia, JMBG, Jedinstveni, Matični, Personal)
+- **Context required**: Yes (labels: Serbian, Serbia, JMBG, Jedinstveni,
+  Matični, Personal)
 - **Stream supported**: Yes (maxMatchLength: 13)
 - **Validation**: 13-digit length, day field (1–31), month field (1–12)
 
@@ -787,7 +814,8 @@ redactor.redact("DNI: 12345678");
 
 - **ID**: `ar_dni`
 - **Entity type**: `ar_dni`
-- **Context required**: Yes (labels: Argentina, Argentin, DNI, Documento Nacional, Identidad)
+- **Context required**: Yes (labels: Argentina, Argentin, DNI, Documento
+  Nacional, Identidad)
 - **Stream supported**: Yes (maxMatchLength: 8)
 - **Validation**: 7–8 digit format
 
@@ -807,7 +835,8 @@ redactor.redact("CUIT: 20-12345678-3");
 
 - **ID**: `ar_cuit`
 - **Entity type**: `ar_cuit`
-- **Context required**: Yes (labels: Argentina, CUIT, CUIL, Tax, Impuesto, Tributario)
+- **Context required**: Yes (labels: Argentina, CUIT, CUIL, Tax, Impuesto,
+  Tributario)
 - **Stream supported**: Yes (maxMatchLength: 13)
 - **Validation**: Format (2 digits + 8 digits + check digit)
 
@@ -827,7 +856,8 @@ redactor.redact("RUT: 12.345.678-K");
 
 - **ID**: `cl_rut`
 - **Entity type**: `cl_rut`
-- **Context required**: Yes (labels: Chile, Chilean, RUT, Rol Único, Tributario, Cédula)
+- **Context required**: Yes (labels: Chile, Chilean, RUT, Rol Único, Tributario,
+  Cédula)
 - **Stream supported**: Yes (maxMatchLength: 12)
 - **Validation**: Chilean RUT checksum (mod-11, check digit 0–9 or K)
 
@@ -846,7 +876,8 @@ redactor.redact("Cédula: 1234567890");
 
 - **ID**: `co_cedula`
 - **Entity type**: `co_cedula`
-- **Context required**: Yes (labels: Colombia, Colombian, Cédula, Cedula, Ciudadanía, CC)
+- **Context required**: Yes (labels: Colombia, Colombian, Cédula, Cedula,
+  Ciudadanía, CC)
 - **Stream supported**: Yes (maxMatchLength: 10)
 - **Validation**: 6–10 digit format
 
@@ -866,7 +897,8 @@ redactor.redact("NIT: 123456789-0");
 
 - **ID**: `co_nit`
 - **Entity type**: `co_nit`
-- **Context required**: Yes (labels: Colombia, NIT, Tax, Impuesto, Tributario, Empresa)
+- **Context required**: Yes (labels: Colombia, NIT, Tax, Impuesto, Tributario,
+  Empresa)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: Format (9 digits + check digit)
 
@@ -885,7 +917,8 @@ redactor.redact("DNI: 12345678");
 
 - **ID**: `pe_dni`
 - **Entity type**: `pe_dni`
-- **Context required**: Yes (labels: Peru, Peruvian, Perú, Peruano, DNI, Documento Nacional, Identidad, RENIEC)
+- **Context required**: Yes (labels: Peru, Peruvian, Perú, Peruano, DNI,
+  Documento Nacional, Identidad, RENIEC)
 - **Stream supported**: Yes (maxMatchLength: 8)
 - **Validation**: 8-digit format
 
@@ -924,7 +957,8 @@ redactor.redact("Cédula: V-12345678");
 
 - **ID**: `ve_cedula`
 - **Entity type**: `ve_cedula`
-- **Context required**: Yes (labels: Venezuela, Venezuelan, Cédula, Cedula, Identidad, CI)
+- **Context required**: Yes (labels: Venezuela, Venezuelan, Cédula, Cedula,
+  Identidad, CI)
 - **Stream supported**: Yes (maxMatchLength: 10)
 - **Validation**: Format (V/E prefix + 1–8 digits)
 
@@ -963,7 +997,8 @@ redactor.redact("Cédula: 1234567890");
 
 - **ID**: `ec_cedula`
 - **Entity type**: `ec_cedula`
-- **Context required**: Yes (labels: Ecuador, Ecuadorian, Cédula, Cedula, Identidad)
+- **Context required**: Yes (labels: Ecuador, Ecuadorian, Cédula, Cedula,
+  Identidad)
 - **Stream supported**: Yes (maxMatchLength: 10)
 - **Validation**: 10-digit format, province code (1–24), third digit (≤6 or =9)
 
@@ -982,7 +1017,8 @@ redactor.redact("Cédula: 1.234.567-8");
 
 - **ID**: `uy_cedula`
 - **Entity type**: `uy_cedula`
-- **Context required**: Yes (labels: Uruguay, Uruguayan, Cédula, Cedula, Identidad)
+- **Context required**: Yes (labels: Uruguay, Uruguayan, Cédula, Cedula,
+  Identidad)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: Format (1 digit + 3 digits + 3 digits + check digit)
 
@@ -1001,7 +1037,8 @@ redactor.redact("Emirates ID: 784-1234-5678901-2");
 
 - **ID**: `uae_id`
 - **Entity type**: `uae_id`
-- **Context required**: Yes (labels: UAE, Emirates, Dubai, Abu Dhabi, National ID, Emirates ID)
+- **Context required**: Yes (labels: UAE, Emirates, Dubai, Abu Dhabi, National
+  ID, Emirates ID)
 - **Stream supported**: Yes (maxMatchLength: 18)
 - **Validation**: Format (784 prefix + 12 digits + check digit)
 
@@ -1020,7 +1057,8 @@ redactor.redact("National ID: 1234567890");
 
 - **ID**: `sa_id`
 - **Entity type**: `sa_id`
-- **Context required**: Yes (labels: Saudi, KSA, Kingdom, Iqama, National ID, Muqeem)
+- **Context required**: Yes (labels: Saudi, KSA, Kingdom, Iqama, National ID,
+  Muqeem)
 - **Stream supported**: Yes (maxMatchLength: 10)
 - **Validation**: Format (1 or 2 prefix + 9 digits)
 
@@ -1040,7 +1078,8 @@ redactor.redact("Teudat Zehut: 123456789");
 
 - **ID**: `il_id`
 - **Entity type**: `il_id`
-- **Context required**: Yes (labels: Israel, Teudat, Zehut, Israeli, National ID)
+- **Context required**: Yes (labels: Israel, Teudat, Zehut, Israeli, National
+  ID)
 - **Stream supported**: Yes (maxMatchLength: 9)
 - **Validation**: 9-digit format
 
@@ -1078,7 +1117,8 @@ redactor.redact("QID: 12345678901");
 
 - **ID**: `qa_id`
 - **Entity type**: `qa_id`
-- **Context required**: Yes (labels: Qatar, QID, Doha, National ID, Resident Permit)
+- **Context required**: Yes (labels: Qatar, QID, Doha, National ID, Resident
+  Permit)
 - **Stream supported**: Yes (maxMatchLength: 11)
 - **Validation**: 11-digit format
 
@@ -1117,7 +1157,8 @@ redactor.redact("CPR: 123456789");
 
 - **ID**: `bh_cpr`
 - **Entity type**: `bh_cpr`
-- **Context required**: Yes (labels: Bahrain, CPR, Central Population, National ID)
+- **Context required**: Yes (labels: Bahrain, CPR, Central Population, National
+  ID)
 - **Stream supported**: Yes (maxMatchLength: 9)
 - **Validation**: 9-digit length, month field (1–12), day field (1–31)
 
@@ -1193,7 +1234,8 @@ redactor.redact("Driver License: AB123456");
 
 - **ID**: `nz_driver_license`
 - **Entity type**: `nz_driver_license`
-- **Context required**: Yes (labels: New Zealand, NZ, Kiwi, Driver License, Driver Licence, Driver, License, Licence)
+- **Context required**: Yes (labels: New Zealand, NZ, Kiwi, Driver License,
+  Driver Licence, Driver, License, Licence)
 - **Stream supported**: Yes (maxMatchLength: 8)
 - **Validation**: Format (2 letters + 6 digits)
 
@@ -1250,7 +1292,8 @@ redactor.redact("National ID: ABC123456789");
 
 - **ID**: `png_id`
 - **Entity type**: `png_id`
-- **Context required**: Yes (labels: Papua New Guinea, Papua, New Guinea, National ID)
+- **Context required**: Yes (labels: Papua New Guinea, Papua, New Guinea,
+  National ID)
 - **Stream supported**: Yes (maxMatchLength: 12)
 - **Validation**: 8–12 alphanumeric character format
 
@@ -1328,7 +1371,8 @@ redactor.redact("NIK: 1234567890123456");
 
 - **ID**: `id_nik`
 - **Entity type**: `id_nik`
-- **Context required**: Yes (labels: Indonesia, Indonesian, NIK, Nomor Induk, KTP, National ID)
+- **Context required**: Yes (labels: Indonesia, Indonesian, NIK, Nomor Induk,
+  KTP, National ID)
 - **Stream supported**: Yes (maxMatchLength: 16)
 - **Validation**: 16-digit format
 
@@ -1386,7 +1430,8 @@ redactor.redact("IC Number: 123456-12-3456");
 
 - **ID**: `my_ic`
 - **Entity type**: `my_ic`
-- **Context required**: Yes (labels: Malaysia, Malaysian, MyKad, IC Number, Kad Pengenalan)
+- **Context required**: Yes (labels: Malaysia, Malaysian, MyKad, IC Number, Kad
+  Pengenalan)
 - **Stream supported**: Yes (maxMatchLength: 14)
 - **Validation**: 12-digit length, month field (1–12), day field (1–31)
 
@@ -1406,7 +1451,8 @@ redactor.redact("UMID: 1234-1234567-8");
 
 - **ID**: `ph_umid`
 - **Entity type**: `ph_umid`
-- **Context required**: Yes (labels: Philippines, Filipino, UMID, Unified, Multipurpose, National ID)
+- **Context required**: Yes (labels: Philippines, Filipino, UMID, Unified,
+  Multipurpose, National ID)
 - **Stream supported**: Yes (maxMatchLength: 14)
 - **Validation**: Format (4 digits + 7 digits + check digit)
 
@@ -1426,7 +1472,8 @@ redactor.redact("CCCD: 123456789012");
 
 - **ID**: `vn_cccd`
 - **Entity type**: `vn_cccd`
-- **Context required**: Yes (labels: Vietnam, Vietnamese, CCCD, Citizen Identity, CMND, National ID)
+- **Context required**: Yes (labels: Vietnam, Vietnamese, CCCD, Citizen
+  Identity, CMND, National ID)
 - **Stream supported**: Yes (maxMatchLength: 12)
 - **Validation**: 12-digit format
 
@@ -1446,6 +1493,7 @@ redactor.redact("NRC: 12/Yangon(N)123456");
 
 - **ID**: `mm_nrc`
 - **Entity type**: `mm_nrc`
-- **Context required**: Yes (labels: Myanmar, Burmese, NRC, National Registration, Identity)
+- **Context required**: Yes (labels: Myanmar, Burmese, NRC, National
+  Registration, Identity)
 - **Stream supported**: Yes (maxMatchLength: 20)
 - **Validation**: Format (division code + township + citizen type + 6 digits)

@@ -54,8 +54,8 @@ for await (const event of stream) {
 
 ### complete
 
-Emitted once at the end of the stream. When restoration is enabled, includes
-the `RestorationMap`:
+Emitted once at the end of the stream. When restoration is enabled, includes the
+`RestorationMap`:
 
 ```ts
 const stream = redactor.stream(asyncChunks(), { restore: true });
@@ -92,8 +92,8 @@ const stream = redactor.stream(asyncChunks(), { signal: controller.signal });
 
 ### report
 
-When `true`, detection events are emitted with `InspectionGroup` data
-containing absolute offsets and match details.
+When `true`, detection events are emitted with `InspectionGroup` data containing
+absolute offsets and match details.
 
 ### restore
 

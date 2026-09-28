@@ -21,9 +21,9 @@ docs/
   about/               Changelog
 ```
 
-Brand assets also live at the repo root in `assets/` — see
-`assets/README.md` for the full catalog (horizontal, wordmark, icon, and
-social variants in light/dark/mono).
+Brand assets also live at the repo root in `assets/` — see `assets/README.md`
+for the full catalog (horizontal, wordmark, icon, and social variants in
+light/dark/mono).
 
 ## Commands
 
@@ -40,11 +40,10 @@ social variants in light/dark/mono).
 - Detector pages follow a consistent format: description, code example, and a
   metadata table (ID, entity type, context, stream, validation).
 - The VitePress config uses `cleanUrls: true` and `lastUpdated: true`.
-- The nav bar shows the logo only (`siteTitle: false`) with light/dark
-  variants via `themeConfig.logo`.
-- Favicon is served from `docs/public/favicon.svg` via a `head` link tag
-  in the config (note: the `href` includes the `base` prefix
-  `/sensored/`).
+- The nav bar shows the logo only (`siteTitle: false`) with light/dark variants
+  via `themeConfig.logo`.
+- Favicon is served from `docs/public/favicon.svg` via a `head` link tag in the
+  config (note: the `href` includes the `base` prefix `/sensored/`).
 - Default VitePress theme with dark mode support.
 
 ## Dependencies

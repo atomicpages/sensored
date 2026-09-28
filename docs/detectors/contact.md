@@ -55,9 +55,11 @@ redactor.redact("Mailing Address: 123 Main Street");
 
 - **ID**: `address`
 - **Entity type**: `address`
-- **Context required**: Yes (labels: Address, Street, Home Address, Mailing Address, Residence, Postal Address)
+- **Context required**: Yes (labels: Address, Street, Home Address, Mailing
+  Address, Residence, Postal Address)
 - **Stream supported**: Yes (maxMatchLength: 120)
-- **Validation**: Context label presence, street suffix matching (St, Ave, Rd, Blvd, Lane, Dr, Ct, Pl, Sq, Ter, Cir, Way, Pkwy, Hwy)
+- **Validation**: Context label presence, street suffix matching (St, Ave, Rd,
+  Blvd, Lane, Dr, Ct, Pl, Sq, Ter, Cir, Way, Pkwy, Hwy)
 
 ## postal_code
 
@@ -77,4 +79,5 @@ redactor.redact("ZIP: 90210-1234");
 - **Entity type**: `postal_code`
 - **Context required**: No
 - **Stream supported**: Yes (maxMatchLength: 10)
-- **Validation**: Format (US ZIP, UK postcode, Canadian postal code, or 4-digit numeric)
+- **Validation**: Format (US ZIP, UK postcode, Canadian postal code, or 4-digit
+  numeric)

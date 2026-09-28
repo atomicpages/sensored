@@ -16,7 +16,8 @@ redactor.redact("Case No: CV2024001234");
 
 - **ID**: `legal_case`
 - **Entity type**: `legal_case`
-- **Context required**: Yes (labels: Case, Docket, Court, Subpoena, Summons, Judgment, Order, Decree, Bankruptcy, BK, Probate, Estate, Legal, Lawsuit)
+- **Context required**: Yes (labels: Case, Docket, Court, Subpoena, Summons,
+  Judgment, Order, Decree, Bankruptcy, BK, Probate, Estate, Legal, Lawsuit)
 - **Stream supported**: Yes (maxMatchLength: 16)
 - **Validation**: Context label presence, at least one digit required
 
@@ -36,7 +37,8 @@ redactor.redact("Bar No: BN123456");
 
 - **ID**: `legal_license`
 - **Entity type**: `legal_license`
-- **Context required**: Yes (labels: Bar, Attorney, Lawyer, Notary, Notarial, Court Reporter, CSR, RPR, License, Commission, Legal, Law Firm)
+- **Context required**: Yes (labels: Bar, Attorney, Lawyer, Notary, Notarial,
+  Court Reporter, CSR, RPR, License, Commission, Legal, Law Firm)
 - **Stream supported**: Yes (maxMatchLength: 12)
 - **Validation**: Context label presence, at least one digit required
 
@@ -56,6 +58,8 @@ redactor.redact("Matter No: MAT123456");
 
 - **ID**: `legal_reference`
 - **Entity type**: `legal_reference`
-- **Context required**: Yes (labels: Matter, Engagement, Client, Settlement, Agreement, Retainer, NDA, Confidentiality, Non-Disclosure, Contract, CNTR, Legal, Law Firm, Attorney, Counsel)
+- **Context required**: Yes (labels: Matter, Engagement, Client, Settlement,
+  Agreement, Retainer, NDA, Confidentiality, Non-Disclosure, Contract, CNTR,
+  Legal, Law Firm, Attorney, Counsel)
 - **Stream supported**: Yes (maxMatchLength: 15)
 - **Validation**: Context label presence, at least one digit required

@@ -31,9 +31,9 @@ for (const d of detectors) {
 
 ## redactor.describe()
 
-Returns descriptions of only the detectors active in a given redactor's
-resolved policy. Useful when you've already configured a redactor and want to
-steer an LLM based on the active rules.
+Returns descriptions of only the detectors active in a given redactor's resolved
+policy. Useful when you've already configured a redactor and want to steer an
+LLM based on the active rules.
 
 ```ts
 import { createRedactor } from "sensored";
@@ -67,8 +67,8 @@ interface ContextHint {
 - **required** — Always `true` for context-dependent detectors.
 - **labels** — Human-readable label strings the detector looks for (e.g.
   `["SSN", "Social Security Number"]`).
-- **position** — Where labels must appear relative to the candidate: `preceding`,
-  `following`, or `both`.
+- **position** — Where labels must appear relative to the candidate:
+  `preceding`, `following`, or `both`.
 - **window** — Character window size the detector searches within.
 - **instructions** — Optional free-text steering guidance for detectors with
   non-standard context rules. When present, prefer these instructions over the
@@ -109,5 +109,5 @@ ${JSON.stringify(hints, null, 2)}`;
 
 ## Custom detectors
 
-Custom detectors can declare a `contextHint` in their `DetectorDefinition`.
-See [Custom Detectors](./custom-detectors#contexthint) for details.
+Custom detectors can declare a `contextHint` in their `DetectorDefinition`. See
+[Custom Detectors](./custom-detectors#contexthint) for details.

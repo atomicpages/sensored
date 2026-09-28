@@ -16,7 +16,8 @@ redactor.redact("Employee ID: EMP123456");
 
 - **ID**: `hr_identifier`
 - **Entity type**: `hr_identifier`
-- **Context required**: Yes (labels: Employee ID, EMP-ID, Staff No, Personnel ID, Worker ID, Payroll No, PAY ID, Timesheet No, Timecard ID, Time-Entry No)
+- **Context required**: Yes (labels: Employee ID, EMP-ID, Staff No, Personnel
+  ID, Worker ID, Payroll No, PAY ID, Timesheet No, Timecard ID, Time-Entry No)
 - **Stream supported**: Yes (maxMatchLength: 25)
 - **Validation**: Context label presence
 
@@ -37,7 +38,9 @@ redactor.redact("Background Check ID: BGC1234567");
 
 - **ID**: `hr_screening`
 - **Entity type**: `hr_screening`
-- **Context required**: Yes (labels: Background Check ID, BGC ID, Screening ID, Drug Test ID, Urinalysis ID, Disciplinary Action No, Incident No, Warning No, Violation No)
+- **Context required**: Yes (labels: Background Check ID, BGC ID, Screening ID,
+  Drug Test ID, Urinalysis ID, Disciplinary Action No, Incident No, Warning No,
+  Violation No)
 - **Stream supported**: Yes (maxMatchLength: 25)
 - **Validation**: Context label presence, at least one digit required
 
@@ -58,9 +61,12 @@ redactor.redact("Salary: $85,000.00");
 
 - **ID**: `hr_compensation`
 - **Entity type**: `hr_compensation`
-- **Context required**: Yes (labels: Salary, Compensation, Pay, Wage, Earning, Benefits Plan No, Insurance Plan ID, Health-Plan No, 401K Account No, 403B No, IRA No, Retirement Account No, Pension No)
+- **Context required**: Yes (labels: Salary, Compensation, Pay, Wage, Earning,
+  Benefits Plan No, Insurance Plan ID, Health-Plan No, 401K Account No, 403B No,
+  IRA No, Retirement Account No, Pension No)
 - **Stream supported**: Yes (maxMatchLength: 30)
-- **Validation**: Context label presence, dual pattern matching with deduplication
+- **Validation**: Context label presence, dual pattern matching with
+  deduplication
 
 ## hr_recruitment
 
@@ -79,6 +85,9 @@ redactor.redact("Application ID: APP1234567");
 
 - **ID**: `hr_recruitment`
 - **Entity type**: `hr_recruitment`
-- **Context required**: Yes (labels: Application ID, Candidate ID, Applicant No, Application Ref, Resume ID, CV No, Performance ID, Review ID, Appraisal No, Evaluation ID, Training ID, Certification ID, Cert No, Recruiter Ref, Agency ID)
+- **Context required**: Yes (labels: Application ID, Candidate ID, Applicant No,
+  Application Ref, Resume ID, CV No, Performance ID, Review ID, Appraisal No,
+  Evaluation ID, Training ID, Certification ID, Cert No, Recruiter Ref, Agency
+  ID)
 - **Stream supported**: Yes (maxMatchLength: 25)
 - **Validation**: Context label presence, at least one digit required

@@ -110,7 +110,8 @@ const result = redactor.redact("Contact: EMP-123456");
 
 ## Using transformations
 
-Beyond simple redaction, you can mask, remove, format-preserve, or token-replace:
+Beyond simple redaction, you can mask, remove, format-preserve, or
+token-replace:
 
 ```ts
 const redactor = createRedactor({
@@ -130,8 +131,8 @@ See the [Transformations guide](./transformations) for details on each action.
 
 ## AI confirmation
 
-Opt into AI-powered verification to eliminate false positives. Jev confirms
-each detected candidate before redacting:
+Opt into AI-powered verification to eliminate false positives. Jev confirms each
+detected candidate before redacting:
 
 ```ts
 const redactor = createRedactor({
@@ -147,6 +148,5 @@ const result = await redactor.redactAsync("Contact John Smith today");
 // result.detections[0].semanticConfirmed: true
 ```
 
-Sync `redact()` and `stream()` are unaffected. Fails open if the AI provider
-is unavailable. See [AI Confirmation](./semantic-confirmation) for full
-details.
+Sync `redact()` and `stream()` are unaffected. Fails open if the AI provider is
+unavailable. See [AI Confirmation](./semantic-confirmation) for full details.

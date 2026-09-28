@@ -18,7 +18,8 @@ redactor.redact("Send to: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh");
 - **Entity type**: `crypto_address`
 - **Context required**: No
 - **Stream supported**: Yes (maxMatchLength: 95)
-- **Validation**: Format-specific patterns (Bitcoin, Ethereum, Litecoin, Ripple, Cardano, Solana, Cosmos, Tezos, BNB Chain)
+- **Validation**: Format-specific patterns (Bitcoin, Ethereum, Litecoin, Ripple,
+  Cardano, Solana, Cosmos, Tezos, BNB Chain)
 
 ## crypto_tx_hash
 
@@ -30,12 +31,15 @@ const redactor = createRedactor({
   rules: { crypto_tx_hash: { action: "redact" } },
 });
 
-redactor.redact("Tx Hash: 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef");
+redactor.redact(
+  "Tx Hash: 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+);
 // "Tx Hash: [CRYPTO_TX_HASH_1]"
 ```
 
 - **ID**: `crypto_tx_hash`
 - **Entity type**: `crypto_tx_hash`
-- **Context required**: Yes (labels: Transaction, Tx Hash, Transaction ID, Transaction Hash, Blockchain Transaction, TXID)
+- **Context required**: Yes (labels: Transaction, Tx Hash, Transaction ID,
+  Transaction Hash, Blockchain Transaction, TXID)
 - **Stream supported**: Yes (maxMatchLength: 64)
 - **Validation**: Context label presence
