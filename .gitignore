@@ -45,3 +45,4 @@ eval/report-latest.json
 eval/after.json
 .envrc
 keys
+.agents/handoff
