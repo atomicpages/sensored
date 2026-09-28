@@ -10,6 +10,12 @@ export default defineConfig({
   base: "/sensored/",
   cleanUrls: true,
   lastUpdated: true,
+  head: [
+    [
+      "link",
+      { rel: "icon", type: "image/svg+xml", href: "/sensored/favicon.svg" },
+    ],
+  ],
   vite: {
     plugins: [llmstxt()],
   },
@@ -20,6 +26,12 @@ export default defineConfig({
   },
 
   themeConfig: {
+    logo: {
+      light: "/logo-light.svg",
+      dark: "/logo-dark.svg",
+    },
+    siteTitle: false,
+
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
       { text: "Detectors", link: "/detectors/overview" },

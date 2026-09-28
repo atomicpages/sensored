@@ -43,3 +43,4 @@ docs/.vitepress/dist
 docs/.vitepress/cache
 eval/report-latest.json
 eval/after.json
+.envrc

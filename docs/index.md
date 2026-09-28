@@ -5,6 +5,9 @@ hero:
   name: sensored
   text: Streaming-first PII redaction for TypeScript
   tagline: Detect and redact sensitive data with 129 built-in detectors, AI-powered semantic confirmation, and full streaming support.
+  image:
+    src: /logo-light.svg
+    alt: sensored
   actions:
     - theme: brand
       text: Get Started

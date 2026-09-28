@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/horizontal-light.svg" alt="sensored" width="400">
+</p>
+
 # sensored
 
 A streaming-first PII redaction library for TypeScript. Detects and redacts

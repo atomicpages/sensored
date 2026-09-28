@@ -8,13 +8,22 @@ Technical documentation website for the sensored library, built with VitePress
 ```
 docs/
   .vitepress/
-    config.ts          Site config: nav, sidebar, theme, search
-  index.md             Home page (hero layout with feature cards)
+    config.ts          Site config: nav, sidebar, theme, search, logo, favicon
+  index.md             Home page (hero layout with logo and feature cards)
+  public/              Static assets served as-is by VitePress
+    favicon.svg        Favicon (terminal mark icon)
+    logo-light.svg     Horizontal logo for light mode (nav + hero)
+    logo-dark.svg      Horizontal logo for dark mode (nav + hero)
+    social-preview.svg 1280×640 social preview image
   guide/               Human-facing guides (install, quick start, presets, etc.)
   detectors/           Per-domain detector reference pages
   api/                 API reference (types, functions, constants)
   about/               Changelog
 ```
+
+Brand assets also live at the repo root in `assets/` — see
+`assets/README.md` for the full catalog (horizontal, wordmark, icon, and
+social variants in light/dark/mono).
 
 ## Commands
 
@@ -31,7 +40,12 @@ docs/
 - Detector pages follow a consistent format: description, code example, and a
   metadata table (ID, entity type, context, stream, validation).
 - The VitePress config uses `cleanUrls: true` and `lastUpdated: true`.
-- No custom theme — default VitePress theme with dark mode support.
+- The nav bar shows the logo only (`siteTitle: false`) with light/dark
+  variants via `themeConfig.logo`.
+- Favicon is served from `docs/public/favicon.svg` via a `head` link tag
+  in the config (note: the `href` includes the `base` prefix
+  `/sensored/`).
+- Default VitePress theme with dark mode support.
 
 ## Dependencies
 
