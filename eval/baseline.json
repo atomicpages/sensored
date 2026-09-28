@@ -1,7 +1,7 @@
 {
   "version": 1,
   "revision": "independent",
-  "fingerprint": "6fa870735fca06688aa8e99221f2db242ab80282be13634dc232c09620549fc9",
+  "fingerprint": "4e0f38ba3396790c5d1094cf8cdb83e697f83c953dd8d4a0c89de19cedddbf9c",
   "independentReviewed": true,
   "rules": {
     "email": {
