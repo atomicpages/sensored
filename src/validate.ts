@@ -384,6 +384,7 @@ const CONFIG_KEYS = [
   "restore",
   "allowlist",
   "semantic",
+  "detectOnly",
 ] as const;
 
 export function validateConfigShape(

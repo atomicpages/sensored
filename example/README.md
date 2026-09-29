@@ -48,6 +48,55 @@ drop-in logger wrapper. No API keys required.
 bun run logging.ts
 ```
 
+## pino-logging.ts
+
+Redact PII from Pino log records using the `pinoRedact` adapter. Shows how to
+plug sensored into Pino's formatter pipeline. No API keys required.
+
+```bash
+bun run pino-logging.ts
+```
+
+## winston-logging.ts
+
+Redact PII from Winston log records using the `winstonRedact` adapter. Shows
+how to plug sensored into Winston's `format` pipeline. No API keys required.
+
+```bash
+bun run winston-logging.ts
+```
+
+## morgan-logging.ts
+
+Redact PII from Morgan HTTP access logs using the `morganRedact` adapter. Shows
+how to wrap a writable stream so PII in URLs, IPs, and user agents is redacted
+before writing. No API keys required.
+
+```bash
+bun run morgan-logging.ts
+```
+
+## openai-wrapper.ts
+
+Wrap an OpenAI client with `wrapOpenAI` so prompts are automatically redacted
+and responses are automatically restored. Demonstrates both non-streaming and
+streaming modes. Compare with `basic.ts` which uses the streaming redactor
+manually.
+
+```bash
+OPENAI_API_KEY=sk-... bun run openai-wrapper.ts
+```
+
+## anthropic-wrapper.ts
+
+Wrap an Anthropic client with `wrapAnthropic` so prompts are automatically
+redacted and responses are automatically restored. Demonstrates both
+non-streaming and streaming modes.
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-... bun run anthropic-wrapper.ts
+```
+
 ## server.ts
 
 HTTP echo server that redacts PII from request bodies using Bun's built-in

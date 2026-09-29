@@ -4,7 +4,7 @@
  * Requires OPENAI_API_KEY and TYPESAFE_API_KEY.
  *
  * Usage:
- *   OPENAI_API_KEY=sk-... TYPESAFE_API_KEY=... bun run phase2-semantic.ts
+ *   OPENAI_API_KEY=sk-... TYPESAFE_API_KEY=... bun run jev-semantic-matching.ts
  */
 
 import OpenAI from "openai";
@@ -72,7 +72,7 @@ console.log("Sending ticket to OpenAI for case summary...\n");
 
 try {
   const completion = await openai.chat.completions.create({
-    model: env.MODEL,
+    model: env.OPENAI_MODEL,
     messages: [
       { role: "system", content: systemPrompt },
       {

@@ -41,6 +41,7 @@ export type {
   SemanticQuestion,
   SemanticResult,
 } from "./semantic/types";
+export { redactValue } from "./traverse";
 export type {
   ContextHint,
   Detection,
@@ -120,6 +121,7 @@ export function createRedactor(config: RedactorConfig) {
     rules,
     allowlist,
     semantic: semanticConfig,
+    detectOnly,
   } = resolvePolicy(config);
   const limit = config.limits?.maxInputLength ?? MAX_INPUT_LENGTH;
   const restoreEnabled = config.restore ?? false;
@@ -153,7 +155,14 @@ export function createRedactor(config: RedactorConfig) {
       throw new SensoredError("INPUT_LIMIT");
     }
 
-    return processText(text, rules, report, restoreEnabled, allowlist);
+    return processText(
+      text,
+      rules,
+      report,
+      restoreEnabled,
+      allowlist,
+      detectOnly,
+    );
   }
 
   async function processAsync(text: string): Promise<AsyncRedactResult> {
@@ -207,7 +216,8 @@ export function createRedactor(config: RedactorConfig) {
       }
     }
 
-    const restoration = restoreEnabled ? createRestorationContext() : undefined;
+    const restoration =
+      restoreEnabled && !detectOnly ? createRestorationContext() : undefined;
 
     if (candidates.length === 0) {
       const { segments } = renderMatches(
@@ -217,6 +227,7 @@ export function createRedactor(config: RedactorConfig) {
         false,
         0,
         restoration,
+        detectOnly,
       );
 
       return {
@@ -273,6 +284,7 @@ export function createRedactor(config: RedactorConfig) {
       false,
       0,
       restoration,
+      detectOnly,
     );
 
     const detections: SemanticDetection[] = [];
@@ -345,6 +357,7 @@ export function createRedactor(config: RedactorConfig) {
         restore: restoreEnabled,
         ...options,
         allowlist,
+        detectOnly,
       })(chunks);
     },
     restore(text: string, map: RestorationMap): string {

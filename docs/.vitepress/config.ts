@@ -71,6 +71,19 @@ export default defineConfig({
             { text: "Errors", link: "/guide/errors" },
           ],
         },
+        {
+          text: "Integrations",
+          items: [
+            {
+              text: "Logger Redaction",
+              link: "/guide/logger-redaction",
+            },
+            {
+              text: "LLM Prompt Redaction",
+              link: "/guide/llm-prompt-redaction",
+            },
+          ],
+        },
       ],
       "/detectors/": [
         {

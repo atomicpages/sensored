@@ -30,6 +30,11 @@
     "./cli": "./dist/cli/index.mjs",
     "./cli/config": "./dist/cli/config.mjs",
     "./src": "./dist/src/index.mjs",
+    "./providers/anthropic": "./dist/src/adapters/anthropic.mjs",
+    "./providers/openai": "./dist/src/adapters/openai.mjs",
+    "./loggers/morgan": "./dist/src/adapters/morgan.mjs",
+    "./loggers/pino": "./dist/src/adapters/pino.mjs",
+    "./loggers/winston": "./dist/src/adapters/winston.mjs",
     "./package.json": "./package.json"
   },
   "bin": {
@@ -86,6 +91,11 @@
   "peerDependencies": {
     "@typesafe-ai/sdk": "^1.0.0",
     "compromise": "^14.17.0",
+    "pino": "^9.0.0",
+    "winston": "^3.0.0",
+    "openai": "^4.0.0",
+    "@anthropic-ai/sdk": "^0.30.0",
+    "morgan": "^1.10.0",
     "typescript": "^7"
   },
   "peerDependenciesMeta": {
@@ -93,6 +103,21 @@
       "optional": true
     },
     "compromise": {
+      "optional": true
+    },
+    "pino": {
+      "optional": true
+    },
+    "winston": {
+      "optional": true
+    },
+    "openai": {
+      "optional": true
+    },
+    "@anthropic-ai/sdk": {
+      "optional": true
+    },
+    "morgan": {
       "optional": true
     }
   },

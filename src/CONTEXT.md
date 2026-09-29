@@ -547,6 +547,13 @@ to a `Set<string>` for O(1) lookup. Filtering happens after placeholder
 filtering but before rendering, so allowlisted values never appear in
 restoration maps. Works with all actions and in streaming mode.
 
+**Detect-only mode:** `config.detectOnly` (boolean) skips redaction and
+restoration entirely — the redactor runs detectors but returns unmodified
+text. Useful for auditing what PII would be detected without altering the
+output. `detectOnly: true` combined with `restore: true` throws
+`INVALID_CONFIG`. Threaded through `policy.ts`, `engine.ts`, `stream.ts`,
+and all adapters.
+
 `types.ts` holds UTF-16 reports, transformations and the registered detector seam.
 It also defines `ContextHint` (labels, position, window, instructions) and
 `DetectorDescription` (id, entityType, replacement, stream, optional contextHint)
@@ -573,14 +580,33 @@ text, and emits stream events. Supports cancellation (AbortSignal), buffer
 limits (65 536 UTF-16 units), source error wrapping, and opt-in detection
 reporting with absolute offsets. Throws `STREAM_UNSUPPORTED` when any active rule
 lacks stream metadata.
+`traverse.ts` exports `redactValue<T>(input, redactor)` — recursively traverses
+objects, arrays, and symbol-keyed properties, calling `redactor.redact()` on
+every string value. Sensitive field names (password, secret, token,
+authorization, api_key, etc.) are unconditionally redacted to `"[REDACTED]"`
+regardless of content type (strings, numbers, objects, booleans all become
+`"[REDACTED]"`; null/undefined pass through). Never mutates input; uses a
+WeakSet for circular reference safety. Used by logging adapters (pino, winston)
+and LLM adapters (openai, anthropic) to redact structured data.
+`stream-restore.ts` exports `StreamRestorer` — restores placeholders in
+streaming responses where a placeholder may be split across chunk boundaries.
+`push(chunk)` returns restorable text, holding back partial placeholders up to
+`MAX_PARTIAL_LENGTH`. `flush()` emits any remaining held text. Uses `restore()`
+from `restore.ts` and pattern constants from `placeholders.ts`. Used by the
+openai and anthropic streaming adapters.
 `restore.ts` exports the `restore(text, map)` function that reverses redacted
 text back to its original form using a `RestorationMap` (placeholder → original
-value). When `config.restore` is `true`, `redact()` returns `{ text, map }`
+value). Uses `PLACEHOLDER_PATTERN` from `placeholders.ts`. When `config.restore`
+is `true`, `redact()` returns `{ text, map }`
 instead of a plain string; the map uses numbered per-entity-type placeholders
 (e.g. `[EMAIL_1]`, `[PHONE_2]`). Restoration works with all actions (redact, mask, remove, format-preserve,
 token-replace) and is idempotent. The `createRedactor` function uses TypeScript
 overloads so callers with `restore: true` get a `RedactResult` return type while
 callers without it get `string`, preserving backward compatibility.
+`placeholders.ts` exports the shared `PLACEHOLDER_PATTERN` (matches numbered
+placeholders like `[EMAIL_1]`) and `PARTIAL_PATTERN` (matches incomplete
+placeholders split across chunk boundaries). Imported by `restore.ts` and
+`stream-restore.ts` so placeholder format lives in one module.
 
 **Security note:** The `RestorationMap` contains plaintext PII mappings
 (placeholder → original value). The map is frozen via `Object.freeze()` but is

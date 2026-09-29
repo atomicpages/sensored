@@ -60,6 +60,7 @@ export interface RedactorConfig {
   readonly restore?: boolean;
   readonly allowlist?: readonly string[];
   readonly semantic?: SemanticConfig;
+  readonly detectOnly?: boolean;
 }
 
 export interface DetectorDefinition {

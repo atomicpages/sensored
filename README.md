@@ -99,6 +99,81 @@ for await (const event of stream) {
 }
 ```
 
+## Adapters
+
+sensored ships optional adapters for popular logging libraries and LLM
+client SDKs. All adapters are opt-in via optional peer dependencies.
+
+### Logger adapters
+
+Redact PII from structured log records before they're serialized:
+
+```ts
+// Pino
+import pino from "pino";
+import { pinoRedact } from "sensored/loggers/pino";
+
+const logger = pino({
+  ...pinoRedact({ presets: ["pii"], rules: {} }),
+});
+```
+
+```ts
+// Winston
+import winston from "winston";
+import { winstonRedact } from "sensored/loggers/winston";
+
+const redact = winstonRedact({ presets: ["pii"], rules: {} });
+const redactFormat = winston.format((info) => {
+  Object.assign(info, redact(info));
+  return info;
+})();
+```
+
+```ts
+// Morgan
+import { morganRedact } from "sensored/loggers/morgan";
+
+const stream = morganRedact({ presets: ["pii"], rules: {} }, process.stdout);
+```
+
+See the [Logger Redaction guide](https://atomicpages.github.io/sensored/guide/logger-redaction)
+for full setup instructions.
+
+### LLM client wrappers
+
+Redact prompts before sending to LLM APIs and restore placeholders in
+responses automatically:
+
+```ts
+// OpenAI
+import OpenAI from "openai";
+import { wrapOpenAI } from "sensored/providers/openai";
+
+const client = wrapOpenAI(new OpenAI(), { presets: ["pii"], rules: {} });
+const response = await client.chat.completions.create({
+  model: "gpt-4o",
+  messages: [{ role: "user", content: "Email john@example.com about order #123" }],
+});
+// Model receives redacted prompt; response is restored automatically.
+```
+
+```ts
+// Anthropic
+import Anthropic from "@anthropic-ai/sdk";
+import { wrapAnthropic } from "sensored/providers/anthropic";
+
+const client = wrapAnthropic(new Anthropic(), { presets: ["pii"], rules: {} });
+const response = await client.messages.create({
+  model: "claude-sonnet-4-5-20250514",
+  max_tokens: 1024,
+  messages: [{ role: "user", content: "Email alice@example.com" }],
+});
+```
+
+See the [LLM Prompt Redaction guide](https://atomicpages.github.io/sensored/guide/llm-prompt-redaction)
+for streaming, tool calls, and more.
+
 ## Presets
 
 | Preset       | Rules | Use case                            |

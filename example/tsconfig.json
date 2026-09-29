@@ -15,7 +15,12 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "paths": {
-      "sensored": ["../src/index.ts"]
+      "sensored": ["../src/index.ts"],
+      "sensored/loggers/pino": ["../src/adapters/pino.ts"],
+      "sensored/loggers/winston": ["../src/adapters/winston.ts"],
+      "sensored/loggers/morgan": ["../src/adapters/morgan.ts"],
+      "sensored/providers/openai": ["../src/adapters/openai.ts"],
+      "sensored/providers/anthropic": ["../src/adapters/anthropic.ts"]
     },
 
     // Best practices

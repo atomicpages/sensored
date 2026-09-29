@@ -178,6 +178,7 @@ function renderSafePortion(
   report: boolean,
   startCursor: number = 0,
   restoration?: RestorationContext,
+  detectOnly: boolean = false,
 ): {
   segments: RenderedSegment[];
   groups: InspectionGroup[];
@@ -213,13 +214,10 @@ function renderSafePortion(
     }
 
     const { contributors, start, end } = group;
-    const replacement = resolveReplacement(
-      text,
-      contributors,
-      start,
-      end,
-      restoration,
-    );
+
+    const replacement = detectOnly
+      ? text.slice(start, end)
+      : resolveReplacement(text, contributors, start, end, restoration);
 
     if (start > cursor) {
       segments.push({ text: text.slice(cursor, start) });
@@ -310,6 +308,7 @@ export function renderMatches(
   report: boolean,
   startCursor: number = 0,
   restoration?: RestorationContext,
+  detectOnly: boolean = false,
 ): {
   segments: RenderedSegment[];
   groups: InspectionGroup[];
@@ -322,6 +321,7 @@ export function renderMatches(
     report,
     startCursor,
     restoration,
+    detectOnly,
   );
 }
 
@@ -339,6 +339,7 @@ export function detectAndRender(
   startCursor: number = 0,
   restoration?: RestorationContext,
   allowlist: Set<string> = new Set(),
+  detectOnly: boolean = false,
 ): {
   segments: RenderedSegment[];
   groups: InspectionGroup[];
@@ -359,6 +360,7 @@ export function detectAndRender(
     report,
     startCursor,
     restoration,
+    detectOnly,
   );
 }
 
@@ -369,8 +371,10 @@ export function processText(
   report: boolean,
   restore?: boolean,
   allowlist: Set<string> = new Set(),
+  detectOnly: boolean = false,
 ): Inspection & { map?: RestorationMap } {
-  const restoration = restore ? createRestorationContext() : undefined;
+  const restoration =
+    restore && !detectOnly ? createRestorationContext() : undefined;
 
   const { segments, groups } = detectAndRender(
     text,
@@ -380,6 +384,7 @@ export function processText(
     0,
     restoration,
     allowlist,
+    detectOnly,
   );
 
   const result: Inspection & { map?: RestorationMap } = {

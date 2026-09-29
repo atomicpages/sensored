@@ -20,6 +20,7 @@ export function createStream(
   options?: StreamOptions & {
     allowlist?: Set<string>;
     semantic?: unknown;
+    detectOnly?: boolean;
   },
 ): (chunks: AsyncIterable<string>) => AsyncIterable<StreamEvent> {
   for (const rule of rules) {
@@ -31,10 +32,10 @@ export function createStream(
   const report = options?.report ?? false;
   const signal = options?.signal;
   const restoreEnabled = options?.restore ?? false;
+  const detectOnly = options?.detectOnly ?? false;
   const allowlist = options?.allowlist ?? new Set<string>();
-  const restoration: RestorationContext | undefined = restoreEnabled
-    ? createRestorationContext()
-    : undefined;
+  const restoration: RestorationContext | undefined =
+    restoreEnabled && !detectOnly ? createRestorationContext() : undefined;
 
   function adjustForGrapheme(buffer: string, flushPoint: number): number {
     if (flushPoint <= 0) {
@@ -81,6 +82,10 @@ export function createStream(
     for (const segment of segments) {
       if (segment.group !== undefined) {
         const group = segment.group;
+
+        if (detectOnly) {
+          yield { type: "text", text: segment.text };
+        }
 
         yield {
           type: "detection",
@@ -139,6 +144,7 @@ export function createStream(
           consumedCursor,
           restoration,
           allowlist,
+          detectOnly,
         );
 
         if (consumed <= consumedCursor) {
@@ -170,6 +176,7 @@ export function createStream(
           consumedCursor,
           restoration,
           allowlist,
+          detectOnly,
         );
 
         yield* emitSegments(segments, absoluteOffset);

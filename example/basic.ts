@@ -30,7 +30,7 @@ console.log("Sending prompt to OpenAI...\n");
 const streamStart = performance.now();
 
 const completion = await openai.chat.completions.create({
-  model: env.MODEL,
+  model: env.OPENAI_MODEL,
   messages: [{ role: "user", content: prompt }],
   stream: true,
 });

@@ -172,8 +172,15 @@ export function resolvePolicy(config: unknown): {
   rules: ActiveRule[];
   allowlist: Set<string>;
   semantic: SemanticConfig | undefined;
+  detectOnly: boolean;
 } {
   validateConfigShape(config);
+
+  const detectOnly = config.detectOnly ?? false;
+
+  if (detectOnly && config.restore === true) {
+    throw new SensoredError("INVALID_CONFIG", "detectOnly");
+  }
 
   if (config.limits !== undefined) {
     validateLimits(config.limits);
@@ -252,5 +259,6 @@ export function resolvePolicy(config: unknown): {
     rules,
     allowlist,
     semantic: config.semantic,
+    detectOnly,
   };
 }
