@@ -12,6 +12,7 @@ jobs:
       contents: write
       id-token: write
       issues: write
+      pull-requests: write
       packages: write
     environment: npm
     outputs:
@@ -28,19 +29,18 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 'lts/*'
-          registry-url: 'https://registry.npmjs.org'
 
       - run: bun run build
 
       - name: Semantic Release
         id: semantic
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-        run: npx semantic-release
 
   binaries:
     name: Build binaries
