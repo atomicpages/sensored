@@ -19,8 +19,9 @@ transformations. src/email.ts owns email candidate validation. src/types.ts and
 src/detectors.ts define the registered detector/report seam. test/ contains Bun
 regression tests. Each meaningful logic directory has a CONTEXT.md.
 
-The package is published as `sensored` on npm. Versioning is automated via semantic-release (`.releaserc.json`) triggered
-on push to main by `.github/workflows/release.yml`. Conventional commits are
-enforced by commitlint (`commitlint.config.ts`) via a `.husky/commit-msg` hook.
-Interactive commit prompts are available via `bun run cz` (commitizen with
+The package is published as `sensored` on npm. Versioning is automated via
+semantic-release (`.releaserc.json`) triggered on push to main by
+`.github/workflows/release.yml`. Conventional commits are enforced by commitlint
+(`commitlint.config.ts`) via a `.husky/commit-msg` hook. Interactive commit
+prompts are available via `bun run cz` (commitizen with
 `cz-conventional-changelog` adapter, configured in `.czrc`).

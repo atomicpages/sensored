@@ -59,9 +59,8 @@ regex patterns, causing CPU exhaustion.
 
 **Mitigation:** All regex patterns use bounded quantifiers and avoid ambiguous
 nested repetition. Patterns are reviewed during detector onboarding. Input
-length is capped at 1 MiB
-(`src/index.ts:38`); stream buffer is capped at 65,536 UTF-16 units
-(`src/stream.ts:16`).
+length is capped at 1 MiB (`src/index.ts:38`); stream buffer is capped at 65,536
+UTF-16 units (`src/stream.ts:16`).
 
 #### 3. Prototype Pollution
 

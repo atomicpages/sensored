@@ -45,8 +45,8 @@ const redacted = redactor.redact(text);
 ### Semantic confirmation
 
 Opt-in AI-powered verification of detected PII candidates using Jev (TypeSafe
-System One). Reduces false positives by asking a semantic model to confirm
-each candidate before redacting.
+System One). Reduces false positives by asking a semantic model to confirm each
+candidate before redacting.
 
 ```ts
 const redactor = createRedactor({
@@ -208,6 +208,13 @@ bun run build        # build dist/
 bun run eval:generate && bun run eval:score  # run eval suite
 bun run bench        # run benchmarks
 ```
+
+## Acknowledgments
+
+I would be remiss if I didn't give a lot of kudos to
+[sam247](https://github.com/sam247) and their wonderful work on
+[openredaction](https://github.com/sam247/openredaction) of which this project
+is heavily inspired by.
 
 ## License
 
