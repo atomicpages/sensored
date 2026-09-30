@@ -22,16 +22,14 @@ type NlpFunction = (text: string) => {
 
 let nlpFn: NlpFunction | null | undefined;
 
-function getNlp(): NlpFunction | null {
-  if (nlpFn === undefined) {
-    try {
-      const compromise = require("compromise");
-      nlpFn = compromise.default ?? compromise;
-    } catch {
-      nlpFn = null;
-    }
-  }
+try {
+  const compromise = await import("compromise");
+  nlpFn = compromise.default ?? (compromise as unknown as NlpFunction);
+} catch {
+  nlpFn = null;
+}
 
+function getNlp(): NlpFunction | null {
   return nlpFn ?? null;
 }
 

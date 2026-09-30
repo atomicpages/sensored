@@ -1,0 +1,80 @@
+name: Runtime Smoke Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: bun run build
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist/
+
+  node:
+    name: Node.js
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "20"
+      - run: node --input-type=module -e "import { createRedactor } from './dist/src/index.mjs'; const r = createRedactor({ rules: { email: { action: 'redact' }, phone: { action: 'redact' } } }); const out = r.redact('Contact alice@example.com or call 555-123-4567'); if (!out.includes('[EMAIL')) throw new Error('email not redacted'); if (!out.includes('[PHONE')) throw new Error('phone not redacted'); console.log('Node.js smoke: OK', out);"
+
+  deno:
+    name: Deno
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist/
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: lts
+      - run: |
+          cat > smoke.ts << 'EOF'
+          import { createRedactor } from "./dist/src/index.mjs";
+          const r = createRedactor({ rules: { email: { action: "redact" }, phone: { action: "redact" } } });
+          const out = r.redact("Contact alice@example.com or call 555-123-4567");
+          if (!out.includes("[EMAIL")) throw new Error("email not redacted");
+          if (!out.includes("[PHONE")) throw new Error("phone not redacted");
+          console.log("Deno smoke: OK", out);
+          EOF
+          deno run --allow-read smoke.ts
+
+  edge-check:
+    name: Edge/Browser (static analysis)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist/
+      - run: |
+          if grep -rl 'node:' dist/src/; then
+            echo "ERROR: Found node: imports in dist/src/ — core library is not browser/edge compatible"
+            grep -rl 'node:' dist/src/
+            exit 1
+          fi
+          echo "No node: imports found in dist/src/ — browser/edge compatible"

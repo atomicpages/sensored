@@ -1,8 +1,9 @@
 {
+  "include": ["src/", "cli/"],
   "exclude": ["example"],
   "compilerOptions": {
     // Environment setup & latest features
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "WebWorker"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",

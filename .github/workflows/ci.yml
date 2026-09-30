@@ -27,12 +27,28 @@ jobs:
       - run: bun run lint
 
   typecheck:
-    name: Typecheck
+    name: Typecheck (src)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
       - run: bun run typecheck
+
+  typecheck-build:
+    name: Typecheck (build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: bun run typecheck:build
+
+  typecheck-test:
+    name: Typecheck (test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - run: bun run typecheck:test
 
   test:
     name: Test

@@ -12,7 +12,20 @@ confirmation.
 
 ```bash
 bun add sensored
+# or
+npm install sensored
+# or
+deno add npm:sensored
 ```
+
+## Runtime support
+
+sensored runs on Node.js 20+, Bun, Deno, browsers, and edge runtimes
+(Cloudflare Workers, Vercel Edge). The core library has zero runtime-specific
+dependencies. CI smoke tests verify Node.js, Deno, and browser/edge
+compatibility on every push.
+
+> **Note:** The CLI requires Bun. The core library and adapters work everywhere.
 
 For higher-recall person name detection via NER:
 
@@ -300,8 +313,10 @@ documentation.
 
 ```bash
 bun install          # install dependencies
-bun test             # run tests (4835 tests)
-bun run typecheck    # typecheck
+bun test             # run tests (4986 tests)
+bun run typecheck    # typecheck src/ (no Bun types)
+bun run typecheck:build  # typecheck src/ + cli/ (with Bun types)
+bun run typecheck:test   # typecheck tests (with Bun types)
 bun run lint         # lint
 bun run build        # build dist/
 bun run eval:generate && bun run eval:score  # run eval suite
