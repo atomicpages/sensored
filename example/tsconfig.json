@@ -16,9 +16,11 @@
     "noEmit": true,
     "paths": {
       "sensored": ["../src/index.ts"],
-      "sensored/loggers/pino": ["../src/adapters/pino.ts"],
-      "sensored/loggers/winston": ["../src/adapters/winston.ts"],
-      "sensored/loggers/morgan": ["../src/adapters/morgan.ts"],
+      "sensored/loggers/bunyan": ["../src/loggers/bunyan.ts"],
+      "sensored/loggers/log4js": ["../src/loggers/log4js.ts"],
+      "sensored/loggers/morgan": ["../src/loggers/morgan.ts"],
+      "sensored/loggers/pino": ["../src/loggers/pino.ts"],
+      "sensored/loggers/winston": ["../src/loggers/winston.ts"],
       "sensored/providers/openai": ["../src/adapters/openai.ts"],
       "sensored/providers/anthropic": ["../src/adapters/anthropic.ts"]
     },

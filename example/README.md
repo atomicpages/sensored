@@ -76,6 +76,26 @@ before writing. No API keys required.
 bun run morgan-logging.ts
 ```
 
+## bunyan-logging.ts
+
+Redact PII from raw bunyan log records using the `bunyanRedact` adapter. Shows
+how to wrap a destination stream so PII in record fields is redacted before
+JSON serialization and forwarding. No API keys required.
+
+```bash
+bun run bunyan-logging.ts
+```
+
+## log4js-logging.ts
+
+Redact PII from log4js log events using the sensored wrapper appender. Shows
+how to configure a wrapper appender that redacts `loggingEvent.data` items
+before delegating to the wrapped appender. No API keys required.
+
+```bash
+bun run log4js-logging.ts
+```
+
 ## openai-wrapper.ts
 
 Wrap an OpenAI client with `wrapOpenAI` so prompts are automatically redacted

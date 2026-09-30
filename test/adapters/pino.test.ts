@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { pinoRedact } from "../../src/adapters/pino";
+import { pinoRedact } from "../../src/loggers/pino";
 
 describe("pinoRedact", () => {
   const formatter = pinoRedact({

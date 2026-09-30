@@ -1,7 +1,7 @@
 # Logger Redaction
 
-sensored provides adapters for popular Node.js logging libraries. These
-adapters redact PII from structured log records before they're serialized
+sensored provides loggers for popular Node.js logging libraries. These
+loggers redact PII from structured log records before they're serialized
 and written to transports — so sensitive data never leaves your process.
 
 ## Why redact at the logger boundary?
@@ -56,7 +56,7 @@ logger.info(
 
 ### Sensitive field names
 
-The adapter automatically redacts values at sensitive field names
+The logger automatically redacts values at sensitive field names
 regardless of content:
 
 - `password`, `passwd`, `secret`, `token`, `authorization`, `auth`
@@ -184,3 +184,103 @@ redactedStream.write(
 );
 // Output: GET /api/users/[EMAIL_1] 200 [IPV4_1] Mozilla/5.0
 ```
+
+## Bunyan
+
+[`bunyan`](https://github.com/trentm/node-bunyan) is a fast JSON logger for
+Node.js. sensored's `bunyanRedact` wraps a destination stream, intercepts raw
+bunyan log record objects, redacts PII via `redactValue`, JSON.stringifies
+the result, and forwards to the destination stream.
+
+### Install
+
+```bash
+bun add bunyan
+```
+
+### Usage
+
+```ts
+import { bunyanRedact } from "sensored/loggers/bunyan";
+
+const redactStream = bunyanRedact(
+  {
+    presets: ["pii"],
+    rules: {
+      person_name_lite: { action: "redact" },
+      email: { action: "redact" },
+      phone: { action: "redact" },
+    },
+  },
+  process.stdout,
+);
+
+redactStream.write({
+  msg: "User logged in",
+  level: 30,
+  user: "John Smith",
+  email: "john.smith@example.com",
+  phone: "555-867-5309",
+  event: "login",
+});
+// Output: {"msg":"User logged in","level":30,"user":"[PERSON_NAME_1]","email":"[EMAIL_1]","phone":"[PHONE_1]","event":"login"}
+```
+
+The adapter returns a `BunyanRawStream` whose `write()` method accepts a raw
+bunyan record object, redacts it, and forwards the JSON string to the
+destination stream. It returns `true` per the bunyan raw stream convention.
+
+## log4js
+
+[`log4js`](https://github.com/log4js-node/log4js-node) is a port of the
+popular log4j logging framework. sensored's log4js adapter is a wrapper
+appender that redacts PII in `loggingEvent.data` items before delegating to
+the wrapped appender.
+
+### Install
+
+```bash
+bun add log4js
+```
+
+### Usage
+
+```ts
+import log4js from "log4js";
+import { configure } from "sensored/loggers/log4js";
+
+log4js.configure({
+  appenders: {
+    stdout: { type: "stdout" },
+    redacted: {
+      type: "sensored/loggers/log4js",
+      appender: "stdout",
+      redact: {
+        presets: ["pii"],
+        rules: {
+          person_name_lite: { action: "redact" },
+          email: { action: "redact" },
+          phone: { action: "redact" },
+        },
+      },
+    },
+  },
+  categories: {
+    default: { appenders: ["redacted"], level: "info" },
+  },
+});
+
+const logger = log4js.getLogger();
+
+logger.info("User logged in", {
+  user: "John Smith",
+  email: "john.smith@example.com",
+  phone: "555-867-5309",
+});
+// Output: User logged in { user: '[PERSON_NAME_1]', email: '[EMAIL_1]', phone: '[PHONE_1]' }
+```
+
+The wrapper appender resolves the wrapped appender via `findAppender` at call
+time, redacts string args via `redactor.redact()` and object args via
+`redactValue()`, creates a new event with the redacted data (no mutation), and
+delegates to the wrapped appender.

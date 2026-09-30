@@ -137,6 +137,30 @@ import { morganRedact } from "sensored/loggers/morgan";
 const stream = morganRedact({ presets: ["pii"], rules: {} }, process.stdout);
 ```
 
+```ts
+// Bunyan
+import { bunyanRedact } from "sensored/loggers/bunyan";
+
+const stream = bunyanRedact({ presets: ["pii"], rules: {} }, process.stdout);
+```
+
+```ts
+// log4js
+import log4js from "log4js";
+
+log4js.configure({
+  appenders: {
+    stdout: { type: "stdout" },
+    redacted: {
+      type: "sensored/loggers/log4js",
+      appender: "stdout",
+      redact: { presets: ["pii"], rules: {} },
+    },
+  },
+  categories: { default: { appenders: ["redacted"], level: "info" } },
+});
+```
+
 See the [Logger Redaction guide](https://atomicpages.github.io/sensored/guide/logger-redaction)
 for full setup instructions.
 

@@ -50,3 +50,10 @@ Rules:
    alone are not enough.
 5. **Always** keep `docs/` and `README.md` up to date as code changes occur. For
    the README, keep the updates minimal and focused.
+6. **NEVER** use `./src/...` as export keys in `package.json`. The root export
+   is `.` and sub-path exports use clean paths like `./loggers/bunyan`, not
+   `./src/loggers/bunyan`. The `dist/` directory maps source paths to output
+   paths — the export keys must NOT mirror internal source layout. tsdown's
+   `exports: true` auto-generates keys from entry paths (e.g. `src/loggers/bunyan.ts`
+   becomes `./src/loggers/bunyan`), so use `exports.customExports` as a function
+   to remap `./src/...` keys to clean paths on every build.

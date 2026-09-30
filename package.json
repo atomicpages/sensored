@@ -29,12 +29,14 @@
   "exports": {
     "./cli": "./dist/cli/index.mjs",
     "./cli/config": "./dist/cli/config.mjs",
-    "./src": "./dist/src/index.mjs",
-    "./src/adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
-    "./src/adapters/morgan": "./dist/src/adapters/morgan.mjs",
-    "./src/adapters/openai": "./dist/src/adapters/openai.mjs",
-    "./src/adapters/pino": "./dist/src/adapters/pino.mjs",
-    "./src/adapters/winston": "./dist/src/adapters/winston.mjs",
+    ".": "./dist/src/index.mjs",
+    "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
+    "./adapters/openai": "./dist/src/adapters/openai.mjs",
+    "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",
+    "./loggers/log4js": "./dist/src/loggers/log4js.mjs",
+    "./loggers/morgan": "./dist/src/loggers/morgan.mjs",
+    "./loggers/pino": "./dist/src/loggers/pino.mjs",
+    "./loggers/winston": "./dist/src/loggers/winston.mjs",
     "./package.json": "./package.json"
   },
   "bin": {
@@ -95,6 +97,8 @@
     "winston": "^3.0.0",
     "openai": "^4.0.0",
     "@anthropic-ai/sdk": "^0.30.0",
+    "bunyan": "^1.8.0",
+    "log4js": "^6.0.0",
     "morgan": "^1.10.0",
     "typescript": "^7"
   },
@@ -115,6 +119,12 @@
       "optional": true
     },
     "@anthropic-ai/sdk": {
+      "optional": true
+    },
+    "bunyan": {
+      "optional": true
+    },
+    "log4js": {
       "optional": true
     },
     "morgan": {

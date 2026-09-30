@@ -1,5 +1,5 @@
+import { createLogRedactor } from "../adapters/shared";
 import type { RedactorConfig } from "../types";
-import { createLogRedactor } from "./shared";
 
 export function winstonRedact(
   config: RedactorConfig,
