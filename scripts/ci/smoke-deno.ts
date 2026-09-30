@@ -1,4 +1,4 @@
-import { createRedactor } from "./dist/src/index.mjs";
+import { createRedactor } from "../../dist/src/index.mjs";
 
 const r = createRedactor({
   rules: {
