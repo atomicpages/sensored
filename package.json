@@ -1,6 +1,6 @@
 {
   "name": "sensored",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A streaming-first PII redaction library for TypeScript",
   "keywords": [
     "pii",

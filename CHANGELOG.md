@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/atomicpages/sensored/compare/v1.2.0...v1.3.0) (2026-09-30)
+
+
+### Features
+
+* add browser playground and lazy person_name NER loader ([#3](https://github.com/atomicpages/sensored/issues/3)) ([3654be6](https://github.com/atomicpages/sensored/commit/3654be68cf7eca73350927c7d1bb7686308ac908))
+
 # [1.2.0](https://github.com/atomicpages/sensored/compare/v1.1.0...v1.2.0) (2026-09-30)
 
 
