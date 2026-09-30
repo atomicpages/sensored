@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { winstonRedact } from "../../src/adapters/winston";
+import { winstonRedact } from "../../src/loggers/winston";
 
 describe("winstonRedact", () => {
   const transform = winstonRedact({

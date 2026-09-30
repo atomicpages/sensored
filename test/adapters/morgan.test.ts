@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { morganRedact } from "../../src/adapters/morgan";
+import { morganRedact } from "../../src/loggers/morgan";
 
 describe("morganRedact", () => {
   const stream = {

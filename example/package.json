@@ -15,19 +15,24 @@
     "run:pino": "bun run pino-logging.ts",
     "run:winston": "bun run winston-logging.ts",
     "run:morgan": "bun run morgan-logging.ts",
+    "run:bunyan": "bun run bunyan-logging.ts",
+    "run:log4js": "bun run log4js-logging.ts",
     "run:openai-wrapper": "bun run openai-wrapper.ts",
     "run:anthropic-wrapper": "bun run anthropic-wrapper.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/morgan": "1.9.9"
+    "@types/morgan": "1.9.9",
+    "@types/bunyan": "1.8.9"
   },
   "peerDependencies": {
     "typescript": "^7"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.39.0",
+    "bunyan": "1.8.15",
     "envalid": "8.2.0",
+    "log4js": "6.9.1",
     "morgan": "1.10.0",
     "openai": "7.23.0",
     "pino": "9.5.0",
