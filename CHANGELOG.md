@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/atomicpages/sensored/compare/v1.1.0...v1.2.0) (2026-09-30)
+
+
+### Features
+
+* multi-runtime support (Node.js, Bun, Deno, browser, edge) ([#2](https://github.com/atomicpages/sensored/issues/2)) ([7eeae65](https://github.com/atomicpages/sensored/commit/7eeae6527d16efadc8d47588955dd0189aedee73))
+
 # [1.1.0](https://github.com/atomicpages/sensored/compare/v1.0.0...v1.1.0) (2026-09-30)
 
 
