@@ -1,4 +1,8 @@
-import { createRedactor, type Redactor } from "../src/index";
+import {
+  createRedactor,
+  preloadPersonNameDetector,
+  type Redactor,
+} from "../src/index";
 import type { RedactorConfig, RestorationMap, RuleSetting } from "../src/types";
 import { printError, printUsageError } from "./errors";
 import {
@@ -65,7 +69,7 @@ export async function writeRestoreMap(
   map: RestorationMap | undefined,
   mapPath: string,
 ): Promise<void> {
-  await Bun.write(mapPath, JSON.stringify(map ?? {}, null, 2) + "\n");
+  await Bun.write(mapPath, `${JSON.stringify(map ?? {}, null, 2)}\n`);
 }
 
 export interface BuildRedactorResult {
@@ -134,6 +138,10 @@ export async function buildRedactor(
 
   try {
     redactor = createRedactor(config);
+
+    if (redactor.describe().some((detector) => detector.id === "person_name")) {
+      await preloadPersonNameDetector();
+    }
   } catch (err) {
     printError(`invalid configuration: ${errorMessage(err)}`);
   }

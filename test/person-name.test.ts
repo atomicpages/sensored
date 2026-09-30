@@ -1,11 +1,27 @@
-import { describe, expect, test } from "bun:test";
-import { createRedactor, SensoredError } from "../src";
+import { beforeAll, describe, expect, test } from "bun:test";
+import {
+  createRedactor,
+  preloadPersonNameDetector,
+  SensoredError,
+} from "../src";
 
 const redactor = createRedactor({
   rules: { person_name: { action: "redact" } },
 });
 
 describe("person-name complete-string processing", () => {
+  beforeAll(async () => {
+    await preloadPersonNameDetector();
+  });
+
+  test("deduplicates dependency loading", async () => {
+    const first = preloadPersonNameDetector();
+    const second = preloadPersonNameDetector();
+
+    expect(first).toBe(second);
+    await first;
+  });
+
   test.each([
     ["Name: John Smith", "Name: [PERSON_NAME]"],
     ["Dr. Jane Doe is here", "[PERSON_NAME] is here"],

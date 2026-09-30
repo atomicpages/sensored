@@ -18,18 +18,17 @@ import type {
 import { createStream } from "./stream";
 import type {
   ContextHint,
-  Detection,
   DetectorDescription,
   Inspection,
   RedactorConfig,
   RedactResult,
   RestorationMap,
-  SemanticConfig,
   StreamEvent,
   StreamOptions,
 } from "./types";
 
 export { Detector } from "./detectors/base";
+export { preloadPersonNameDetector } from "./detectors/person/person-name";
 export { employeeIdExample } from "./employee-id";
 export type { ErrorCode, ProblemDetails } from "./errors";
 export { SensoredError } from "./errors";

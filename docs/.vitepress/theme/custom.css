@@ -1,0 +1,13 @@
+.playground-page .VPDoc:not(.has-sidebar) .content {
+  max-width: 1248px;
+}
+
+.playground-page .VPDoc:not(.has-sidebar) .content-container {
+  max-width: 1200px;
+}
+
+@media (max-width: 760px) {
+  .playground-page .VPDoc {
+    padding-inline: 12px;
+  }
+}

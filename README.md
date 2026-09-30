@@ -8,6 +8,9 @@ A streaming-first PII redaction library for TypeScript. Detects and redacts
 sensitive data with 129 regex detectors, optional NER, and AI-powered semantic
 confirmation.
 
+[Try the browser playground](https://atomicpages.github.io/sensored/playground)
+— input is processed locally and never uploaded.
+
 ## Install
 
 ```bash
@@ -40,8 +43,20 @@ bun add @typesafe-ai/sdk
 ```
 
 The default `person_name_lite` detector uses a lightweight regex + bloom filter
-with zero runtime dependencies. Use `person_name` to opt into compromise.js NER,
-or add `@typesafe-ai/sdk` to let Jev confirm detections before redacting.
+with zero runtime dependencies. Use `person_name` to opt into compromise.js NER:
+
+```ts
+import { createRedactor, preloadPersonNameDetector } from "sensored";
+
+await preloadPersonNameDetector();
+
+const redactor = createRedactor({
+  rules: { person_name: { action: "redact" } },
+});
+```
+
+The dependency loads only when preloaded. Alternatively, add
+`@typesafe-ai/sdk` to let Jev confirm detections before redacting.
 
 ## Quick start
 
