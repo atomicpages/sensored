@@ -18,6 +18,7 @@ export default defineConfig({
   exports: {
     customExports(generated) {
       const clean: Record<string, string> = {};
+
       for (const [key, value] of Object.entries(generated)) {
         if (key === "./src") {
           clean["."] = value;
@@ -27,6 +28,7 @@ export default defineConfig({
           clean[key] = value;
         }
       }
+
       return clean;
     },
   },

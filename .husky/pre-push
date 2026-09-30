@@ -2,3 +2,5 @@ bun audit
 bun test --randomize
 bun lint
 bun typecheck
+bun typecheck:build
+bun typecheck:test

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["test/", "cli/test/", "eval/", "bench/"],
+  "exclude": ["example"],
+  "compilerOptions": {
+    "types": ["bun"],
+    "lib": ["ESNext"]
+  }
+}

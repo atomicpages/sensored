@@ -12,7 +12,13 @@
     "pci-dss",
     "security",
     "compliance",
-    "streaming"
+    "streaming",
+    "browser",
+    "edge",
+    "deno",
+    "cloudflare-workers",
+    "isomorphic",
+    "universal"
   ],
   "homepage": "https://github.com/atomicpages/sensored",
   "bugs": {
@@ -24,6 +30,9 @@
   },
   "license": "MIT",
   "author": "Dennis Thompson",
+  "engines": {
+    "node": ">=20"
+  },
   "sideEffects": false,
   "type": "module",
   "exports": {
@@ -59,7 +68,9 @@
     "lint": "biome check . --fix --diagnostic-level error",
     "prepare": "husky",
     "test": "bun test --randomize",
-    "typecheck": "tsc --noEmit --incremental"
+    "typecheck": "tsc --noEmit --incremental -p tsconfig.src.json",
+    "typecheck:build": "tsc --noEmit --incremental",
+    "typecheck:test": "tsc --noEmit --incremental -p tsconfig.test.json"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",

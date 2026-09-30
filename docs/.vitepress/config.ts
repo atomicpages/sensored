@@ -46,6 +46,7 @@ export default defineConfig({
           items: [
             { text: "Installation", link: "/guide/getting-started" },
             { text: "Quick Start", link: "/guide/quick-start" },
+            { text: "Runtime Support", link: "/guide/runtime-support" },
           ],
         },
         {
