@@ -35,7 +35,7 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "20"
-      - run: node --input-type=module -e "import { createRedactor } from './dist/src/index.mjs'; const r = createRedactor({ rules: { email: { action: 'redact' }, phone: { action: 'redact' } } }); const out = r.redact('Contact alice@example.com or call 555-123-4567'); if (!out.includes('[EMAIL')) throw new Error('email not redacted'); if (!out.includes('[PHONE')) throw new Error('phone not redacted'); console.log('Node.js smoke: OK', out);"
+      - run: node scripts/ci/smoke-node.mjs
 
   deno:
     name: Deno
@@ -50,16 +50,7 @@ jobs:
       - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with:
           deno-version: lts
-      - run: |
-          cat > smoke.ts << 'EOF'
-          import { createRedactor } from "./dist/src/index.mjs";
-          const r = createRedactor({ rules: { email: { action: "redact" }, phone: { action: "redact" } } });
-          const out = r.redact("Contact alice@example.com or call 555-123-4567");
-          if (!out.includes("[EMAIL")) throw new Error("email not redacted");
-          if (!out.includes("[PHONE")) throw new Error("phone not redacted");
-          console.log("Deno smoke: OK", out);
-          EOF
-          deno run --allow-read smoke.ts
+      - run: deno run --allow-read scripts/ci/smoke-deno.ts
 
   edge-check:
     name: Edge/Browser (static analysis)
@@ -71,10 +62,4 @@ jobs:
         with:
           name: dist
           path: dist/
-      - run: |
-          if grep -rl 'node:' dist/src/; then
-            echo "ERROR: Found node: imports in dist/src/ — core library is not browser/edge compatible"
-            grep -rl 'node:' dist/src/
-            exit 1
-          fi
-          echo "No node: imports found in dist/src/ — browser/edge compatible"
+      - run: bash scripts/ci/smoke-edge.sh
