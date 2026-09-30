@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/atomicpages/sensored/compare/v1.0.0...v1.1.0) (2026-09-30)
+
+
+### Features
+
+* add bunyan and log4js logger adapters, move loggers to src/loggers/ ([#1](https://github.com/atomicpages/sensored/issues/1)) ([47c2955](https://github.com/atomicpages/sensored/commit/47c2955ccb2daf8eb717d8ceb65fcf1d70b00735))
+
 # 1.0.0 (2026-09-29)
 
 
