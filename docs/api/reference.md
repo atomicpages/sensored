@@ -438,6 +438,19 @@ import { listDetectors } from "sensored";
 function listDetectors(): readonly DetectorDescription[];
 ```
 
+### preloadPersonNameDetector
+
+Loads the optional `compromise` dependency for the `person_name` NER detector.
+Concurrent and repeated calls share one import.
+
+```ts
+import { preloadPersonNameDetector } from "sensored";
+
+function preloadPersonNameDetector(): Promise<void>;
+
+await preloadPersonNameDetector();
+```
+
 ### restore
 
 Restores redacted text using a restoration map. Can be used without a redactor
@@ -471,6 +484,7 @@ export { createRedactor };
 
 // Standalone functions
 export { listDetectors };
+export { preloadPersonNameDetector };
 export { restore };
 
 // Error class and types

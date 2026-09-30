@@ -61,3 +61,5 @@ features:
       candidates before redacting. Eliminates false positives without
       sacrificing recall. 100% precision in independent evaluation.
 ---
+
+<SensoredPlayground mode="compact" />

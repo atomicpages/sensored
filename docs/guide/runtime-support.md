@@ -54,9 +54,21 @@ Bundlers (Vite, webpack, esbuild) will pick up the ESM build automatically.
 ### person_name detector
 
 The `person_name` detector uses `compromise` for NER, which is an optional
-peer dependency. It loads via dynamic `import()` and works in all runtimes.
-If `compromise` is not installed, the detector throws `INVALID_CONFIG` when
-activated.
+peer dependency. Load it explicitly before creating a redactor that enables
+`person_name`:
+
+```ts
+import { createRedactor, preloadPersonNameDetector } from "sensored";
+
+await preloadPersonNameDetector();
+
+const redactor = createRedactor({
+  rules: { person_name: { action: "redact" } },
+});
+```
+
+The dynamic import runs once, only when requested. If `compromise` is not
+installed, preloading rejects with `INVALID_CONFIG`.
 
 ### Semantic confirmation
 

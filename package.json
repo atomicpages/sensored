@@ -83,6 +83,7 @@
     "@semantic-release/github": "^12.0.10",
     "@semantic-release/npm": "^13.2.0",
     "@semantic-release/release-notes-generator": "^14.1.1",
+    "@speed-highlight/core": "^2.1.0",
     "@types/bun": "1.4.2",
     "@typesafe-ai/sdk": "^0.6.0",
     "citty": "^0.2.2",

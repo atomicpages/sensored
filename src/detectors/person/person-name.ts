@@ -20,14 +20,29 @@ type NlpFunction = (text: string) => {
   };
 };
 
-let nlpFn: NlpFunction | null | undefined;
+let nlpFn: NlpFunction | undefined;
+let loadPromise: Promise<void> | undefined;
 
-try {
-  const compromise = await import("compromise");
-  nlpFn = compromise.default ?? (compromise as unknown as NlpFunction);
-} catch {
-  nlpFn = null;
+export function preloadPersonNameDetector(): Promise<void> {
+  if (loadPromise === undefined) {
+    loadPromise = import("compromise")
+      .then((compromise) => {
+        // compromise's types don't expose the callable signature directly
+        nlpFn = compromise.default ?? (compromise as unknown as NlpFunction);
+      })
+      .catch(() => {
+        throw new SensoredError("INVALID_CONFIG", "person_name", {
+          dependency: "compromise",
+          install: "bun add compromise",
+          preload: "await preloadPersonNameDetector()",
+        });
+      });
+  }
+
+  return loadPromise;
 }
+
+void preloadPersonNameDetector().catch(() => {});
 
 function getNlp(): NlpFunction | null {
   return nlpFn ?? null;
@@ -54,6 +69,7 @@ export class PersonNameDetector extends Detector {
       throw new SensoredError("INVALID_CONFIG", "person_name", {
         dependency: "compromise",
         install: "bun add compromise",
+        preload: "await preloadPersonNameDetector()",
       });
     }
 

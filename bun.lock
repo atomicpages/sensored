@@ -15,6 +15,7 @@
         "@semantic-release/github": "^12.0.10",
         "@semantic-release/npm": "^13.2.0",
         "@semantic-release/release-notes-generator": "^14.1.1",
+        "@speed-highlight/core": "^2.1.0",
         "@types/bun": "1.4.2",
         "@typesafe-ai/sdk": "^0.6.0",
         "citty": "^0.2.2",
@@ -34,13 +35,27 @@
         "wikidata-names": "^1.0.0",
       },
       "peerDependencies": {
+        "@anthropic-ai/sdk": "^0.30.0",
         "@typesafe-ai/sdk": "^1.0.0",
+        "bunyan": "^1.8.0",
         "compromise": "^14.17.0",
+        "log4js": "^6.0.0",
+        "morgan": "^1.10.0",
+        "openai": "^4.0.0",
+        "pino": "^9.0.0",
         "typescript": "^7",
+        "winston": "^3.0.0",
       },
       "optionalPeers": [
+        "@anthropic-ai/sdk",
         "@typesafe-ai/sdk",
+        "bunyan",
         "compromise",
+        "log4js",
+        "morgan",
+        "openai",
+        "pino",
+        "winston",
       ],
     },
   },
@@ -254,6 +269,8 @@
     "@sindresorhus/is": ["@sindresorhus/is@4.6.0", "", {}, "sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw=="],
 
     "@sindresorhus/merge-streams": ["@sindresorhus/merge-streams@4.0.0", "", {}, "sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ=="],
+
+    "@speed-highlight/core": ["@speed-highlight/core@2.1.0", "", {}, "sha512-KLoDVy82Hm3N09SLf1L5HoqPo+oIPsPn6C5K3Iz3VTSFygs6vV1Rn3kLyV+D5uyMW3wXtGGFzfJ+kKcFtSSBUQ=="],
 
     "@types/bun": ["@types/bun@1.4.2", "", { "dependencies": { "bun-types": "1.4.2" } }, "sha512-GimotNn7+ZV0uVArItBbriZsR1oNf0+WTzPkdcFrzShI7k2norL0uzEaJT8T33dWr7O/c9ZDuAFQrctKCi72oQ=="],
 

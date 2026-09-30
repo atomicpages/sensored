@@ -3,11 +3,14 @@ import llmstxt, {
   copyOrDownloadAsMarkdownButtons,
 } from "vitepress-plugin-llms";
 
+const sensoredEntry = new URL("../../src/index.ts", import.meta.url).pathname;
+
 export default defineConfig({
   lang: "en-US",
   title: "sensored",
   description: "Streaming-first PII redaction library for TypeScript",
   base: "/sensored/",
+  srcExclude: ["internal/**"],
   cleanUrls: true,
   lastUpdated: true,
   head: [
@@ -18,6 +21,11 @@ export default defineConfig({
   ],
   vite: {
     plugins: [llmstxt()],
+    resolve: {
+      alias: {
+        "@sensored-core": sensoredEntry,
+      },
+    },
   },
   markdown: {
     config(md) {
@@ -33,6 +41,7 @@ export default defineConfig({
     siteTitle: false,
 
     nav: [
+      { text: "Playground", link: "/playground" },
       { text: "Guide", link: "/guide/getting-started" },
       { text: "Detectors", link: "/detectors/overview" },
       { text: "API", link: "/api/reference" },
