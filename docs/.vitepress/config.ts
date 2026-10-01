@@ -78,6 +78,7 @@ export default defineConfig({
             { text: "LLM Steering", link: "/guide/llm-steering" },
             { text: "Streaming", link: "/guide/streaming" },
             { text: "Restoration", link: "/guide/restoration" },
+            { text: "Flag Mode", link: "/guide/flag-mode" },
             { text: "Errors", link: "/guide/errors" },
           ],
         },
