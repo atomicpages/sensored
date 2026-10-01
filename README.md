@@ -9,7 +9,7 @@ sensitive data with 129 regex detectors, optional NER, and AI-powered semantic
 confirmation.
 
 [Try the browser playground](https://atomicpages.github.io/sensored/playground)
-— input is processed locally and never uploaded.
+— presets provide relevant sample input, processed locally and never uploaded.
 
 ## Install
 

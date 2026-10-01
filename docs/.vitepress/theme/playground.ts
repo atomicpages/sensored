@@ -24,6 +24,65 @@ export const PLAYGROUND_ACTIONS = [
 export type PlaygroundPreset = (typeof PLAYGROUND_PRESETS)[number];
 export type PlaygroundAction = (typeof PLAYGROUND_ACTIONS)[number];
 
+export const PLAYGROUND_TEMPLATES = Object.freeze({
+  pii: `Customer: Dr. Maya Chen.
+Email: maya.chen@example.com
+Phone: +1 415-555-0136
+Card: 4242 4242 4242 4242
+IP: 203.0.113.42
+Authorization: Bearer ghp_1234567890abcdefghijklmnopqrstuvwxyz
+SSN: 078-05-1120`,
+  gdpr: `Data subject: Elena Fischer
+Email: elena.fischer@example.eu
+Phone: +49 30 901820
+IBAN: DE89370400440532013000
+Address: 12 Friedrichstrasse, 10117 Berlin`,
+  hipaa: `Patient: Jordan Lee
+MRN: 12345678
+Email: jordan.lee@example.com
+Phone: +1 617-555-0142
+SSN: 078-05-1120
+Health Insurance ID: ABC123456789`,
+  ccpa: `California consumer: Sofia Ramirez
+Email: sofia.ramirez@example.com
+Phone: +1 310-555-0175
+Address: 123 Market Street, San Francisco, CA 94105
+Device IMEI: 490154203237518`,
+  "pci-dss": `Cardholder: Alex Morgan
+Card number: 4242 4242 4242 4242
+CVV: 123
+Payment token: tok_123456789012345678901234
+Transaction ID: TXN-ID 12345678`,
+  healthcare: `Patient: Priya Shah
+Medical Record Number: 87654321
+NPI: 1234567893
+Diagnosis code: A00
+Clinical trial participant ID: AB1234
+Email: priya.shah@example.com`,
+  finance: `Account holder: Marcus Green
+IBAN: GB82WEST12345698765432
+SWIFT/BIC: DEUTDEFF
+Routing number: 021000021
+Card: 4242 4242 4242 4242
+Transaction ID: TXN-ID 87654321`,
+  education: `Student: Taylor Brooks
+Email: taylor.brooks@example.edu
+Phone: +1 202-555-0186
+SSN: 078-05-1120
+Passport: 123456789`,
+  soc2: `Incident owner: Morgan Chen
+Email: morgan.chen@example.com
+Source IP: 203.0.113.42
+AWS access key: AKIAIOSFODNN7EXAMPLE
+GitHub token: ghp_1234567890abcdefghijklmnopqrstuvwxyz
+Card: 4242 4242 4242 4242`,
+  security: `Source IP: 203.0.113.42
+MAC address: 00:1A:2B:3C:4D:5E
+AWS access key: AKIAIOSFODNN7EXAMPLE
+GitHub token: ghp_1234567890abcdefghijklmnopqrstuvwxyz
+API key: sk_test_1234567890abcdefghijklmnop`,
+} satisfies Readonly<Record<PlaygroundPreset, string>>);
+
 export interface PlaygroundState {
   readonly input: string;
   readonly preset: PlaygroundPreset;
@@ -52,13 +111,7 @@ type PlaygroundRule =
   | { readonly action: "redact"; readonly priority?: number }
   | { readonly action: Exclude<PlaygroundAction, "redact"> };
 
-export const PLAYGROUND_SAMPLE = `Customer: Dr. Maya Chen.
-Email: maya.chen@example.com
-Phone: +1 415-555-0136
-Card: 4242 4242 4242 4242
-IP: 203.0.113.42
-Authorization: Bearer ghp_1234567890abcdefghijklmnopqrstuvwxyz
-SSN: 078-05-1120`;
+export const PLAYGROUND_SAMPLE = PLAYGROUND_TEMPLATES.pii;
 
 export const PLAYGROUND_SAMPLE_OUTPUT = `Customer: [PERSON_NAME].
 Email: [EMAIL]
@@ -84,9 +137,11 @@ export function createPlaygroundState(
 export function changePreset(
   state: PlaygroundState,
   preset: PlaygroundPreset,
+  inputChanged = false,
 ): PlaygroundState {
   return {
     ...state,
+    input: inputChanged ? state.input : PLAYGROUND_TEMPLATES[preset],
     preset,
     disabledDetectors: new Set(),
     nerEnabled: false,

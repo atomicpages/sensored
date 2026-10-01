@@ -6,8 +6,10 @@ import {
   createPlaygroundState,
   generatePlaygroundCode,
   PLAYGROUND_INPUT_LIMIT,
+  PLAYGROUND_PRESETS,
   PLAYGROUND_SAMPLE,
   PLAYGROUND_SAMPLE_OUTPUT,
+  PLAYGROUND_TEMPLATES,
   parseAllowlist,
   validatePlaygroundInput,
 } from "../docs/.vitepress/theme/playground";
@@ -32,18 +34,40 @@ describe("playground state", () => {
     expect(redactor.redact(PLAYGROUND_SAMPLE)).toBe(PLAYGROUND_SAMPLE_OUTPUT);
   });
 
-  test("changing preset resets detector overrides and NER only", () => {
+  test("provides a matching template for every preset", () => {
+    expect(Object.keys(PLAYGROUND_TEMPLATES)).toEqual([...PLAYGROUND_PRESETS]);
+
+    for (const preset of PLAYGROUND_PRESETS) {
+      const redactor = createRedactor({ presets: [preset], rules: {} });
+
+      expect(redactor.redact(PLAYGROUND_TEMPLATES[preset])).not.toBe(
+        PLAYGROUND_TEMPLATES[preset],
+      );
+    }
+  });
+
+  test("changing preset replaces pristine template input", () => {
+    const hipaa = changePreset(createPlaygroundState(), "hipaa");
+    const finance = changePreset(hipaa, "finance");
+
+    expect(hipaa.input).toBe(PLAYGROUND_TEMPLATES.hipaa);
+    expect(finance.input).toBe(PLAYGROUND_TEMPLATES.finance);
+  });
+
+  test("changing preset preserves user-modified input", () => {
     const state = {
       ...createPlaygroundState(),
+      input: "Keep this custom input",
       action: "mask" as const,
       allowlist: ["example.com"],
       disabledDetectors: new Set(["email"]),
       nerEnabled: true,
     };
 
-    const changed = changePreset(state, "hipaa");
+    const changed = changePreset(state, "hipaa", true);
 
     expect(changed).toMatchObject({
+      input: "Keep this custom input",
       preset: "hipaa",
       action: "mask",
       allowlist: ["example.com"],

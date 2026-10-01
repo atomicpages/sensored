@@ -56,6 +56,9 @@ light/dark/mono).
 - The homepage embeds `SensoredPlayground` in compact mode; `/playground`
   renders full controls. Both modes run entirely in the browser, cap input at
   50,000 UTF-16 code units, and never persist or transmit user text.
+- Each built-in preset has matching sample input. Preset changes replace the
+  sample until the user edits or clears the input; user-modified and handed-off
+  input is preserved.
 - `config.ts` aliases `@sensored-core` to `src/index.ts`. The component imports
   that alias dynamically near viewport entry, keeping the redactor out of the
   initial page chunk. The optional `compromise` NER dependency loads only after

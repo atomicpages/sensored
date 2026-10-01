@@ -10,6 +10,7 @@ import {
 } from "vue";
 import {
   buildPlaygroundRules,
+  changePreset,
   createMatchDetails,
   createPlaygroundState,
   generatePlaygroundCode,
@@ -18,7 +19,6 @@ import {
   PLAYGROUND_ACTIONS,
   PLAYGROUND_INPUT_LIMIT,
   PLAYGROUND_PRESETS,
-  PLAYGROUND_SAMPLE,
   PLAYGROUND_SAMPLE_OUTPUT,
   type PlaygroundAction,
   type PlaygroundPreset,
@@ -43,6 +43,7 @@ const router = useRouter();
 const initialState = createPlaygroundState();
 const root = ref<HTMLElement>();
 const input = ref(initialState.input);
+const inputChanged = ref(false);
 const preset = ref<PlaygroundPreset>(initialState.preset);
 const action = ref<PlaygroundAction>(initialState.action);
 const output = ref(PLAYGROUND_SAMPLE_OUTPUT);
@@ -112,6 +113,7 @@ onMounted(() => {
 
     if (handoff !== undefined) {
       input.value = handoff.input;
+      inputChanged.value = true;
       preset.value = handoff.preset;
       action.value = handoff.action;
     }
@@ -156,8 +158,15 @@ watch(generatedCode, () => {
 });
 
 watch(preset, async () => {
-  disabledDetectorIds.value = new Set();
-  nerEnabled.value = false;
+  const state = changePreset(
+    currentState(),
+    preset.value,
+    inputChanged.value,
+  );
+
+  input.value = state.input;
+  disabledDetectorIds.value = state.disabledDetectors;
+  nerEnabled.value = state.nerEnabled;
 
   if (ready.value) {
     await refreshDetectors();
@@ -322,6 +331,7 @@ function removeAllowlistEntry(entry: string): void {
 function resetPlayground(): void {
   const state = createPlaygroundState();
   input.value = state.input;
+  inputChanged.value = false;
   preset.value = state.preset;
   action.value = state.action;
   allowlist.value = [];
@@ -331,6 +341,11 @@ function resetPlayground(): void {
 
 function clearInput(): void {
   input.value = "";
+  inputChanged.value = true;
+}
+
+function markInputChanged(): void {
+  inputChanged.value = true;
 }
 
 function openFullPlayground(): void {
@@ -574,6 +589,7 @@ async function highlightGeneratedCode(): Promise<void> {
           v-model="input"
           spellcheck="false"
           :maxlength="PLAYGROUND_INPUT_LIMIT + 1"
+          @input="markInputChanged"
         />
       </section>
 
