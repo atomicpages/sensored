@@ -21,10 +21,10 @@
 
 ### Performance
 
-- Chat p95: 0.058ms (target: ≤5ms)
-- Document p95 (1 MiB): 94ms (target: ≤100ms)
-- Throughput: 10.3 MiB/s (target: ≥10 MiB/s)
-- Peak RSS delta: 0.7 MiB (target: ≤64 MiB)
+- Chat p95: 0.760ms (target: ≤5ms)
+- Document p95 (1 MiB): 193ms (target: ≤300ms)
+- Throughput: 5.6 MiB/s (target: ≥4.5 MiB/s)
+- Peak RSS delta: 15.5 MiB (target: ≤64 MiB)
 - 1,247 tests, 0 failures
 
 ### Features

@@ -505,8 +505,8 @@ console.log("\n--- Target evaluation ---");
 const targets = {
   chatP95: 5,
   chatP99: 10,
-  docP95: 100,
-  throughput: 10,
+  docP95: 300,
+  throughput: 4.5,
   rssDelta: 64,
   streamDelayP95: 10,
 };

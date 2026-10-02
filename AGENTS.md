@@ -40,20 +40,28 @@ Rules:
 
 1. When you are responding to user inquiries do not write a wall of text. Keep
    your responses short and to the point. Do not cater to people's egos.
-2. This project uses bun as a runtime. Use it. Do not recommend node.js. Do not
+2. **NEVER** introduce breaking changes to the public API without explicit
+   approval. This is a FOSS project — consumers depend on stable interfaces.
+   If a breaking change is unavoidable, document it clearly and bump the major
+   version.
+3. This project uses bun as a runtime. Use it. Do not recommend node.js. Do not
    recommend Deno. You use bun and bun built-ins. Period. Use the `bun` skill,
    and if you cannot find what you need, then search the web.
-3. No unsafe typecasts `as any` or `as unknown as ...` unless absolutely
+4. No unsafe typecasts `as any` or `as unknown as ...` unless absolutely
    necessary. If you perform an unsafe typecast you MUST provide a clear
    justification.
-4. When in plan mode, ALWAYS show example code for illustrative purposes. Words
+5. When in plan mode, ALWAYS show example code for illustrative purposes. Words
    alone are not enough.
-5. **Always** keep `docs/` and `README.md` up to date as code changes occur. For
+6. **Always** keep `docs/` and `README.md` up to date as code changes occur. For
    the README, keep the updates minimal and focused.
-6. **NEVER** use `./src/...` as export keys in `package.json`. The root export
+7. **NEVER** use `./src/...` as export keys in `package.json`. The root export
    is `.` and sub-path exports use clean paths like `./loggers/bunyan`, not
    `./src/loggers/bunyan`. The `dist/` directory maps source paths to output
    paths — the export keys must NOT mirror internal source layout. tsdown's
    `exports: true` auto-generates keys from entry paths (e.g. `src/loggers/bunyan.ts`
    becomes `./src/loggers/bunyan`), so use `exports.customExports` as a function
    to remap `./src/...` keys to clean paths on every build.
+8. **NEVER** drop, overwrite, or carelessly pop stashes. Before running
+   `git checkout -- .`, `git stash pop`, `git stash drop`, or any destructive
+   git operation, verify that uncommitted or stashed work will not be lost.
+   When in doubt, `git stash list` and `git stash show -p` first.

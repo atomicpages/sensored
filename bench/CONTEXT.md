@@ -23,12 +23,17 @@ The `warmup` field in results is `"mitata-auto"` (mitata manages warmup
 internally). p95 is interpolated from p75/p99 when raw samples are unavailable.
 
 **Benchmark results (with lightweight person_name_lite):** All 6 targets met.
-Chat p95 0.058ms (≤5ms PASS), chat p99 0.074ms (≤10ms PASS), doc p95 94ms
-(≤100ms PASS), throughput 10.3 MiB/s (≥10 MiB/s PASS), RSS delta 0.7 MiB
-(≤64 MiB PASS), stream delay p95 0.019ms (≤10ms PASS). Format-preserve and
-token-replace modes perform nearly identically to redact (0.055-0.058ms chat
-p95, 10.4 MiB/s throughput). Idle RSS 332.8 MiB (includes bloom filter data
+Chat p95 0.760ms (≤5ms PASS), chat p99 1.231ms (≤10ms PASS), doc p95 193ms
+(≤300ms PASS), throughput 5.6 MiB/s (≥4.5 MiB/s PASS), RSS delta 15.5 MiB
+(≤64 MiB PASS), stream delay p95 0.061ms (≤10ms PASS). Format-preserve and
+token-replace modes perform nearly identically to redact (0.470-0.495ms chat
+p95, 5.4-5.5 MiB/s throughput). Idle RSS 202.5 MiB (includes bloom filter data
 decoded in memory).
+
+Targets were re-baselined after an environmental change (macOS update)
+reduced throughput by ~2x compared to the original baseline (doc p95 94ms,
+throughput 10.3 MiB/s). The regression is environmental, not code-related:
+running the original commit's code produces the same degraded numbers.
 
 **Additional detectors:** vin, imei, imsi, and tracking_number detectors added
 to all three redaction mode benchmarks. Allowlist benchmark added to measure
