@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/atomicpages/sensored/compare/v1.3.0...v1.4.0) (2026-10-02)
+
+
+### Features
+
+* add http_auth_header and url_query_key detectors ([#5](https://github.com/atomicpages/sensored/issues/5)) ([57af8db](https://github.com/atomicpages/sensored/commit/57af8dbe699865e88e41273214a9a947444dfe9f))
+
 # [1.3.0](https://github.com/atomicpages/sensored/compare/v1.2.0...v1.3.0) (2026-09-30)
 
 
