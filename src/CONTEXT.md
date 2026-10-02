@@ -18,8 +18,8 @@ do not support `@version` syntax. `pii` includes 96 rules (all national-ID,
 identity, financial, healthcare, crypto, contact, and logistics detectors).
 `gdpr` includes 39 rules. `hipaa` includes 29 rules. `ccpa` includes 86 rules.
 `pci-dss` includes 6 rules. `healthcare` includes 19 rules. `finance` includes
-15 rules. `education` includes 6 rules. `soc2` includes 30 rules. `security`
-includes 14 rules. Validation logic lives in `validate.ts`. `validate.ts`
+15 rules. `education` includes 6 rules. `soc2` includes 32 rules. `security`
+includes 16 rules. Validation logic lives in `validate.ts`. `validate.ts`
 validates config shape, limits, per-rule settings, and custom detector
 definitions. Shared helpers (`isRecord`, `hasOnlyKeys`,
 `isNonNegativeInteger`) are exported for cross-file reuse.
@@ -141,6 +141,7 @@ detectors/
     ipv6.ts            Ipv6Detector
     mac-address.ts     MacAddressDetector
     url-with-auth.ts   UrlWithAuthDetector
+    url-query-key.ts   UrlQueryKeyDetector
   cloud/
     aws-access-key.ts  AwsAccessKeyDetector
     google-api-key.ts  GoogleApiKeyDetector
@@ -151,6 +152,7 @@ detectors/
     jwt-token.ts       JwtTokenDetector
     private-key.ts     PrivateKeyDetector
     generic-api-key.ts GenericApiKeyDetector
+    http-auth-header.ts HttpAuthHeaderDetector
   logistics/
     tracking-number.ts TrackingNumberDetector
   healthcare/
@@ -355,6 +357,10 @@ Exported as a singleton.
 `network/url-with-auth.ts` implements `UrlWithAuthDetector` (extends `Detector`):
 detects URLs with embedded credentials (`https://user:pass@host`). Context-optional.
 Exported as a singleton.
+`network/url-query-key.ts` implements `UrlQueryKeyDetector` (extends `Detector`):
+detects credential values in URL query parameters (e.g., `?api_key=secret`).
+Only redacts the value, not the parameter name or URL. Context-optional.
+Exported as a singleton.
 
 ### Cloud provider key detectors
 
@@ -385,6 +391,12 @@ Exported as a singleton.
 `token/generic-api-key.ts` implements `GenericApiKeyDetector` (extends `Detector`):
 detects generic API keys with context labels (API key, API secret, access token,
 etc.). Context-required. Exported as a singleton.
+`token/http-auth-header.ts` implements `HttpAuthHeaderDetector` (extends
+`Detector`): detects HTTP authorization header values (`Authorization: Basic`,
+`Proxy-Authorization: Basic`, `Api-Key`, `ApiKey`, `Ocp-Apim-Subscription-Key`,
+`X-*-Key/Token/Secret`). Only redacts the value. Context-optional. Supports
+custom header patterns via `detectorOptions.http_auth_header.customHeaders`.
+Exported as a singleton.
 
 ### Healthcare detectors
 
@@ -525,7 +537,7 @@ output plus opt-in reports. `renderFormatPreserve()` transforms digits to `X`
 and letters to `*` while keeping separators and structure. `renderTokenReplace()`
 generates deterministic fake data per entity type using `fnv1a32()` hashing;
 optional custom token mappings override defaults. `DEFAULT_TOKEN_GENERATORS`
-provides idempotent fake values for all 129 entity types (designed to not match
+provides idempotent fake values for all 131 entity types (designed to not match
 any detector). Coverage: all 128 detector entity types plus `person_name_lite`.
 Fake values are constant (input-agnostic), format-valid, and idempotent —
 context-required detectors lack context labels in output, checksum-validated

@@ -369,6 +369,8 @@ export const BUILTIN_PRESETS: Record<
       vin: { action: "redact" },
       imei: { action: "redact" },
       imsi: { action: "redact" },
+      http_auth_header: { action: "redact" },
+      url_query_key: { action: "redact" },
     },
   ],
   security: [
@@ -387,6 +389,8 @@ export const BUILTIN_PRESETS: Record<
       url_with_auth: { action: "redact" },
       crypto_address: { action: "redact" },
       crypto_tx_hash: { action: "redact" },
+      http_auth_header: { action: "redact" },
+      url_query_key: { action: "redact" },
     },
   ],
 };

@@ -5,7 +5,7 @@
 # sensored
 
 A streaming-first PII redaction library for TypeScript. Detects and redacts
-sensitive data with 129 regex detectors, optional NER, and AI-powered semantic
+sensitive data with 131 regex detectors, optional NER, and AI-powered semantic
 confirmation.
 
 [Try the browser playground](https://atomicpages.github.io/sensored/playground)
@@ -238,14 +238,14 @@ for streaming, tool calls, and more.
 | `healthcare` | 19    | Healthcare identifiers              |
 | `finance`    | 15    | Financial identifiers               |
 | `education`  | 6     | Education sector                    |
-| `soc2`       | 30    | SOC 2 security controls             |
-| `security`   | 14    | Secrets and network identifiers     |
+| `soc2`       | 32    | SOC 2 security controls             |
+| `security`   | 16    | Secrets and network identifiers     |
 
 Presets are documented rule selections, not compliance guarantees.
 
 ## Built-in detectors
 
-129 detectors across 13 domains:
+131 detectors across 13 domains:
 
 | Group         | Detectors                                                                                                                                                |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -254,9 +254,9 @@ Presets are documented rule selections, not compliance guarantees.
 | National ID   | us_ssn, uk_nino, ca_sin, au_tfn, jp_my_number, uk_nhs, us_itin, us_ein, nz_ird, + 56 more across Europe, Asia, Africa, Middle East, Americas, Oceania    |
 | Identity      | passport, drivers_license, digital_identity, license_plate, vin, imei, imsi                                                                              |
 | Person        | person_name (requires `compromise`), person_name_lite (lightweight regex + bloom filter)                                                                 |
-| Network       | ipv4, ipv6, mac_address, url_with_auth                                                                                                                   |
+| Network       | ipv4, ipv6, mac_address, url_with_auth, url_query_key                                                                                                    |
 | Cloud Keys    | aws_access_key, google_api_key, stripe_api_key, slack_token                                                                                              |
-| Tokens & Keys | github_token, jwt_token, private_key, generic_api_key                                                                                                    |
+| Tokens & Keys | github_token, jwt_token, private_key, generic_api_key, http_auth_header                                                                                  |
 | Healthcare    | us_npi, us_dea, medical_record_number, clinical_trial_id, medical_device_id, medical_code, medical_reference, genetic_info, health_insurance_id          |
 | HR            | hr_identifier, hr_screening, hr_compensation, hr_recruitment                                                                                             |
 | Legal         | legal_case, legal_license, legal_reference                                                                                                               |

@@ -1,5 +1,10 @@
 import { SensoredError } from "./errors";
-import type { DetectorDefinition, RedactorConfig, RuleSetting } from "./types";
+import type {
+  DetectorDefinition,
+  DetectorOptions,
+  RedactorConfig,
+  RuleSetting,
+} from "./types";
 import { hasOnlyKeys, isNonNegativeInteger, isRecord } from "./utils";
 
 function invalid(path: string): never {
@@ -372,6 +377,52 @@ function validateSemanticConfig(value: unknown): asserts value is {
 }
 
 // ---------------------------------------------------------------------------
+// Detector-options validation
+// ---------------------------------------------------------------------------
+
+const HTTP_AUTH_HEADER_OPTIONS_KEYS = ["customHeaders"] as const;
+
+function validateDetectorOptions(
+  value: unknown,
+): asserts value is DetectorOptions {
+  if (!isRecord(value)) {
+    invalid("detectorOptions");
+  }
+
+  if (!hasOnlyKeys(value, ["http_auth_header"])) {
+    invalid("detectorOptions");
+  }
+
+  if (value.http_auth_header !== undefined) {
+    const hah = value.http_auth_header;
+
+    if (!isRecord(hah)) {
+      invalid("detectorOptions.http_auth_header");
+    }
+
+    if (!hasOnlyKeys(hah, [...HTTP_AUTH_HEADER_OPTIONS_KEYS])) {
+      invalid("detectorOptions.http_auth_header");
+    }
+
+    if (hah.customHeaders !== undefined) {
+      if (!Array.isArray(hah.customHeaders) || hah.customHeaders.length === 0) {
+        invalid("detectorOptions.http_auth_header.customHeaders");
+      }
+
+      for (const header of hah.customHeaders) {
+        if (typeof header !== "string" && !(header instanceof RegExp)) {
+          invalid("detectorOptions.http_auth_header.customHeaders");
+        }
+
+        if (typeof header === "string" && header.length === 0) {
+          invalid("detectorOptions.http_auth_header.customHeaders");
+        }
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Top-level config validation
 // ---------------------------------------------------------------------------
 
@@ -385,6 +436,7 @@ const CONFIG_KEYS = [
   "allowlist",
   "semantic",
   "detectOnly",
+  "detectorOptions",
 ] as const;
 
 export function validateConfigShape(
@@ -466,6 +518,10 @@ export function validateConfigShape(
 
   if (config.semantic !== undefined) {
     validateSemanticConfig(config.semantic);
+  }
+
+  if (config.detectorOptions !== undefined) {
+    validateDetectorOptions(config.detectorOptions);
   }
 }
 

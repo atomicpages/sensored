@@ -6,6 +6,7 @@ export const EVAL_RULES: readonly string[] = [
   "ipv4", "ipv6", "mac_address", "url_with_auth",
   "aws_access_key", "google_api_key", "stripe_api_key", "slack_token",
   "github_token", "jwt_token", "private_key", "generic_api_key",
+  "http_auth_header", "url_query_key",
   "swift_bic", "uk_sort_code", "us_routing", "uk_bank_account",
   "uk_nhs", "us_itin", "us_ein", "nz_ird",
   "us_npi", "us_dea", "medical_record_number",

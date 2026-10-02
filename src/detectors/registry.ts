@@ -170,6 +170,7 @@ import { zaIdDetector } from "./national-id/za-id";
 import { ipv4Detector } from "./network/ipv4";
 import { ipv6Detector } from "./network/ipv6";
 import { macAddressDetector } from "./network/mac-address";
+import { urlQueryKeyDetector } from "./network/url-query-key";
 import { urlWithAuthDetector } from "./network/url-with-auth";
 
 // ---------------------------------------------------------------------------
@@ -185,6 +186,7 @@ import { personNameLiteDetector } from "./person/person-name-lite";
 
 import { genericApiKeyDetector } from "./token/generic-api-key";
 import { gitHubTokenDetector } from "./token/github-token";
+import { httpAuthHeaderDetector } from "./token/http-auth-header";
 import { jwtTokenDetector } from "./token/jwt-token";
 import { privateKeyDetector } from "./token/private-key";
 
@@ -340,6 +342,7 @@ const builtIns: readonly Detector[] = [
   ipv6Detector,
   macAddressDetector,
   urlWithAuthDetector,
+  urlQueryKeyDetector,
 
   // Person
   personNameDetector,
@@ -348,6 +351,7 @@ const builtIns: readonly Detector[] = [
   // Token
   genericApiKeyDetector,
   gitHubTokenDetector,
+  httpAuthHeaderDetector,
   jwtTokenDetector,
   privateKeyDetector,
 

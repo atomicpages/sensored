@@ -1,5 +1,9 @@
 import { registerDetector } from "./detectors/base";
 import { builtInDetectors } from "./detectors/registry";
+import {
+  buildHttpAuthHeaderPattern,
+  HttpAuthHeaderDetector,
+} from "./detectors/token/http-auth-header";
 import { SensoredError } from "./errors";
 import { BUILTIN_PRESETS } from "./presets";
 import type { ActiveRule, RuleSetting, SemanticConfig } from "./types";
@@ -188,6 +192,14 @@ export function resolvePolicy(config: unknown): {
 
   // Start with built-ins, then register custom detectors on top.
   const detectors = builtInDetectors();
+
+  // Apply detector options — currently only http_auth_header supports
+  // custom configuration (extra header patterns).
+  if (config.detectorOptions?.http_auth_header?.customHeaders) {
+    const customHeaders = config.detectorOptions.http_auth_header.customHeaders;
+    const pattern = buildHttpAuthHeaderPattern(customHeaders);
+    detectors.set("http_auth_header", new HttpAuthHeaderDetector(pattern));
+  }
 
   if (config.detectors !== undefined) {
     if (!Array.isArray(config.detectors)) {

@@ -14,7 +14,7 @@ programmatically so you can steer the model before it writes.
 
 ## listDetectors()
 
-Returns descriptions of all 129 built-in detectors, including their context
+Returns descriptions of all 131 built-in detectors, including their context
 hints (if any).
 
 ```ts

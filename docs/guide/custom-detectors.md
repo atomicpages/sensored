@@ -1,6 +1,6 @@
 # Custom Detectors
 
-sensored lets you register custom detectors alongside the 129 built-in ones.
+sensored lets you register custom detectors alongside the 131 built-in ones.
 Built-in and custom detectors share the same contract — there's no separate
 "plugin" API.
 

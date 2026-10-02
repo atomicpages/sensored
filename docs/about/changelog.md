@@ -1,6 +1,6 @@
 # Changelog
 
-## 129 detectors, 13 domains, 11 presets
+## 131 detectors, 13 domains, 11 presets
 
 ### Detectors
 
@@ -16,8 +16,8 @@
 - `healthcare` — 19 rules
 - `finance` — 15 rules
 - `education` — 6 rules
-- `soc2` — 30 rules
-- `security` — 14 rules
+- `soc2` — 32 rules
+- `security` — 16 rules
 
 ### Performance
 

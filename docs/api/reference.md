@@ -429,7 +429,7 @@ statuses.
 
 ### listDetectors
 
-Returns descriptions of all 129 built-in detectors, including their context
+Returns descriptions of all 131 built-in detectors, including their context
 hints. See [LLM Steering](../guide/llm-steering).
 
 ```ts
