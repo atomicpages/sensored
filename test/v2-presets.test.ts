@@ -54,6 +54,12 @@ test("soc2 preset includes security and PII detectors", () => {
   expect(redactor.redact("203.0.113.1")).toBe("[IPV4]");
   expect(redactor.redact("test@example.com")).toBe("[EMAIL]");
   expect(redactor.redact("4111111111111111")).toBe("[PAYMENT_CARD]");
+  expect(redactor.redact("Api-Key: sk-1234567890abcdef")).toBe(
+    "Api-Key: [HTTP_AUTH_HEADER]",
+  );
+  expect(redactor.redact("https://api.example.com?api_key=secret123")).toBe(
+    "https://api.example.com?api_key=[URL_QUERY_KEY]",
+  );
 });
 
 test("security preset includes only security detectors", () => {
@@ -66,6 +72,12 @@ test("security preset includes only security detectors", () => {
   expect(redactor.redact("203.0.113.1")).toBe("[IPV4]");
   // Security preset does NOT include PII
   expect(redactor.redact("test@example.com")).toBe("test@example.com");
+  expect(redactor.redact("Api-Key: sk-1234567890abcdef")).toBe(
+    "Api-Key: [HTTP_AUTH_HEADER]",
+  );
+  expect(redactor.redact("https://api.example.com?api_key=secret123")).toBe(
+    "https://api.example.com?api_key=[URL_QUERY_KEY]",
+  );
 });
 
 // ---------------------------------------------------------------------------

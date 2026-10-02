@@ -81,3 +81,41 @@ redactor.redact("API key: sk_test_1234567890abcdef");
 - **Context required**: Yes (labels: API key, API secret, access token, etc.)
 - **Stream supported**: Yes
 - **Validation**: Context label presence
+
+## http_auth_header
+
+Detects HTTP authorization header values (`Authorization: Basic/Bearer/Digest`,
+`Proxy-Authorization: Basic/Bearer/Digest`, `Api-Key`, `ApiKey`,
+`Ocp-Apim-Subscription-Key`, `X-*-Key/Token/Secret`). Only redacts the
+value, not the header name.
+
+```ts
+const redactor = createRedactor({
+  rules: { http_auth_header: { action: "redact" } },
+});
+
+redactor.redact("Authorization: Basic dXNlcjpwYXNzMTIz");
+// "Authorization: Basic [HTTP_AUTH_HEADER_1]"
+```
+
+Custom header patterns can be configured via `detectorOptions`:
+
+```ts
+const redactor = createRedactor({
+  rules: { http_auth_header: { action: "redact" } },
+  detectorOptions: {
+    http_auth_header: {
+      customHeaders: [
+        "X-My-Service-Key",           // string: escaped as literal
+        /X-Custom-Auth\s*:\s*(\S+)/,  // RegExp: source used directly
+      ],
+    },
+  },
+});
+```
+
+- **ID**: `http_auth_header`
+- **Entity type**: `http_auth_header`
+- **Context required**: No
+- **Stream supported**: Yes
+- **Validation**: Known header name or custom pattern match

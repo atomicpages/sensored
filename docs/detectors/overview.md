@@ -1,6 +1,6 @@
 # Detector Overview
 
-sensored includes 129 built-in detectors across 13 domains. Each detector
+sensored includes 131 built-in detectors across 13 domains. Each detector
 identifies a specific type of sensitive data and can be used with any
 transformation action.
 
@@ -130,10 +130,12 @@ transformation action.
 |                   | `ipv6`                  | No               | Yes            |
 |                   | `mac_address`           | No               | Yes            |
 |                   | `url_with_auth`         | No               | Yes            |
+|                   | `url_query_key`         | No               | Yes            |
 | **Person**        | `person_name`           | No               | Yes            |
 |                   | `person_name_lite`      | No               | Yes            |
 | **Tokens & Keys** | `generic_api_key`       | Yes              | Yes            |
 |                   | `github_token`          | No               | Yes            |
+|                   | `http_auth_header`      | No               | Yes            |
 |                   | `jwt_token`             | No               | Yes            |
 |                   | `private_key`           | No               | Yes            |
 | **Logistics**     | `tracking_number`       | Yes              | Yes            |

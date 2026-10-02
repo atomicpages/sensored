@@ -12,3 +12,7 @@ export function hasOnlyKeys(
 ): boolean {
   return Object.keys(value).every((key) => allowed.includes(key));
 }
+
+export function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

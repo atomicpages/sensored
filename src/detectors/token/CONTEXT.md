@@ -10,6 +10,7 @@ token/
   jwt-token.ts          JwtTokenDetector — JSON Web Tokens
   private-key.ts        PrivateKeyDetector — PEM private keys (RSA, EC, DSA, OpenSSH)
   generic-api-key.ts    GenericApiKeyDetector — context-labeled API keys
+  http-auth-header.ts   HttpAuthHeaderDetector — HTTP auth header values
 ```
 
 ### github_token
@@ -38,3 +39,16 @@ Detects API keys labeled by surrounding context (e.g., `api_key: abc123...`,
 redacts the key value portion. Excludes placeholder values (example, sample,
 test, fake, demo). Context-required (label must be present).
 `maxMatchLength: 256`. Exported as a singleton.
+
+### http_auth_header
+
+Detects HTTP authorization header values (`Authorization: Basic/Bearer/Digest <value>`,
+`Proxy-Authorization: Basic/Bearer/Digest <value>`, `Api-Key: <value>`,
+`ApiKey: <value>`, `Ocp-Apim-Subscription-Key: <value>`,
+`X-*-Key: <value>`, `X-*-Token: <value>`, `X-*-Secret: <value>`).
+Only redacts the value (capturing group 1), not the header name.
+Context-optional. `maxMatchLength: 1024`. Exported as a singleton.
+Supports custom header patterns via `detectorOptions.http_auth_header.customHeaders`
+(strings are escaped as literals; RegExPs use their source).
+Note: Digest values containing whitespace (e.g., `username="admin", realm="api"`)
+are only partially redacted — `(\S+)` stops at the first space.

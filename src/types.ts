@@ -49,6 +49,12 @@ export interface SemanticConfig {
   readonly contextWindow?: number;
 }
 
+export interface DetectorOptions {
+  readonly http_auth_header?: {
+    readonly customHeaders?: readonly (string | RegExp)[];
+  };
+}
+
 export interface RedactorConfig {
   readonly presets?: readonly string[];
   readonly customPresets?: Readonly<
@@ -61,6 +67,7 @@ export interface RedactorConfig {
   readonly allowlist?: readonly string[];
   readonly semantic?: SemanticConfig;
   readonly detectOnly?: boolean;
+  readonly detectorOptions?: DetectorOptions;
 }
 
 export interface DetectorDefinition {

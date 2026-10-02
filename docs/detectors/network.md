@@ -75,3 +75,25 @@ redactor.redact("Endpoint: https://admin:secret@api.example.com");
 - **Context required**: No
 - **Stream supported**: Yes
 - **Validation**: URL with userinfo component (user:password@)
+
+## url_query_key
+
+Detects credential values in URL query parameters (e.g.,
+`?api_key=secret123`). Matches 24 sensitive parameter names including
+`api_key`, `access_token`, `auth_token`, `secret`, `private_key`, and
+`oauth_token`. Only redacts the value, not the parameter name or URL.
+
+```ts
+const redactor = createRedactor({
+  rules: { url_query_key: { action: "redact" } },
+});
+
+redactor.redact("https://api.example.com/data?api_key=sk_test_123456");
+// "https://api.example.com/data?api_key=[URL_QUERY_KEY_1]"
+```
+
+- **ID**: `url_query_key`
+- **Entity type**: `url_query_key`
+- **Context required**: No
+- **Stream supported**: Yes
+- **Validation**: Known credential parameter name in query string

@@ -5,7 +5,7 @@ hero:
   name: sensored
   text: Streaming-first PII redaction for TypeScript
   tagline:
-    Detect and redact sensitive data with 129 built-in detectors, AI-powered
+    Detect and redact sensitive data with 131 built-in detectors, AI-powered
     semantic confirmation, and full streaming support.
   image:
     src: /logo-light.svg
@@ -23,7 +23,7 @@ features:
     details:
       Process continuous text streams with boundary buffering, context windows,
       and safe flush points. No need to buffer entire inputs in memory.
-  - title: 129 Built-in Detectors
+  - title: 131 Built-in Detectors
     details:
       Email, phone, payment cards, national IDs, passports, person names, cloud
       keys, JWT tokens, private keys, healthcare identifiers, HR data, legal

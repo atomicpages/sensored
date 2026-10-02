@@ -27,7 +27,7 @@ baseline report is committed as `eval/baseline.json`.
 
 The gate requires `provenance === "independent"` and `reviewed === true`,
 at least 1000 negative documents, at least 200 positive occurrences per
-detector (all 129 detectors), >= 99% precision and >= 95% recall per
+detector (all 131 detectors), >= 99% precision and >= 95% recall per
 detector, and a matching baseline report. Any new FP, FN, or lost TP tuple
 against the baseline blocks release. A changed corpus fingerprint requires
 re-baselining.

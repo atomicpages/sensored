@@ -80,7 +80,11 @@ Card: 4242 4242 4242 4242`,
 MAC address: 00:1A:2B:3C:4D:5E
 AWS access key: AKIAIOSFODNN7EXAMPLE
 GitHub token: ghp_1234567890abcdefghijklmnopqrstuvwxyz
-API key: sk_test_1234567890abcdefghijklmnop`,
+API key: sk_test_1234567890abcdefghijklmnop
+Authorization: Basic dXNlcjpwYXNzMTIz
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0In0.abc123
+Authorization: Digest username="admin", realm="api", nonce="abc123", response="def456"
+https://api.example.com/data?api_key=sk_test_1234567890abcdefghijklmnop`,
 } satisfies Readonly<Record<PlaygroundPreset, string>>);
 
 export interface PlaygroundState {

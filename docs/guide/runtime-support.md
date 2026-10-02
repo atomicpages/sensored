@@ -43,7 +43,7 @@ Bundlers (Vite, webpack, esbuild) will pick up the ESM build automatically.
 - `redactValue()` — recursive object traversal
 - `redactor.stream()` — streaming redaction
 - `restore()` — placeholder restoration
-- All 129 built-in detectors
+- All 131 built-in detectors
 - All 10 presets
 - Custom detectors
 - Allowlist

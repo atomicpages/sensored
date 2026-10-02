@@ -49,6 +49,8 @@ export const DEFAULT_TOKEN_GENERATORS: Record<
     "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZWRhY3RlZCJ9.0000000000000000",
   private_key: () => "-----BEGIN REDACTED KEY-----\n-----END REDACTED KEY-----",
   generic_api_key: () => "redacted-key-000000000000",
+  http_auth_header: () => "cmVkYWN0ZWQ6cmVkYWN0ZWQ=",
+  url_query_key: () => "cmVkYWN0ZWQ",
 
   // ── Contact ──────────────────────────────────────────────────────
   address: () => "123 Redacted Ave",

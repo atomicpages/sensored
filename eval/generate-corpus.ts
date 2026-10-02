@@ -3850,6 +3850,56 @@ function generateTrackingNumberPositive(): Case {
   return ctxWrapGeneric(value, labels, "tracking_number", id);
 }
 
+function generateHttpAuthHeaderPositive(): Case {
+  const value = faker.string.alphanumeric(24);
+  const id = `httpauth-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((v: string) => string)[] = [
+    (v) => `Authorization: Basic ${v}`,
+    (v) => `Authorization: Bearer ${v}`,
+    (v) => `Authorization: Digest ${v}`,
+    (v) => `Proxy-Authorization: Basic ${v}`,
+    (v) => `Proxy-Authorization: Bearer ${v}`,
+    (v) => `Proxy-Authorization: Digest ${v}`,
+    (v) => `Api-Key: ${v}`,
+    (v) => `ApiKey: ${v}`,
+    (v) => `Ocp-Apim-Subscription-Key: ${v}`,
+    (v) => `X-Api-Key: ${v}`,
+    (v) => `X-Auth-Token: ${v}`,
+    (v) => `X-Secret-Key: ${v}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(value);
+  const span = spanFor(text, value, "http_auth_header");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateUrlQueryKeyPositive(): Case {
+  const value = faker.string.alphanumeric(20);
+  const id = `urlqk-pos-${faker.string.alphanumeric(8)}`;
+
+  const keys = [
+    "api_key", "api-key", "apikey", "api_token", "api-token", "apitoken",
+    "access_token", "access-token", "accesstoken", "auth_token", "auth-token",
+    "authtoken", "access_key", "access-key", "accesskey", "secret_key",
+    "secret-key", "secretkey", "secret", "private_key", "private-key",
+    "privatekey", "oauth_token", "oauth-token", "oauthtoken",
+  ];
+
+  const key = faker.helpers.arrayElement(keys);
+  const host = faker.helpers.arrayElement([
+    "example.com", "api.test.org", "service.demo.net", "app.sample.io",
+  ]);
+  const path = faker.helpers.arrayElement(["/v1/data", "/users", "/search", ""]);
+  const url = `https://${host}${path}?${key}=${value}`;
+  const text = url;
+  const span = spanFor(text, value, "url_query_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
 function main(): void {
   faker.seed(42);
 
@@ -3988,6 +4038,8 @@ function main(): void {
     generateImeiPositive,
     generateImsiPositive,
     generateTrackingNumberPositive,
+    generateHttpAuthHeaderPositive,
+    generateUrlQueryKeyPositive,
   ];
 
   for (const gen of generators) {

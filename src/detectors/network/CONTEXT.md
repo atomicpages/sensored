@@ -10,6 +10,7 @@ network/
   ipv6.ts            IPv6Detector — public IPv6 addresses
   mac-address.ts     MacAddressDetector — MAC addresses (colon/hyphen)
   url-with-auth.ts   UrlWithAuthDetector — URLs with embedded credentials
+  url-query-key.ts   UrlQueryKeyDetector — URL query parameter credential values
 ```
 
 ### ipv4
@@ -36,3 +37,14 @@ Exported as a singleton.
 Detects URLs with embedded credentials (e.g., `https://user:pass@example.com`).
 Matches `http://`, `https://`, and `ftp://` schemes. Context-optional.
 `maxMatchLength: 2048`. Exported as a singleton.
+
+### url_query_key
+
+Detects credential values in URL query parameters (e.g.,
+`?api_key=secret123`, `&access_token=abc456`). Matches 24 sensitive
+parameter names (api_key, api-key, apikey, api_token, api-token, apitoken,
+access_token, access-token, accesstoken, auth_token, auth-token, authtoken,
+access_key, access-key, accesskey, secret_key, secret-key, secretkey, secret,
+private_key, private-key, privatekey, oauth_token, oauth-token, oauthtoken).
+Only redacts the value (capturing group 1), not the parameter name or URL.
+Context-optional. `maxMatchLength: 8192`. Exported as a singleton.
