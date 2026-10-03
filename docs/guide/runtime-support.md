@@ -1,19 +1,19 @@
 # Runtime support
 
-sensored is designed to run anywhere JavaScript runs. The core library has
-zero runtime-specific dependencies — no `node:` imports, no Bun built-ins, no
+sensored is designed to run anywhere JavaScript runs. The core library has zero
+runtime-specific dependencies — no `node:` imports, no Bun built-ins, no
 browser-only APIs.
 
 ## Supported runtimes
 
-| Runtime         | Supported | CI tested           |
-| --------------- | --------- | ------------------- |
-| Node.js 20+     | Yes       | Yes (smoke test)    |
-| Bun             | Yes       | Yes (full test suite) |
-| Deno            | Yes       | Yes (smoke test)    |
-| Browser         | Yes       | Yes (static analysis) |
-| Cloudflare Workers | Yes    | Yes (static analysis) |
-| Vercel Edge     | Yes       | Yes (static analysis) |
+| Runtime            | Supported | CI tested             |
+| ------------------ | --------- | --------------------- |
+| Node.js 20+        | Yes       | Yes (smoke test)      |
+| Bun                | Yes       | Yes (full test suite) |
+| Deno               | Yes       | Yes (smoke test)      |
+| Browser            | Yes       | Yes (static analysis) |
+| Cloudflare Workers | Yes       | Yes (static analysis) |
+| Vercel Edge        | Yes       | Yes (static analysis) |
 
 ## Importing
 
@@ -53,8 +53,8 @@ Bundlers (Vite, webpack, esbuild) will pick up the ESM build automatically.
 
 ### person_name detector
 
-The `person_name` detector uses `compromise` for NER, which is an optional
-peer dependency. Load it explicitly before creating a redactor that enables
+The `person_name` detector uses `compromise` for NER, which is an optional peer
+dependency. Load it explicitly before creating a redactor that enables
 `person_name`:
 
 ```ts
@@ -72,8 +72,8 @@ installed, preloading rejects with `INVALID_CONFIG`.
 
 ### Semantic confirmation
 
-The `semantic` feature uses `@typesafe-ai/sdk` (optional peer dependency).
-It requires network access to the TypeSafe API and works in all runtimes that
+The `semantic` feature uses `@typesafe-ai/sdk` (optional peer dependency). It
+requires network access to the TypeSafe API and works in all runtimes that
 support `fetch()`.
 
 ### CLI

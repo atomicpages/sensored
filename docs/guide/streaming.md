@@ -116,10 +116,10 @@ The streaming engine:
 
 ## StreamRestorer
 
-When you redact a stream and later need to restore placeholders in the
-response (e.g. an LLM streaming back text containing `[EMAIL_1]`), a
-placeholder may be split across chunk boundaries. `StreamRestorer` handles
-this by holding back partial placeholders until the full text arrives.
+When you redact a stream and later need to restore placeholders in the response
+(e.g. an LLM streaming back text containing `[EMAIL_1]`), a placeholder may be
+split across chunk boundaries. `StreamRestorer` handles this by holding back
+partial placeholders until the full text arrives.
 
 ```ts
 import { StreamRestorer } from "sensored";
@@ -145,14 +145,14 @@ restorer.flush();
 3. If found, holds back from that position; everything before is restored
 4. **`flush()`** restores any remaining held text (call when the stream ends)
 
-The maximum hold length is derived from the longest possible placeholder
-format, so held text is always minimal.
+The maximum hold length is derived from the longest possible placeholder format,
+so held text is always minimal.
 
 ### Use case: LLM streaming responses
 
 The OpenAI and Anthropic adapters use `StreamRestorer` internally to restore
-placeholders in streamed responses. If you're building a custom integration,
-you can use it the same way:
+placeholders in streamed responses. If you're building a custom integration, you
+can use it the same way:
 
 ```ts
 const redactor = createRedactor({

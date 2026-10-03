@@ -108,7 +108,9 @@ const redactor = createRedactor({
   rules: { digitalocean_token: { action: "redact" } },
 });
 
-redactor.redact("Token: dop_v1_0000000000000000000000000000000000000000000000000000000000000000");
+redactor.redact(
+  "Token: dop_v1_0000000000000000000000000000000000000000000000000000000000000000",
+);
 // "Token: [DIGITALOCEAN_TOKEN_1]"
 ```
 

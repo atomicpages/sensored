@@ -1,14 +1,14 @@
 # Logger Redaction
 
-sensored provides loggers for popular Node.js logging libraries. These
-loggers redact PII from structured log records before they're serialized
-and written to transports — so sensitive data never leaves your process.
+sensored provides loggers for popular Node.js logging libraries. These loggers
+redact PII from structured log records before they're serialized and written to
+transports — so sensitive data never leaves your process.
 
 ## Why redact at the logger boundary?
 
-Log aggregation services (Datadog, Splunk, ELK) see everything you send
-them. Once PII reaches a transport, it's too late. Redacting at the logger
-formatter level ensures:
+Log aggregation services (Datadog, Splunk, ELK) see everything you send them.
+Once PII reaches a transport, it's too late. Redacting at the logger formatter
+level ensures:
 
 - PII is removed **before** serialization
 - No changes to application code or log call sites
@@ -56,8 +56,8 @@ logger.info(
 
 ### Sensitive field names
 
-The logger automatically redacts values at sensitive field names
-regardless of content:
+The logger automatically redacts values at sensitive field names regardless of
+content:
 
 - `password`, `passwd`, `secret`, `token`, `authorization`, `auth`
 - `cookie`, `api_key`, `apikey`, `api_secret`, `credential`, `credentials`
@@ -73,15 +73,14 @@ logger.info(
 
 ### detectOnly mode
 
-Use `detectOnly: true` to log what PII *would* be redacted without
-modifying the output — useful for validating rules before enabling
-redaction in production.
+Use `detectOnly: true` to log what PII _would_ be redacted without modifying the
+output — useful for validating rules before enabling redaction in production.
 
 ## Winston
 
-[`winston`](https://github.com/winstonjs/winston) is a versatile logger
-with transports and formats. sensored's `winstonRedact` returns a
-transform function for use with Winston's format system.
+[`winston`](https://github.com/winstonjs/winston) is a versatile logger with
+transports and formats. sensored's `winstonRedact` returns a transform function
+for use with Winston's format system.
 
 ### Install
 
@@ -127,14 +126,14 @@ logger.info("User logged in", {
 // Output: user is [PERSON_NAME_1], email is [EMAIL_1], phone is [PHONE_1]
 ```
 
-Place the redact format **before** the JSON formatter and all transports
-so PII is removed before serialization.
+Place the redact format **before** the JSON formatter and all transports so PII
+is removed before serialization.
 
 ## Morgan
 
 [`morgan`](https://github.com/expressjs/morgan) is HTTP request logger
-middleware for Express and Node.js. sensored's `morganRedact` wraps a
-writable stream, redacting each formatted log line before it's written.
+middleware for Express and Node.js. sensored's `morganRedact` wraps a writable
+stream, redacting each formatted log line before it's written.
 
 ### Install
 
@@ -175,8 +174,7 @@ const server = http.createServer((req, res) => {
 server.listen(3000);
 ```
 
-The stream wrapper can also be used standalone to redact any formatted
-log line:
+The stream wrapper can also be used standalone to redact any formatted log line:
 
 ```ts
 redactedStream.write(
@@ -189,8 +187,8 @@ redactedStream.write(
 
 [`bunyan`](https://github.com/trentm/node-bunyan) is a fast JSON logger for
 Node.js. sensored's `bunyanRedact` wraps a destination stream, intercepts raw
-bunyan log record objects, redacts PII via `redactValue`, JSON.stringifies
-the result, and forwards to the destination stream.
+bunyan log record objects, redacts PII via `redactValue`, JSON.stringifies the
+result, and forwards to the destination stream.
 
 ### Install
 
@@ -232,10 +230,10 @@ destination stream. It returns `true` per the bunyan raw stream convention.
 
 ## log4js
 
-[`log4js`](https://github.com/log4js-node/log4js-node) is a port of the
-popular log4j logging framework. sensored's log4js adapter is a wrapper
-appender that redacts PII in `loggingEvent.data` items before delegating to
-the wrapped appender.
+[`log4js`](https://github.com/log4js-node/log4js-node) is a port of the popular
+log4j logging framework. sensored's log4js adapter is a wrapper appender that
+redacts PII in `loggingEvent.data` items before delegating to the wrapped
+appender.
 
 ### Install
 

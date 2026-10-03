@@ -3,7 +3,9 @@
 Semantic confirmation is an opt-in layer that uses AI (Jev from TypeSafe's
 System One) to verify detected PII candidates before redacting them. It reduces
 false positives by asking a semantic model "yes/no" questions about each
-candidate.
+candidate. Detectors propose spans; Jev confirms or rejects each one; redaction
+runs only after. Candidate `value` plus surrounding context are sent to Jev
+**unredacted** — the input is still fully readable when confirmation runs.
 
 ## Overview
 
@@ -12,6 +14,14 @@ candidate.
 - Only detectors with a `semanticConfirm()` method participate
 - Currently only `person_name_lite` is opted in
 - Fails open: if the AI provider is unavailable, all detections are kept
+- Precision filter on detector candidates — not a second scan for missed PII
+
+## Privacy
+
+Enabling `semantic` sends each opted-in candidate's raw match text and nearby
+context to TypeSafe (Jev). Sync `redact()` and `stream()` never do this. Use
+`redactAsync()` with `semantic` only when that data flow is acceptable for your
+workload.
 
 ## Installation
 
@@ -62,8 +72,9 @@ interface SemanticConfig {
 - **thresholds** — Per-rule noul thresholds (0–1). Detections with noul below
   the threshold are dropped. Defaults to `0.5`. Use `"default"` as a catch-all
   key.
-- **contextWindow** — Characters of context before and after each candidate sent
-  to Jev. Defaults to `200`.
+- **contextWindow** — Characters of unredacted context before and after each
+  candidate `value` sent to Jev. Defaults to `200`. The match itself is always
+  sent as raw text from the original input.
 
 ### Thresholds
 
@@ -82,7 +93,7 @@ semantic: {
 
 `redactAsync()` is the async variant of `redact()`. It runs sync detection
 first, then sends opted-in candidates to Jev for confirmation, drops unconfirmed
-detections, and renders the final text.
+detections as false positives, and renders the final text.
 
 ```ts
 const result = await redactor.redactAsync(text);
@@ -101,19 +112,35 @@ interface AsyncRedactResult {
 
 - **text** — The redacted text (same format as `redact()`).
 - **map** — Present when `restore: true` is set in config.
-- **detections** — All detections that survived semantic confirmation. Each
-  includes `semanticConfirmed: boolean` and optional `noul: number`.
+- **detections** — Detections confirmed by Jev (or kept on fail-open). Each
+  includes `semanticConfirmed: boolean` and optional `noul: number`. Unconfirmed
+  candidates are dropped as false positives and do not appear here.
 - **warnings** — Present when the AI provider fails. All detections are kept
   (fail open).
 
 ## How it works
 
 1. Sync detection runs all active detectors (same as `redact()`)
-2. Candidates from detectors with `semanticConfirm()` are collected
+2. Candidates from detectors with `semanticConfirm()` are collected — each
+   payload is `{ value, before, after }` sliced from the **original** input
 3. If no candidates, early exit with all detections confirmed
-4. All candidates are batched into a single Jev call
-5. Detections with noul below threshold are dropped
+4. All candidates are batched into a single Jev call (still unredacted)
+5. Detections with noul below threshold are dropped as false positives
 6. Remaining detections are rendered (same as `redact()`)
+
+```ts
+// Input still fully readable when Jev runs:
+// value: "John Smith"
+// before / after: surrounding chars from the original string
+// Redaction happens only after confirmation (step 6)
+```
+
+## What this is not
+
+- Not a second pass over already-redacted text
+- Not a way to find PII the detectors missed
+- Jev does not invent new spans — only yes/no (noul) judgments on detector
+  candidates
 
 ## Streaming
 
@@ -143,9 +170,9 @@ const customDetector: DetectorDefinition = {
 };
 ```
 
-The `semanticConfirm` function receives `{ value, before, after }` and returns a
-`SemanticQuestion` with `instructions` and optional `criteria` (with `true` and
-`false` strings).
+The `semanticConfirm` function receives `{ value, before, after }` (raw slices
+from the original input) and returns a `SemanticQuestion` with `instructions`
+and optional `criteria` (with `true` and `false` strings).
 
 ## Error handling
 

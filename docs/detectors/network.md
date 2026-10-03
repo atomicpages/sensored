@@ -78,10 +78,10 @@ redactor.redact("Endpoint: https://admin:secret@api.example.com");
 
 ## url_query_key
 
-Detects credential values in URL query parameters (e.g.,
-`?api_key=secret123`). Matches 24 sensitive parameter names including
-`api_key`, `access_token`, `auth_token`, `secret`, `private_key`, and
-`oauth_token`. Only redacts the value, not the parameter name or URL.
+Detects credential values in URL query parameters (e.g., `?api_key=secret123`).
+Matches 24 sensitive parameter names including `api_key`, `access_token`,
+`auth_token`, `secret`, `private_key`, and `oauth_token`. Only redacts the
+value, not the parameter name or URL.
 
 ```ts
 const redactor = createRedactor({

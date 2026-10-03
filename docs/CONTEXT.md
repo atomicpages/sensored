@@ -63,10 +63,10 @@ light/dark/mono).
   that alias dynamically near viewport entry, keeping the redactor out of the
   initial page chunk. The optional `compromise` NER dependency loads only after
   the full playground enables `person_name`.
-- The full playground dynamically imports `@speed-highlight/core` only when
-  its generated TypeScript panel opens. Reactive updates replace code through
-  `textContent` before highlighting; do not switch this path to `v-html`
-  because generated code can contain user input.
+- The full playground dynamically imports `@speed-highlight/core` only when its
+  generated TypeScript panel opens. Reactive updates replace code through
+  `textContent` before highlighting; do not switch this path to `v-html` because
+  generated code can contain user input.
 - Homepage state crosses to `/playground` through a one-use module variable.
   Never move playground input into URLs, local storage, session storage, logs,
   analytics, or network requests.

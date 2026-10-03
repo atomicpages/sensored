@@ -86,8 +86,8 @@ redactor.redact("API key: sk_test_1234567890abcdef");
 
 Detects HTTP authorization header values (`Authorization: Basic/Bearer/Digest`,
 `Proxy-Authorization: Basic/Bearer/Digest`, `Api-Key`, `ApiKey`,
-`Ocp-Apim-Subscription-Key`, `X-*-Key/Token/Secret`). Only redacts the
-value, not the header name.
+`Ocp-Apim-Subscription-Key`, `X-*-Key/Token/Secret`). Only redacts the value,
+not the header name.
 
 ```ts
 const redactor = createRedactor({
@@ -106,8 +106,8 @@ const redactor = createRedactor({
   detectorOptions: {
     http_auth_header: {
       customHeaders: [
-        "X-My-Service-Key",           // string: escaped as literal
-        /X-Custom-Auth\s*:\s*(\S+)/,  // RegExp: source used directly
+        "X-My-Service-Key", // string: escaped as literal
+        /X-Custom-Auth\s*:\s*(\S+)/, // RegExp: source used directly
       ],
     },
   },
@@ -132,7 +132,8 @@ Detects SendGrid API keys (SG. prefix + two base64url segments).
 
 ## huggingface_token
 
-Detects HuggingFace access tokens (hf_ or api_org_ prefix + 34 alphanumeric chars).
+Detects HuggingFace access tokens (hf_ or api_org_ prefix + 34 alphanumeric
+chars).
 
 - **ID**: `huggingface_token`
 - **Entity type**: `huggingface_token`
@@ -162,7 +163,8 @@ Detects Telegram bot tokens (numeric bot ID + :AA + 35 alphanumeric chars).
 
 ## gitlab_token
 
-Detects GitLab personal access tokens (glpat- prefix + 20-22 alphanumeric chars).
+Detects GitLab personal access tokens (glpat- prefix + 20-22 alphanumeric
+chars).
 
 - **ID**: `gitlab_token`
 - **Entity type**: `gitlab_token`
@@ -192,7 +194,8 @@ Detects OpenAI API keys (sk- prefix + alphanumeric chars containing T3BlbkFJ).
 
 ## anthropic_api_key
 
-Detects Anthropic API keys (sk-ant-admin01- or sk-ant-api03- prefix + 93 word chars + AA).
+Detects Anthropic API keys (sk-ant-admin01- or sk-ant-api03- prefix + 93 word
+chars + AA).
 
 - **ID**: `anthropic_api_key`
 - **Entity type**: `anthropic_api_key`
@@ -202,7 +205,8 @@ Detects Anthropic API keys (sk-ant-admin01- or sk-ant-api03- prefix + 93 word ch
 
 ## shopify_token
 
-Detects Shopify API tokens (shppa_, shpat_, shpca_ + 32-38 hex chars, or shpss_ + 32-38 hex chars).
+Detects Shopify API tokens (shppa_, shpat_, shpca_ + 32-38 hex chars, or
+shpss_ + 32-38 hex chars).
 
 - **ID**: `shopify_token`
 - **Entity type**: `shopify_token`
@@ -232,7 +236,8 @@ Detects Mailchimp API keys (32 hex chars + -us + 1-2 digits).
 
 ## notion_token
 
-Detects Notion integration tokens (secret_ or ntn_ prefix + 43 alphanumeric chars).
+Detects Notion integration tokens (secret_ or ntn_ prefix + 43 alphanumeric
+chars).
 
 - **ID**: `notion_token`
 - **Entity type**: `notion_token`
@@ -242,7 +247,8 @@ Detects Notion integration tokens (secret_ or ntn_ prefix + 43 alphanumeric char
 
 ## sentry_token
 
-Detects Sentry auth tokens (sntrys_eyJ prefix + 197 base64 chars, or sntryu_ + 64 hex chars).
+Detects Sentry auth tokens (sntrys_eyJ prefix + 197 base64 chars, or sntryu_ +
+64 hex chars).
 
 - **ID**: `sentry_token`
 - **Entity type**: `sentry_token`
@@ -252,7 +258,8 @@ Detects Sentry auth tokens (sntrys_eyJ prefix + 197 base64 chars, or sntryu_ + 6
 
 ## heroku_api_key
 
-Detects Heroku API keys (HRKU- prefix + 60 alphanumeric/underscore/hyphen chars).
+Detects Heroku API keys (HRKU- prefix + 60 alphanumeric/underscore/hyphen
+chars).
 
 - **ID**: `heroku_api_key`
 - **Entity type**: `heroku_api_key`
@@ -272,7 +279,8 @@ Detects Linear API keys (lin_api_ prefix + 40 alphanumeric chars).
 
 ## mailgun_api_key
 
-Detects Mailgun API keys (key- prefix + 32 chars, or UUID format). Requires "mailgun" keyword within 40 chars.
+Detects Mailgun API keys (key- prefix + 32 chars, or UUID format). Requires
+"mailgun" keyword within 40 chars.
 
 - **ID**: `mailgun_api_key`
 - **Entity type**: `mailgun_api_key`
@@ -282,7 +290,8 @@ Detects Mailgun API keys (key- prefix + 32 chars, or UUID format). Requires "mai
 
 ## okta_token
 
-Detects Okta API tokens (00 prefix + 40 alphanumeric/underscore/hyphen chars). Requires "okta" keyword within 40 chars.
+Detects Okta API tokens (00 prefix + 40 alphanumeric/underscore/hyphen chars).
+Requires "okta" keyword within 40 chars.
 
 - **ID**: `okta_token`
 - **Entity type**: `okta_token`
@@ -292,7 +301,8 @@ Detects Okta API tokens (00 prefix + 40 alphanumeric/underscore/hyphen chars). R
 
 ## square_token
 
-Detects Square API tokens (EAAA + 60 chars, sq0atp- + 36 chars, or sq0csp- + 43 chars). Requires "square" keyword within 40 chars.
+Detects Square API tokens (EAAA + 60 chars, sq0atp- + 36 chars, or sq0csp- + 43
+chars). Requires "square" keyword within 40 chars.
 
 - **ID**: `square_token`
 - **Entity type**: `square_token`
@@ -302,7 +312,8 @@ Detects Square API tokens (EAAA + 60 chars, sq0atp- + 36 chars, or sq0csp- + 43 
 
 ## discord_bot_token
 
-Detects Discord bot tokens (3 dot-separated segments: 24 + 6 + 27 chars). Requires "discord" keyword within 40 chars.
+Detects Discord bot tokens (3 dot-separated segments: 24 + 6 + 27 chars).
+Requires "discord" keyword within 40 chars.
 
 - **ID**: `discord_bot_token`
 - **Entity type**: `discord_bot_token`
@@ -312,7 +323,8 @@ Detects Discord bot tokens (3 dot-separated segments: 24 + 6 + 27 chars). Requir
 
 ## datadog_api_key
 
-Detects Datadog API keys (40 or 32 alphanumeric chars). Requires "datadog" or "dd" keyword within 40 chars.
+Detects Datadog API keys (40 or 32 alphanumeric chars). Requires "datadog" or
+"dd" keyword within 40 chars.
 
 - **ID**: `datadog_api_key`
 - **Entity type**: `datadog_api_key`
@@ -322,7 +334,8 @@ Detects Datadog API keys (40 or 32 alphanumeric chars). Requires "datadog" or "d
 
 ## pagerduty_token
 
-Detects PagerDuty API tokens (letter + 19 alphanumeric/underscore/plus chars). Requires "pagerduty", "pager_duty", "pd_", or "pd-" keyword within 40 chars.
+Detects PagerDuty API tokens (letter + 19 alphanumeric/underscore/plus chars).
+Requires "pagerduty", "pager_duty", "pd_", or "pd-" keyword within 40 chars.
 
 - **ID**: `pagerduty_token`
 - **Entity type**: `pagerduty_token`
@@ -332,7 +345,8 @@ Detects PagerDuty API tokens (letter + 19 alphanumeric/underscore/plus chars). R
 
 ## scaleway_key
 
-Detects Scaleway API keys (UUID format: 8-4-4-4-12 lowercase alphanumeric). Requires "scaleway" keyword within 40 chars.
+Detects Scaleway API keys (UUID format: 8-4-4-4-12 lowercase alphanumeric).
+Requires "scaleway" keyword within 40 chars.
 
 - **ID**: `scaleway_key`
 - **Entity type**: `scaleway_key`

@@ -140,7 +140,7 @@ transformation action.
 |                   | `discord_bot_token`     | Yes              | Yes            |
 |                   | `generic_api_key`       | Yes              | Yes            |
 |                   | `github_token`          | No               | Yes            |
-|                   | `gitlab_token`           | No               | Yes            |
+|                   | `gitlab_token`          | No               | Yes            |
 |                   | `heroku_api_key`        | No               | Yes            |
 |                   | `http_auth_header`      | No               | Yes            |
 |                   | `huggingface_token`     | No               | Yes            |
