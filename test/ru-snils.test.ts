@@ -29,7 +29,7 @@ describe("RU SNILS detector", () => {
       entityType: "ru_snils",
       reasons: ["ru_snils.format", "ru_snils.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{3}-\d{3}-\d{3}\s?\d{2}/,
     );
   });
@@ -64,10 +64,10 @@ describe("RU SNILS detector", () => {
     const text = "SNILS: 123-456-789 00 and SNILS: 987-654-321 99";
     const detections = ruSnilsDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "123-456-789 00",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "987-654-321 99",
     );
   });

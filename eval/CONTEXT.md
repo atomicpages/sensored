@@ -19,15 +19,17 @@ not count as independent evaluation evidence.
 Corpus revision: `independent`.
 Provenance: `independent`.
 
-The corpus is committed to the repository as `eval/corpus.json` because it
-contains only synthetic faker-generated data with no privacy concerns. The
-baseline report is committed as `eval/baseline.json`.
+The corpus is gitignored because synthetic tokens can match real
+secret-scanning patterns (e.g. GitHub Push Protection). Regenerate
+locally with `bun run eval:generate && bun run eval:score`. The baseline
+report is metrics-only (case IDs + outcome tuples, no corpus text) and
+stays committed so CI can gate after regenerating the corpus.
 
 ## Release gate
 
 The gate requires `provenance === "independent"` and `reviewed === true`,
 at least 1000 negative documents, at least 200 positive occurrences per
-detector (all 131 detectors), >= 99% precision and >= 95% recall per
+detector (all 155 detectors), >= 99% precision and >= 95% recall per
 detector, and a matching baseline report. Any new FP, FN, or lost TP tuple
 against the baseline blocks release. A changed corpus fingerprint requires
 re-baselining.

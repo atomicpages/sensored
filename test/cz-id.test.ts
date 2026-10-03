@@ -30,7 +30,7 @@ describe("Czech Rodné číslo detector", () => {
       entityType: "cz_id",
       reasons: ["cz_id.structure", "cz_id.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{6}\/\d{4}/,
     );
   });
@@ -67,10 +67,10 @@ describe("Czech Rodné číslo detector", () => {
     const text = "Czech: 900101/1234 and Czech: 905101/5678";
     const detections = czIdDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "900101/1234",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "905101/5678",
     );
   });

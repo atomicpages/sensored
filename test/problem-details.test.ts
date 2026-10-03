@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { type ErrorCode, type ProblemDetails, SensoredError } from "../src";
+import { type ErrorCode, SensoredError } from "../src";
 
 describe("toProblemDetails — default status mapping", () => {
   const cases: [ErrorCode, number][] = [

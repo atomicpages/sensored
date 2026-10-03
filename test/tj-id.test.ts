@@ -29,7 +29,7 @@ describe("Tajikistan National ID detector", () => {
       entityType: "tj_id",
       reasons: ["tj_id.format", "tj_id.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{9,10}/,
     );
   });
@@ -64,7 +64,7 @@ describe("Tajikistan National ID detector", () => {
     const detections = tjIdDetector.detect("National ID: 1234567890");
     expect(detections).toHaveLength(1);
     expect(
-      "National ID: 1234567890".slice(detections[0]!.start, detections[0]!.end),
+      "National ID: 1234567890".slice(detections[0]?.start, detections[0]?.end),
     ).toBe("1234567890");
   });
 
@@ -72,10 +72,10 @@ describe("Tajikistan National ID detector", () => {
     const text = "National ID: 123456789 and National ID: 987654321";
     const detections = tjIdDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "123456789",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "987654321",
     );
   });

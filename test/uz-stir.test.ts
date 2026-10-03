@@ -27,7 +27,7 @@ describe("Uzbekistan STIR (Tax ID) detector", () => {
       entityType: "uz_stir",
       reasons: ["uz_stir.format", "uz_stir.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "123456789",
     );
   });
@@ -58,10 +58,10 @@ describe("Uzbekistan STIR (Tax ID) detector", () => {
     const text = "STIR: 123456789 and STIR: 987654321";
     const detections = uzStirDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "123456789",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "987654321",
     );
   });

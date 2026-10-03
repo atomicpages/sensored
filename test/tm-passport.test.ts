@@ -24,7 +24,7 @@ describe("Turkmenistan Passport detector", () => {
       entityType: "tm_passport",
       reasons: ["tm_passport.format", "tm_passport.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /[A-Z]\d{7}/,
     );
   });
@@ -56,10 +56,10 @@ describe("Turkmenistan Passport detector", () => {
     const text = "Passport: A1234567 and Passport: B7654321";
     const detections = tmPassportDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "A1234567",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "B7654321",
     );
   });

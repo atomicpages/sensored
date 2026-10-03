@@ -171,7 +171,7 @@ describe("redactValue", () => {
       string,
       Record<string, string>
     >;
-    expect(result.user!.contact).toBe("[EMAIL]");
+    expect(result.user?.contact).toBe("[EMAIL]");
   });
 
   it("works with RedactorWithoutRestore (redact returns string)", () => {

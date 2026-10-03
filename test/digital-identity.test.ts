@@ -112,14 +112,14 @@ describe("digital_identity detector — boundary cases", () => {
   });
 
   test("maximum @-handle (@ + 31 chars = 32 total)", () => {
-    const value = "@" + "a".repeat(31);
+    const value = `@${"a".repeat(31)}`;
     expect(redactor.redact(`Handle: ${value}`)).toBe(
       `Handle: [DIGITAL_IDENTITY]`,
     );
   });
 
   test("above maximum @-handle (@ + 32 chars = 33 total)", () => {
-    const value = "@" + "a".repeat(32);
+    const value = `@${"a".repeat(32)}`;
     expect(redactor.redact(`Handle: ${value}`)).toBe(`Handle: ${value}`);
   });
 

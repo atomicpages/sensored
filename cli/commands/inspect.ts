@@ -56,7 +56,7 @@ export async function inspectCommand(options: CLIOptions): Promise<void> {
       entityType: match.entityType,
       value:
         match.value.length > 40
-          ? match.value.slice(0, 37) + "..."
+          ? `${match.value.slice(0, 37)}...`
           : match.value,
       start: String(match.start),
       end: String(match.end),

@@ -34,10 +34,10 @@ describe("wrapOpenAI", () => {
     });
 
     const msgs = capturedMessages as Array<Record<string, unknown>>;
-    expect(msgs[0]!.content).toBe("Contact [EMAIL_1]");
+    expect(msgs[0]?.content).toBe("Contact [EMAIL_1]");
 
     const choices = response.choices as Array<Record<string, unknown>>;
-    const message = choices[0]!.message as Record<string, unknown>;
+    const message = choices[0]?.message as Record<string, unknown>;
     expect(message.content).toBe("Hello alice@example.com");
   });
 
@@ -84,7 +84,7 @@ describe("wrapOpenAI", () => {
     const chunks: string[] = [];
     for await (const chunk of stream) {
       const choices = chunk.choices as Array<Record<string, unknown>>;
-      const delta = choices[0]!.delta as Record<string, unknown>;
+      const delta = choices[0]?.delta as Record<string, unknown>;
       if (typeof delta.content === "string") {
         chunks.push(delta.content);
       }
@@ -149,12 +149,13 @@ describe("wrapOpenAI", () => {
     });
 
     const msgs = capturedMessages as Array<Record<string, unknown>>;
-    const tc = (msgs[0]!.tool_calls as Array<Record<string, unknown>>)[0]!;
+    const msg = msgs[0] as Record<string, unknown>;
+    const tc = (msg.tool_calls as Array<Record<string, unknown>>)[0]!;
     const fn = tc.function as Record<string, unknown>;
     expect(fn.arguments).toBe('{"to": "[PHONE_1]"}');
 
     const choices = response.choices as Array<Record<string, unknown>>;
-    const message = choices[0]!.message as Record<string, unknown>;
+    const message = choices[0]?.message as Record<string, unknown>;
     const respTc = (message.tool_calls as Array<Record<string, unknown>>)[0]!;
     const respFn = respTc.function as Record<string, unknown>;
     expect(respFn.arguments).toBe('{"to": "+1-555-123-4567"}');
@@ -217,7 +218,7 @@ describe("wrapOpenAI", () => {
     const argChunks: string[] = [];
     for await (const chunk of stream) {
       const choices = chunk.choices as Array<Record<string, unknown>>;
-      const delta = choices[0]!.delta as Record<string, unknown>;
+      const delta = choices[0]?.delta as Record<string, unknown>;
       if (Array.isArray(delta.tool_calls)) {
         const tc = (delta.tool_calls as Array<Record<string, unknown>>)[0]!;
         const fn = tc.function as { arguments?: string };
@@ -284,7 +285,7 @@ describe("wrapOpenAI", () => {
     });
 
     const choices = response.choices as Array<Record<string, unknown>>;
-    const message = choices[0]!.message as Record<string, unknown>;
+    const message = choices[0]?.message as Record<string, unknown>;
     expect(message.content).toBeNull();
   });
 
@@ -311,6 +312,6 @@ describe("wrapOpenAI", () => {
     });
 
     const msgs = capturedMessages as Array<Record<string, unknown>>;
-    expect(msgs[0]!.content).toBe("alice@example.com");
+    expect(msgs[0]?.content).toBe("alice@example.com");
   });
 });

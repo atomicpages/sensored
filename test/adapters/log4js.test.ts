@@ -21,7 +21,7 @@ describe("log4js adapter", () => {
       redact: { rules: { email: { action: "redact" } } },
     });
     appender({ data: ["Contact alice@example.com"] });
-    expect(wrapped.events[0]!.data).toEqual(["Contact [EMAIL]"]);
+    expect(wrapped.events[0]?.data).toEqual(["Contact [EMAIL]"]);
   });
 
   test("redacts PII in object args", () => {
@@ -30,7 +30,7 @@ describe("log4js adapter", () => {
       redact: { rules: { email: { action: "redact" } } },
     });
     appender({ data: [{ user: "alice@example.com" }] });
-    expect(wrapped.events[0]!.data).toEqual([{ user: "[EMAIL]" }]);
+    expect(wrapped.events[0]?.data).toEqual([{ user: "[EMAIL]" }]);
   });
 
   test("redacts PII in nested objects within data args", () => {
@@ -39,7 +39,7 @@ describe("log4js adapter", () => {
       redact: { rules: { email: { action: "redact" } } },
     });
     appender({ data: [{ user: { email: "alice@example.com" } }] });
-    expect(wrapped.events[0]!.data).toEqual([{ user: { email: "[EMAIL]" } }]);
+    expect(wrapped.events[0]?.data).toEqual([{ user: { email: "[EMAIL]" } }]);
   });
 
   test("redacts PII in array values within data args", () => {
@@ -48,7 +48,7 @@ describe("log4js adapter", () => {
       redact: { rules: { email: { action: "redact" } } },
     });
     appender({ data: [{ emails: ["alice@example.com", "bob@test.org"] }] });
-    expect(wrapped.events[0]!.data).toEqual([
+    expect(wrapped.events[0]?.data).toEqual([
       { emails: ["[EMAIL]", "[EMAIL]"] },
     ]);
   });
@@ -59,7 +59,7 @@ describe("log4js adapter", () => {
       redact: { rules: { email: { action: "redact" } } },
     });
     appender({ data: [{ authorization: "Bearer abc123" }] });
-    expect(wrapped.events[0]!.data).toEqual([{ authorization: "[REDACTED]" }]);
+    expect(wrapped.events[0]?.data).toEqual([{ authorization: "[REDACTED]" }]);
   });
 
   test("does not mutate the original loggingEvent", () => {
@@ -82,7 +82,7 @@ describe("log4js adapter", () => {
       },
     });
     appender({ data: ["alice@example.com"] });
-    expect(wrapped.events[0]!.data).toEqual(["alice@example.com"]);
+    expect(wrapped.events[0]?.data).toEqual(["alice@example.com"]);
   });
 
   test("redacts multiple PII types in one event", () => {
@@ -96,7 +96,7 @@ describe("log4js adapter", () => {
       },
     });
     appender({ data: ["Contact alice@example.com or +1-555-123-4567"] });
-    expect(wrapped.events[0]!.data).toEqual(["Contact [EMAIL] or [PHONE]"]);
+    expect(wrapped.events[0]?.data).toEqual(["Contact [EMAIL] or [PHONE]"]);
   });
 
   test("delegates the redacted event to the wrapped appender", () => {
@@ -114,6 +114,6 @@ describe("log4js adapter", () => {
     );
     appender({ data: ["alice@example.com"] });
     expect(received).toHaveLength(1);
-    expect(received[0]!.data).toEqual(["[EMAIL]"]);
+    expect(received[0]?.data).toEqual(["[EMAIL]"]);
   });
 });

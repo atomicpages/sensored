@@ -27,7 +27,7 @@ describe("HU Tax ID detector", () => {
       entityType: "hu_tax_id",
       reasons: ["hu_tax_id.format", "hu_tax_id.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{10}/,
     );
   });
@@ -58,10 +58,10 @@ describe("HU Tax ID detector", () => {
     const text = "Tax: 1234567890 and Tax: 9876543210";
     const detections = huTaxIdDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "1234567890",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "9876543210",
     );
   });

@@ -54,7 +54,7 @@ export class NzIrdDetector extends ContextDetector {
       return false;
     }
 
-    const padded = digits.length === 8 ? "0" + digits : digits;
+    const padded = digits.length === 8 ? `0${digits}` : digits;
 
     if (!irdChecksum(padded)) {
       return false;

@@ -36,7 +36,7 @@ export class GenericApiKeyDetector extends Detector {
 
     for (const match of text.matchAll(genericApiKeyPattern)) {
       const fullStart = match.index;
-      const fullEnd = fullStart + match[0].length;
+      const _fullEnd = fullStart + match[0].length;
       const value = match[1];
 
       if (value === undefined) {

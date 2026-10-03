@@ -33,7 +33,12 @@ describe("Myanmar NRC detector — positive cases", () => {
     });
     const match = input.includes(MATCH)
       ? MATCH
-      : input.match(/\d{1,2}\/[A-Z][a-z]+\([NC]\)\d{6}/)![0];
+      : input.match(/\d{1,2}\/[A-Z][a-z]+\([NC]\)\d{6}/)?.[0];
+
+    if (match === undefined) {
+      throw new Error(`expected NRC match in: ${input}`);
+    }
+
     expect(detections[0]?.start).toBe(input.indexOf(match));
     expect(detections[0]?.end).toBe(input.indexOf(match) + match.length);
   });

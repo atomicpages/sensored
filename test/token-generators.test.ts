@@ -3,7 +3,7 @@ import { DEFAULT_TOKEN_GENERATORS } from "../src/token-generators";
 
 describe("DEFAULT_TOKEN_GENERATORS: coverage", () => {
   it("every generator produces a non-empty string", () => {
-    for (const [key, gen] of Object.entries(DEFAULT_TOKEN_GENERATORS)) {
+    for (const [_key, gen] of Object.entries(DEFAULT_TOKEN_GENERATORS)) {
       const value = gen("test-input");
       expect(typeof value).toBe("string");
       expect(value.length).toBeGreaterThan(0);
@@ -11,7 +11,7 @@ describe("DEFAULT_TOKEN_GENERATORS: coverage", () => {
   });
 
   it("generators are deterministic (same input → same output)", () => {
-    for (const [key, gen] of Object.entries(DEFAULT_TOKEN_GENERATORS)) {
+    for (const [_key, gen] of Object.entries(DEFAULT_TOKEN_GENERATORS)) {
       const a = gen("input-a");
       const b = gen("input-a");
       expect(a).toBe(b);
@@ -19,7 +19,7 @@ describe("DEFAULT_TOKEN_GENERATORS: coverage", () => {
   });
 
   it("generators ignore input (constant output)", () => {
-    for (const [key, gen] of Object.entries(DEFAULT_TOKEN_GENERATORS)) {
+    for (const [_key, gen] of Object.entries(DEFAULT_TOKEN_GENERATORS)) {
       const a = gen("anything");
       const b = gen("something-else");
       expect(a).toBe(b);

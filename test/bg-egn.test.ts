@@ -29,7 +29,7 @@ describe("BG EGN detector", () => {
       entityType: "bg_egn",
       reasons: ["bg_egn.structure", "bg_egn.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{10}/,
     );
   });
@@ -66,10 +66,10 @@ describe("BG EGN detector", () => {
     const text = "EGN: 9001011234 and EGN: 7523124567";
     const detections = bgEgnDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "9001011234",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "7523124567",
     );
   });

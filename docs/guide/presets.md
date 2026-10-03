@@ -16,8 +16,8 @@ you can customize with explicit rule overrides.
 | `healthcare` | 19    | Healthcare identifiers              |
 | `finance`    | 15    | Financial identifiers               |
 | `education`  | 6     | Education sector                    |
-| `soc2`       | 32    | SOC 2 security controls             |
-| `security`   | 16    | Secrets and network identifiers     |
+| `soc2`       | 56    | SOC 2 security controls             |
+| `security`   | 40    | Secrets and network identifiers     |
 
 ## Combining presets
 

@@ -23,7 +23,7 @@ export function npiLuhnValid(digits: string): boolean {
     return false;
   }
 
-  const prefixed = "80840" + digits;
+  const prefixed = `80840${digits}`;
   let sum = 0;
   let alternate = false;
 
