@@ -160,4 +160,34 @@ export const DEFAULT_TOKEN_GENERATORS: Record<
   imei: () => "000000000000001",
   imsi: () => "000000000000001",
   tracking_number: () => "00000000000000000000",
+
+  // ── Cloud (TruffleHog ported) ─────────────────────────────────────
+  digitalocean_token: () => `doo_v1_${"0".repeat(64)}`,
+  cloudflare_api_token: () => `cfk_${"0".repeat(20)}`,
+
+  // ── Token (TruffleHog ported) ──────────────────────────────────────
+  sendgrid_api_key: () => `SG.${"0".repeat(22)}.${"0".repeat(40)}`,
+  huggingface_token: () => `hf_${"0".repeat(34)}`,
+  slack_webhook_url: () =>
+    `https://hooks.slack.com/services/T00000000/B00000000/${"0".repeat(24)}`,
+  telegram_bot_token: () => `0000000000:AA${"0".repeat(35)}`,
+  gitlab_token: () => `glpat-${"0".repeat(20)}`,
+  npm_token: () => `npm_${"0".repeat(36)}`,
+  openai_api_key: () => `sk-${"0".repeat(20)}T3BlbkFJ${"0".repeat(20)}`,
+  anthropic_api_key: () => `sk-ant-api03-${"0".repeat(93)}AA`,
+  shopify_token: () => `shpat_${"0".repeat(38)}`,
+  twilio_sid: () => `AC${"0".repeat(32)}`,
+  mailchimp_api_key: () => `${"0".repeat(32)}-us0`,
+  notion_token: () => `ntn_${"0".repeat(43)}`,
+  sentry_token: () => `sntrys_eyJ${"0".repeat(197)}`,
+  heroku_api_key: () => `HRKU-${"0".repeat(60)}`,
+  linear_api_key: () => `lin_api_${"0".repeat(40)}`,
+  mailgun_api_key: () => `key-${"0".repeat(32)}`,
+  okta_token: () => `00${"0".repeat(40)}`,
+  square_token: () => `sq0atp-${"0".repeat(36)}`,
+  discord_bot_token: () =>
+    `${"0".repeat(24)}.${"0".repeat(6)}.${"0".repeat(27)}`,
+  datadog_api_key: () => "0".repeat(40),
+  pagerduty_token: () => `y${"0".repeat(19)}`,
+  scaleway_key: () => "00000000-0000-0000-0000-000000000000",
 };

@@ -1,6 +1,6 @@
 # Detector Overview
 
-sensored includes 131 built-in detectors across 13 domains. Each detector
+sensored includes 155 built-in detectors across 13 domains. Each detector
 identifies a specific type of sensitive data and can be used with any
 transformation action.
 
@@ -15,6 +15,8 @@ transformation action.
 | **Crypto**        | `crypto_address`        | No               | Yes            |
 |                   | `crypto_tx_hash`        | Yes              | Yes            |
 | **Cloud Keys**    | `aws_access_key`        | No               | Yes            |
+|                   | `cloudflare_api_token`  | No               | Yes            |
+|                   | `digitalocean_token`    | No               | Yes            |
 |                   | `google_api_key`        | No               | Yes            |
 |                   | `slack_token`           | No               | Yes            |
 |                   | `stripe_api_key`        | No               | Yes            |
@@ -133,11 +135,33 @@ transformation action.
 |                   | `url_query_key`         | No               | Yes            |
 | **Person**        | `person_name`           | No               | Yes            |
 |                   | `person_name_lite`      | No               | Yes            |
-| **Tokens & Keys** | `generic_api_key`       | Yes              | Yes            |
+| **Tokens & Keys** | `anthropic_api_key`     | No               | Yes            |
+|                   | `datadog_api_key`       | Yes              | Yes            |
+|                   | `discord_bot_token`     | Yes              | Yes            |
+|                   | `generic_api_key`       | Yes              | Yes            |
 |                   | `github_token`          | No               | Yes            |
+|                   | `gitlab_token`           | No               | Yes            |
+|                   | `heroku_api_key`        | No               | Yes            |
 |                   | `http_auth_header`      | No               | Yes            |
+|                   | `huggingface_token`     | No               | Yes            |
 |                   | `jwt_token`             | No               | Yes            |
+|                   | `linear_api_key`        | No               | Yes            |
+|                   | `mailchimp_api_key`     | No               | Yes            |
+|                   | `mailgun_api_key`       | Yes              | Yes            |
+|                   | `notion_token`          | No               | Yes            |
+|                   | `npm_token`             | No               | Yes            |
+|                   | `okta_token`            | Yes              | Yes            |
+|                   | `openai_api_key`        | No               | Yes            |
+|                   | `pagerduty_token`       | Yes              | Yes            |
 |                   | `private_key`           | No               | Yes            |
+|                   | `scaleway_key`          | Yes              | Yes            |
+|                   | `sendgrid_api_key`      | No               | Yes            |
+|                   | `sentry_token`          | No               | Yes            |
+|                   | `shopify_token`         | No               | Yes            |
+|                   | `slack_webhook_url`     | No               | Yes            |
+|                   | `square_token`          | Yes              | Yes            |
+|                   | `telegram_bot_token`    | No               | Yes            |
+|                   | `twilio_sid`            | No               | Yes            |
 | **Logistics**     | `tracking_number`       | Yes              | Yes            |
 
 ## Context requirements

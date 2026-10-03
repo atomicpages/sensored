@@ -3900,6 +3900,690 @@ function generateUrlQueryKeyPositive(): Case {
   return { id, text, kind: "supported", expected: [span] };
 }
 
+// ---------------------------------------------------------------------------
+// TruffleHog-ported detectors
+// ---------------------------------------------------------------------------
+
+function generateDigitalOceanTokenPositive(): Case {
+  const prefix = faker.helpers.arrayElement([
+    "dop_v1_",
+    "doo_v1_",
+    "dor_v1_",
+  ]);
+  const hex = faker.string.hexadecimal({ length: 64, casing: "lower" }).slice(2);
+  const token = `${prefix}${hex}`;
+  const id = `doplctn-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `DO_TOKEN: ${t}`,
+    (t) => `DigitalOcean: ${t}`,
+    (t) => `export DIGITALOCEAN_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "digitalocean_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateCloudflareApiTokenPositive(): Case {
+  const prefix = faker.helpers.arrayElement(["cfk_", "cfut_", "cfat_"]);
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  const len = faker.number.int({ min: 20, max: 40 });
+  let body = "";
+
+  for (let i = 0; i < len; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `${prefix}${body}`;
+  const id = `cftoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `CLOUDFLARE_API_TOKEN: ${t}`,
+    (t) => `Cloudflare: ${t}`,
+    (t) => `export CF_API_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "cloudflare_api_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateSendGridApiKeyPositive(): Case {
+  const part1Len = faker.number.int({ min: 20, max: 24 });
+  const part2Len = faker.number.int({ min: 39, max: 50 });
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let p1 = "";
+  let p2 = "";
+
+  for (let i = 0; i < part1Len; i++) {
+    p1 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  for (let i = 0; i < part2Len; i++) {
+    p2 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const key = `SG.${p1}.${p2}`;
+  const id = `sgkey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => k,
+    (k) => `SENDGRID_API_KEY: ${k}`,
+    (k) => `SendGrid: ${k}`,
+    (k) => `export SENDGRID_API_KEY=${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "sendgrid_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateHuggingFaceTokenPositive(): Case {
+  const prefix = faker.helpers.arrayElement(["hf_", "api_org_"]);
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let body = "";
+
+  for (let i = 0; i < 34; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `${prefix}${body}`;
+  const id = `hftoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `HUGGINGFACE_TOKEN: ${t}`,
+    (t) => `HuggingFace: ${t}`,
+    (t) => `export HF_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "huggingface_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateSlackWebhookUrlPositive(): Case {
+  const tPart = faker.string.alphanumeric({ length: 8, casing: "upper" });
+  const bPart = faker.string.alphanumeric({ length: 8, casing: "upper" });
+  const tailLen = faker.number.int({ min: 23, max: 25 });
+  const tailChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let tail = "";
+
+  for (let i = 0; i < tailLen; i++) {
+    tail += faker.helpers.arrayElement(tailChars.split(""));
+  }
+
+  const url = `https://hooks.slack.com/services/T${tPart}/B${bPart}/${tail}`;
+  const id = `slackhook-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((u: string) => string)[] = [
+    (u) => u,
+    (u) => `SLACK_WEBHOOK: ${u}`,
+    (u) => `Slack webhook: ${u}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(url);
+  const span = spanFor(text, url, "slack_webhook_url");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateTelegramBotTokenPositive(): Case {
+  const botId = faker.string.numeric({ min: 8, max: 12 });
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let body = "";
+
+  for (let i = 0; i < 35; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `${botId}:AA${body}`;
+  const id = `tgbot-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `TELEGRAM_BOT_TOKEN: ${t}`,
+    (t) => `Telegram: ${t}`,
+    (t) => `export TELEGRAM_BOT_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "telegram_bot_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateGitLabTokenPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=-_";
+  const len = faker.number.int({ min: 20, max: 22 });
+  let body = "";
+
+  for (let i = 0; i < len; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `glpat-${body}`;
+  const id = `gltoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `GITLAB_TOKEN: ${t}`,
+    (t) => `GitLab: ${t}`,
+    (t) => `export GITLAB_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "gitlab_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateNpmTokenPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let body = "";
+
+  for (let i = 0; i < 36; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `npm_${body}`;
+  const id = `npmtoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `NPM_TOKEN: ${t}`,
+    (t) => `npm: ${t}`,
+    (t) => `export NPM_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "npm_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateOpenAIApiKeyPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  const p1Len = faker.number.int({ min: 20, max: 40 });
+  const p2Len = faker.number.int({ min: 20, max: 40 });
+  let p1 = "";
+  let p2 = "";
+
+  for (let i = 0; i < p1Len; i++) {
+    p1 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  for (let i = 0; i < p2Len; i++) {
+    p2 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const key = `sk-${p1}T3BlbkFJ${p2}`;
+  const id = `openai-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => k,
+    (k) => `OPENAI_API_KEY: ${k}`,
+    (k) => `OpenAI: ${k}`,
+    (k) => `export OPENAI_API_KEY=${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "openai_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateAnthropicApiKeyPositive(): Case {
+  const prefix = faker.helpers.arrayElement(["sk-ant-admin01-", "sk-ant-api03-"]);
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let body = "";
+
+  for (let i = 0; i < 93; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const key = `${prefix}${body}AA`;
+  const id = `anthropic-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => k,
+    (k) => `ANTHROPIC_API_KEY: ${k}`,
+    (k) => `Anthropic: ${k}`,
+    (k) => `export ANTHROPIC_API_KEY=${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "anthropic_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateShopifyTokenPositive(): Case {
+  const prefix = faker.helpers.arrayElement([
+    "shppa_",
+    "shpat_",
+    "shpca_",
+    "shpss_",
+  ]);
+  const len = faker.number.int({ min: 32, max: 38 });
+  const hex = faker.string.hexadecimal({ length: len, casing: "lower" }).slice(2);
+  const token = `${prefix}${hex}`;
+  const id = `shtoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `SHOPIFY_TOKEN: ${t}`,
+    (t) => `Shopify: ${t}`,
+    (t) => `export SHOPIFY_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "shopify_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateTwilioSidPositive(): Case {
+  const hex = faker.string.hexadecimal({ length: 32, casing: "lower" }).slice(2);
+  const sid = `AC${hex}`;
+  const id = `twiliosid-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((s: string) => string)[] = [
+    (s) => s,
+    (s) => `TWILIO_SID: ${s}`,
+    (s) => `Twilio: ${s}`,
+    (s) => `export TWILIO_ACCOUNT_SID=${s}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(sid);
+  const span = spanFor(text, sid, "twilio_sid");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateMailchimpApiKeyPositive(): Case {
+  const hex = faker.string.hexadecimal({ length: 32, casing: "lower" }).slice(2);
+  const dc = faker.number.int({ min: 1, max: 99 });
+  const key = `${hex}-us${dc}`;
+  const id = `mckey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => k,
+    (k) => `MAILCHIMP_API_KEY: ${k}`,
+    (k) => `Mailchimp: ${k}`,
+    (k) => `export MAILCHIMP_API_KEY=${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "mailchimp_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateNotionTokenPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let body = "";
+
+  for (let i = 0; i < 43; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const prefix = faker.helpers.arrayElement(["secret_", "ntn_"]);
+  const token = `${prefix}${body}`;
+  const id = `nottoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `NOTION_TOKEN: ${t}`,
+    (t) => `Notion: ${t}`,
+    (t) => `export NOTION_TOKEN=${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "notion_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateSentryTokenPositive(): Case {
+  const variant = faker.helpers.arrayElement(["sntrys_eyJ", "sntryu_"]);
+
+  if (variant === "sntrys_eyJ") {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789=_+/";
+    let body = "";
+
+    for (let i = 0; i < 197; i++) {
+      body += faker.helpers.arrayElement(chars.split(""));
+    }
+
+    const token = `sntrys_eyJ${body}`;
+    const id = `sentryt-pos-${faker.string.alphanumeric(8)}`;
+
+    const contexts: ((t: string) => string)[] = [
+      (t) => t,
+      (t) => `SENTRY_AUTH_TOKEN: ${t}`,
+      (t) => `Sentry: ${t}`,
+    ];
+
+    const ctx = faker.helpers.arrayElement(contexts);
+    const text = ctx(token);
+    const span = spanFor(text, token, "sentry_token");
+
+    return { id, text, kind: "supported", expected: [span] };
+  }
+
+  const hex = faker.string.hexadecimal({ length: 64, casing: "lower" }).slice(2);
+  const token = `sntryu_${hex}`;
+  const id = `sentryt-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => t,
+    (t) => `SENTRY_AUTH_TOKEN: ${t}`,
+    (t) => `Sentry: ${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "sentry_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateHerokuApiKeyPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let body = "";
+
+  for (let i = 0; i < 60; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const key = `HRKU-${body}`;
+  const id = `hrkey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => k,
+    (k) => `HEROKU_API_KEY: ${k}`,
+    (k) => `Heroku: ${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "heroku_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateLinearApiKeyPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let body = "";
+
+  for (let i = 0; i < 40; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const key = `lin_api_${body}`;
+  const id = `linkey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => k,
+    (k) => `LINEAR_API_KEY: ${k}`,
+    (k) => `Linear: ${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "linear_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateMailgunApiKeyPositive(): Case {
+  const variant = faker.helpers.arrayElement(["key-", "uuid"]);
+
+  let key: string;
+
+  if (variant === "key-") {
+    const lower = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let body = "";
+
+    for (let i = 0; i < 32; i++) {
+      body += faker.helpers.arrayElement(lower.split(""));
+    }
+
+    key = `key-${body}`;
+  } else {
+    const h1 = faker.string.hexadecimal({ length: 32, casing: "lower" }).slice(2);
+    const h2 = faker.string.hexadecimal({ length: 8, casing: "lower" }).slice(2);
+    const h3 = faker.string.hexadecimal({ length: 8, casing: "lower" }).slice(2);
+    key = `${h1}-${h2}-${h3}`;
+  }
+
+  const id = `mgkey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => `mailgun api key: ${k}`,
+    (k) => `MAILGUN_API_KEY=${k}`,
+    (k) => `mailgun: ${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "mailgun_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateOktaTokenPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let body = "";
+
+  for (let i = 0; i < 40; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `00${body}`;
+  const id = `okatoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => `okta token: ${t}`,
+    (t) => `OKTA_API_TOKEN=${t}`,
+    (t) => `okta: ${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "okta_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateSquareTokenPositive(): Case {
+  const variant = faker.helpers.arrayElement(["EAAA", "sq0atp-", "sq0csp-"]);
+
+  if (variant === "EAAA") {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=";
+    let body = "";
+
+    for (let i = 0; i < 60; i++) {
+      body += faker.helpers.arrayElement(chars.split(""));
+    }
+
+    const token = `${variant}${body}`;
+    const id = `sqtoken-pos-${faker.string.alphanumeric(8)}`;
+
+    const contexts: ((t: string) => string)[] = [
+      (t) => `square token: ${t}`,
+      (t) => `SQUARE_ACCESS_TOKEN=${t}`,
+      (t) => `square: ${t}`,
+    ];
+
+    const ctx = faker.helpers.arrayElement(contexts);
+    const text = ctx(token);
+    const span = spanFor(text, token, "square_token");
+
+    return { id, text, kind: "supported", expected: [span] };
+  }
+
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  const len = variant === "sq0atp-" ? 36 : 43;
+  let body = "";
+
+  for (let i = 0; i < len; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `${variant}${body}`;
+  const id = `sqtoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => `square token: ${t}`,
+    (t) => `SQUARE_ACCESS_TOKEN=${t}`,
+    (t) => `square: ${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "square_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateDiscordBotTokenPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  let p1 = "";
+  let p2 = "";
+  let p3 = "";
+
+  for (let i = 0; i < 24; i++) {
+    p1 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  for (let i = 0; i < 6; i++) {
+    p2 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  for (let i = 0; i < 27; i++) {
+    p3 += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `${p1}.${p2}.${p3}`;
+  const id = `dctoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => `discord bot token: ${t}`,
+    (t) => `DISCORD_BOT_TOKEN=${t}`,
+    (t) => `discord: ${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "discord_bot_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateDatadogApiKeyPositive(): Case {
+  const len = faker.helpers.arrayElement([40, 32]);
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let body = "";
+
+  for (let i = 0; i < len; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const key = body;
+  const id = `ddkey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => `datadog api key: ${k}`,
+    (k) => `DATADOG_API_KEY=${k}`,
+    (k) => `dd api key: ${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "datadog_api_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generatePagerDutyTokenPositive(): Case {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_+";
+  let body = "";
+
+  for (let i = 0; i < 19; i++) {
+    body += faker.helpers.arrayElement(chars.split(""));
+  }
+
+  const token = `y${body}`;
+  const id = `pdtoken-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((t: string) => string)[] = [
+    (t) => `pagerduty token: ${t}`,
+    (t) => `PAGERDUTY_TOKEN=${t}`,
+    (t) => `pager_duty: ${t}`,
+    (t) => `pd_ key: ${t}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(token);
+  const span = spanFor(text, token, "pagerduty_token");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
+function generateScalewayKeyPositive(): Case {
+  const lower = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const parts = [8, 4, 4, 4, 12];
+  const segments: string[] = [];
+
+  for (const len of parts) {
+    let seg = "";
+
+    for (let i = 0; i < len; i++) {
+      seg += faker.helpers.arrayElement(lower.split(""));
+    }
+
+    segments.push(seg);
+  }
+
+  const key = segments.join("-");
+  const id = `sckey-pos-${faker.string.alphanumeric(8)}`;
+
+  const contexts: ((k: string) => string)[] = [
+    (k) => `scaleway key: ${k}`,
+    (k) => `SCALEWAY_API_KEY=${k}`,
+    (k) => `scaleway: ${k}`,
+  ];
+
+  const ctx = faker.helpers.arrayElement(contexts);
+  const text = ctx(key);
+  const span = spanFor(text, key, "scaleway_key");
+
+  return { id, text, kind: "supported", expected: [span] };
+}
+
 function main(): void {
   faker.seed(42);
 
@@ -4040,6 +4724,31 @@ function main(): void {
     generateTrackingNumberPositive,
     generateHttpAuthHeaderPositive,
     generateUrlQueryKeyPositive,
+    // TruffleHog-ported detectors
+    generateDigitalOceanTokenPositive,
+    generateCloudflareApiTokenPositive,
+    generateSendGridApiKeyPositive,
+    generateHuggingFaceTokenPositive,
+    generateSlackWebhookUrlPositive,
+    generateTelegramBotTokenPositive,
+    generateGitLabTokenPositive,
+    generateNpmTokenPositive,
+    generateOpenAIApiKeyPositive,
+    generateAnthropicApiKeyPositive,
+    generateShopifyTokenPositive,
+    generateTwilioSidPositive,
+    generateMailchimpApiKeyPositive,
+    generateNotionTokenPositive,
+    generateSentryTokenPositive,
+    generateHerokuApiKeyPositive,
+    generateLinearApiKeyPositive,
+    generateMailgunApiKeyPositive,
+    generateOktaTokenPositive,
+    generateSquareTokenPositive,
+    generateDiscordBotTokenPositive,
+    generateDatadogApiKeyPositive,
+    generatePagerDutyTokenPositive,
+    generateScalewayKeyPositive,
   ];
 
   for (const gen of generators) {

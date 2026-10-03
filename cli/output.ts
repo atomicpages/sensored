@@ -36,11 +36,11 @@ export function printTable(
   columns: readonly Column[],
   rows: readonly Record<string, string>[],
 ): void {
-  process.stdout.write(formatTable(columns, rows) + "\n");
+  process.stdout.write(`${formatTable(columns, rows)}\n`);
 }
 
 export function printJSON(data: unknown): void {
-  process.stdout.write(formatJSON(data) + "\n");
+  process.stdout.write(`${formatJSON(data)}\n`);
 }
 
 export function printInfo(message: string): void {

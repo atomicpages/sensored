@@ -9,7 +9,6 @@
  */
 
 import log4js from "log4js";
-import { configure } from "sensored/loggers/log4js";
 
 log4js.configure({
   appenders: {

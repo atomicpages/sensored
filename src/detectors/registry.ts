@@ -21,6 +21,8 @@ import { cryptoTxHashDetector } from "./crypto/crypto-tx-hash";
 // ---------------------------------------------------------------------------
 
 import { awsAccessKeyDetector } from "./cloud/aws-access-key";
+import { cloudflareApiTokenDetector } from "./cloud/cloudflare-api-token";
+import { digitalOceanTokenDetector } from "./cloud/digitalocean-token";
 import { googleApiKeyDetector } from "./cloud/google-api-key";
 import { slackTokenDetector } from "./cloud/slack-token";
 import { stripeApiKeyDetector } from "./cloud/stripe-api-key";
@@ -184,11 +186,33 @@ import { personNameLiteDetector } from "./person/person-name-lite";
 // Token
 // ---------------------------------------------------------------------------
 
+import { anthropicApiKeyDetector } from "./token/anthropic-api-key";
+import { datadogApiKeyDetector } from "./token/datadog-api-key";
+import { discordBotTokenDetector } from "./token/discord-bot-token";
 import { genericApiKeyDetector } from "./token/generic-api-key";
 import { gitHubTokenDetector } from "./token/github-token";
+import { gitLabTokenDetector } from "./token/gitlab-token";
+import { herokuApiKeyDetector } from "./token/heroku-api-key";
 import { httpAuthHeaderDetector } from "./token/http-auth-header";
+import { huggingFaceTokenDetector } from "./token/huggingface-token";
 import { jwtTokenDetector } from "./token/jwt-token";
+import { linearApiKeyDetector } from "./token/linear-api-key";
+import { mailchimpApiKeyDetector } from "./token/mailchimp-api-key";
+import { mailgunApiKeyDetector } from "./token/mailgun-api-key";
+import { notionTokenDetector } from "./token/notion-token";
+import { npmTokenDetector } from "./token/npm-token";
+import { oktaTokenDetector } from "./token/okta-token";
+import { openAIApiKeyDetector } from "./token/openai-api-key";
+import { pagerDutyTokenDetector } from "./token/pagerduty-token";
 import { privateKeyDetector } from "./token/private-key";
+import { scalewayKeyDetector } from "./token/scaleway-key";
+import { sendGridApiKeyDetector } from "./token/sendgrid-api-key";
+import { sentryTokenDetector } from "./token/sentry-token";
+import { shopifyTokenDetector } from "./token/shopify-token";
+import { slackWebhookUrlDetector } from "./token/slack-webhook-url";
+import { squareTokenDetector } from "./token/square-token";
+import { telegramBotTokenDetector } from "./token/telegram-bot-token";
+import { twilioSidDetector } from "./token/twilio-sid";
 
 // ---------------------------------------------------------------------------
 // Logistics
@@ -216,6 +240,8 @@ const builtIns: readonly Detector[] = [
   googleApiKeyDetector,
   slackTokenDetector,
   stripeApiKeyDetector,
+  cloudflareApiTokenDetector,
+  digitalOceanTokenDetector,
 
   // Financial
   cardDataDetector,
@@ -354,6 +380,28 @@ const builtIns: readonly Detector[] = [
   httpAuthHeaderDetector,
   jwtTokenDetector,
   privateKeyDetector,
+  anthropicApiKeyDetector,
+  datadogApiKeyDetector,
+  discordBotTokenDetector,
+  gitLabTokenDetector,
+  herokuApiKeyDetector,
+  huggingFaceTokenDetector,
+  linearApiKeyDetector,
+  mailchimpApiKeyDetector,
+  mailgunApiKeyDetector,
+  notionTokenDetector,
+  npmTokenDetector,
+  oktaTokenDetector,
+  openAIApiKeyDetector,
+  pagerDutyTokenDetector,
+  scalewayKeyDetector,
+  sendGridApiKeyDetector,
+  sentryTokenDetector,
+  shopifyTokenDetector,
+  slackWebhookUrlDetector,
+  squareTokenDetector,
+  telegramBotTokenDetector,
+  twilioSidDetector,
 
   // Logistics
   trackingNumberDetector,

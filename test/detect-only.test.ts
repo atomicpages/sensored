@@ -17,7 +17,7 @@ describe("detectOnly mode", () => {
     const result = redactor.inspect(text);
     expect(result.text).toBe(text);
     expect(result.groups).toHaveLength(1);
-    expect(result.groups[0]!.replacement).toBe("alice@example.com");
+    expect(result.groups[0]?.replacement).toBe("alice@example.com");
   });
 
   test("stream emits original text with detection events", async () => {
@@ -65,8 +65,8 @@ describe("detectOnly mode", () => {
     const normalResult = withoutDetect.inspect(text);
 
     expect(detectResult.groups).toHaveLength(normalResult.groups.length);
-    expect(detectResult.groups[0]!.start).toBe(normalResult.groups[0]!.start);
-    expect(detectResult.groups[0]!.end).toBe(normalResult.groups[0]!.end);
+    expect(detectResult.groups[0]?.start).toBe(normalResult.groups[0]?.start);
+    expect(detectResult.groups[0]?.end).toBe(normalResult.groups[0]?.end);
   });
 
   test("works with presets", () => {
@@ -90,7 +90,7 @@ describe("detectOnly mode", () => {
     const result = await r.redactAsync(text);
     expect(result.text).toBe(text);
     expect(result.detections).toHaveLength(1);
-    expect(result.detections[0]!.ruleId).toBe("email");
+    expect(result.detections[0]?.ruleId).toBe("email");
   });
 
   test("detectOnly: true + restore: true throws INVALID_CONFIG", () => {
@@ -130,7 +130,7 @@ describe("detectOnly mode", () => {
   test("detection group replacement field contains original text slice", () => {
     const text = "Contact alice@example.com for details";
     const result = redactor.inspect(text);
-    expect(result.groups[0]!.replacement).toBe("alice@example.com");
+    expect(result.groups[0]?.replacement).toBe("alice@example.com");
   });
 
   test("streaming with detectOnly: text events contain original text, detection events still emitted", async () => {
@@ -160,7 +160,7 @@ describe("detectOnly mode", () => {
 
     const group = (detectionEvents[0] as { group: { replacement: string } })
       .group;
-    expect(group!.replacement).toBe("alice@example.com");
+    expect(group?.replacement).toBe("alice@example.com");
   });
 
   test("works with allowlist (allowlisted values not detected)", () => {
@@ -188,6 +188,6 @@ describe("detectOnly mode", () => {
 
     const result = r.inspect(text);
     expect(result.groups).toHaveLength(1);
-    expect(result.groups[0]!.replacement).toBe("AB123456");
+    expect(result.groups[0]?.replacement).toBe("AB123456");
   });
 });

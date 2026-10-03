@@ -16,17 +16,17 @@ describe("crypto_address detector — positive cases", () => {
     ["Lfm2M5m5P5QGefi2DMPTfTL5SLmv7DivfNa", "LTC legacy L"],
     ["Mfm2M5m5P5QGefi2DMPTfTL5SLmv7DivfNa", "LTC legacy M"],
     ["ltc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", "LTC SegWit"],
-    ["4" + "A".repeat(93), "XMR"],
+    [`4${"A".repeat(93)}`, "XMR"],
     ["rDsbeomare4J1k6t6U8Z2J5J2J2J2J2J2J", "XRP"],
-    ["addr1" + "a".repeat(50), "ADA minimum"],
-    ["7" + "x".repeat(31), "SOL minimum 32 chars"],
-    ["7" + "x".repeat(43), "SOL maximum 44 chars"],
-    ["tz1" + "K".repeat(33), "XTZ tz1"],
-    ["tz2" + "K".repeat(33), "XTZ tz2"],
-    ["tz3" + "K".repeat(33), "XTZ tz3"],
-    ["tz4" + "K".repeat(33), "XTZ tz4"],
-    ["KT1" + "K".repeat(33), "XTZ KT1"],
-    ["bnb1" + "a".repeat(38), "BNB"],
+    [`addr1${"a".repeat(50)}`, "ADA minimum"],
+    [`7${"x".repeat(31)}`, "SOL minimum 32 chars"],
+    [`7${"x".repeat(43)}`, "SOL maximum 44 chars"],
+    [`tz1${"K".repeat(33)}`, "XTZ tz1"],
+    [`tz2${"K".repeat(33)}`, "XTZ tz2"],
+    [`tz3${"K".repeat(33)}`, "XTZ tz3"],
+    [`tz4${"K".repeat(33)}`, "XTZ tz4"],
+    [`KT1${"K".repeat(33)}`, "XTZ KT1"],
+    [`bnb1${"a".repeat(38)}`, "BNB"],
   ])("%s (%s)", (input) => {
     const detections = cryptoAddressDetector.detect(input);
     expect(detections).toHaveLength(1);
@@ -82,19 +82,19 @@ describe("crypto_address detector — negative cases", () => {
 
 describe("crypto_address detector — boundary cases", () => {
   test("minimum BTC P2PKH (26 chars)", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
 
   test("maximum BTC P2PKH (35 chars)", () => {
-    const addr = "1" + "a".repeat(34);
+    const addr = `1${"a".repeat(34)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
 
   test("minimum ETH (42 chars)", () => {
-    const addr = "0x" + "a".repeat(40);
+    const addr = `0x${"a".repeat(40)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
@@ -106,25 +106,25 @@ describe("crypto_address detector — boundary cases", () => {
   });
 
   test("minimum SOL (32 chars)", () => {
-    const addr = "7" + "x".repeat(31);
+    const addr = `7${"x".repeat(31)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
 
   test("maximum SOL (44 chars)", () => {
-    const addr = "7" + "x".repeat(43);
+    const addr = `7${"x".repeat(43)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
 
   test("minimum ADA (55 chars)", () => {
-    const addr = "addr1" + "a".repeat(50);
+    const addr = `addr1${"a".repeat(50)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
 
   test("BNB with only base58 chars", () => {
-    const addr = "bnb1" + "a".repeat(38);
+    const addr = `bnb1${"a".repeat(38)}`;
     const detections = cryptoAddressDetector.detect(addr);
     expect(detections).toHaveLength(1);
   });
@@ -132,42 +132,42 @@ describe("crypto_address detector — boundary cases", () => {
 
 describe("crypto_address detector — adversarial cases", () => {
   test("address embedded in word characters is rejected", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const text = `x${addr}x`;
     const detections = cryptoAddressDetector.detect(text);
     expect(detections).toHaveLength(0);
   });
 
   test("address preceded by letter is rejected", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const text = `x${addr}`;
     const detections = cryptoAddressDetector.detect(text);
     expect(detections).toHaveLength(0);
   });
 
   test("address followed by letter is rejected", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const text = `${addr}O`;
     const detections = cryptoAddressDetector.detect(text);
     expect(detections).toHaveLength(0);
   });
 
   test("address preceded by digit is rejected", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const text = `9${addr}`;
     const detections = cryptoAddressDetector.detect(text);
     expect(detections).toHaveLength(0);
   });
 
   test("address followed by digit is rejected", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const text = `${addr}0`;
     const detections = cryptoAddressDetector.detect(text);
     expect(detections).toHaveLength(0);
   });
 
   test("address with underscore suffix is rejected", () => {
-    const addr = "1" + "a".repeat(25);
+    const addr = `1${"a".repeat(25)}`;
     const text = `${addr}_`;
     const detections = cryptoAddressDetector.detect(text);
     expect(detections).toHaveLength(0);

@@ -27,7 +27,7 @@ describe("HU Personal ID detector", () => {
       entityType: "hu_id",
       reasons: ["hu_id.format", "hu_id.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{6}[A-Z]{2}/,
     );
   });
@@ -61,10 +61,10 @@ describe("HU Personal ID detector", () => {
     const text = "Hungarian: 123456AB and Hungarian: 789012CD";
     const detections = huIdDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "123456AB",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "789012CD",
     );
   });

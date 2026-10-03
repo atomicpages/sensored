@@ -1,4 +1,4 @@
-import type { RedactorConfig, RuleSetting } from "../src/types";
+import type { RedactorConfig } from "../src/types";
 
 export type ConfigInput =
   | RedactorConfig

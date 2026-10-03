@@ -15,7 +15,7 @@ export function bunyanRedact(
   return {
     write(rec: Record<string, unknown>): boolean {
       const redacted = redactValue(rec, redactor) as Record<string, unknown>;
-      stream.write(JSON.stringify(redacted) + "\n");
+      stream.write(`${JSON.stringify(redacted)}\n`);
       return true;
     },
   };

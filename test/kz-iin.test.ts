@@ -27,7 +27,7 @@ describe("Kazakhstan IIN detector", () => {
       entityType: "kz_iin",
       reasons: ["kz_iin.format", "kz_iin.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{12}/,
     );
   });
@@ -62,10 +62,10 @@ describe("Kazakhstan IIN detector", () => {
     const text = "IIN: 890515300123 and IIN: 890515300456";
     const detections = kzIinDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "890515300123",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "890515300456",
     );
   });

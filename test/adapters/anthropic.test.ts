@@ -27,15 +27,15 @@ describe("wrapAnthropic", () => {
       max_tokens: 1024,
     });
 
-    expect(capturedParams!.model).toBe("claude-3-opus");
-    expect(capturedParams!.max_tokens).toBe(1024);
-    expect(capturedParams!.system).toBe("System prompt with [EMAIL_1]");
+    expect(capturedParams?.model).toBe("claude-3-opus");
+    expect(capturedParams?.max_tokens).toBe(1024);
+    expect(capturedParams?.system).toBe("System prompt with [EMAIL_1]");
 
-    const msgs = capturedParams!.messages as Array<Record<string, unknown>>;
-    expect(msgs[0]!.content).toBe("Contact [EMAIL_2]");
+    const msgs = capturedParams?.messages as Array<Record<string, unknown>>;
+    expect(msgs[0]?.content).toBe("Contact [EMAIL_2]");
 
     const content = response.content as Array<Record<string, unknown>>;
-    expect(content[0]!.text).toBe("Hello alice@example.com");
+    expect(content[0]?.text).toBe("Hello alice@example.com");
   });
 
   test("streaming: text_delta events restored", async () => {
@@ -114,8 +114,8 @@ describe("wrapAnthropic", () => {
       max_tokens: 1024,
     });
 
-    const sys = capturedParams!.system as Array<Record<string, unknown>>;
-    expect(sys[0]!.text).toBe("Instructions with [EMAIL_1]");
+    const sys = capturedParams?.system as Array<Record<string, unknown>>;
+    expect(sys[0]?.text).toBe("Instructions with [EMAIL_1]");
   });
 
   test("content blocks with tool_use are redacted and restored", async () => {
@@ -161,12 +161,12 @@ describe("wrapAnthropic", () => {
       max_tokens: 1024,
     });
 
-    const msgs = capturedParams!.messages as Array<Record<string, unknown>>;
-    const content = msgs[0]!.content as Array<Record<string, unknown>>;
-    expect((content[0]!.input as Record<string, unknown>).to).toBe("[EMAIL_1]");
+    const msgs = capturedParams?.messages as Array<Record<string, unknown>>;
+    const content = msgs[0]?.content as Array<Record<string, unknown>>;
+    expect((content[0]?.input as Record<string, unknown>).to).toBe("[EMAIL_1]");
 
     const respContent = response.content as Array<Record<string, unknown>>;
-    expect((respContent[0]!.input as Record<string, unknown>).to).toBe(
+    expect((respContent[0]?.input as Record<string, unknown>).to).toBe(
       "alice@example.com",
     );
   });
@@ -264,7 +264,7 @@ describe("wrapAnthropic", () => {
       max_tokens: 1024,
     });
 
-    const msgs = capturedParams!.messages as Array<Record<string, unknown>>;
-    expect(msgs[0]!.content).toBe("alice@example.com");
+    const msgs = capturedParams?.messages as Array<Record<string, unknown>>;
+    expect(msgs[0]?.content).toBe("alice@example.com");
   });
 });

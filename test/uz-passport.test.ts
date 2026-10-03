@@ -24,7 +24,7 @@ describe("Uzbekistan Passport detector", () => {
       entityType: "uz_passport",
       reasons: ["uz_passport.format", "uz_passport.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /[A-Z]{2}\d{7}/,
     );
   });
@@ -56,10 +56,10 @@ describe("Uzbekistan Passport detector", () => {
     const text = "Passport: AB1234567 and Passport: CD7654321";
     const detections = uzPassportDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "AB1234567",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "CD7654321",
     );
   });

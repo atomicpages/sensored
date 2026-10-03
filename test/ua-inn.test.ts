@@ -26,7 +26,7 @@ describe("UA INN detector", () => {
       entityType: "ua_inn",
       reasons: ["ua_inn.format", "ua_inn.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{10}/,
     );
   });
@@ -57,10 +57,10 @@ describe("UA INN detector", () => {
     const text = "INN: 1234567890 and INN: 9876543210";
     const detections = uaInnDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "1234567890",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "9876543210",
     );
   });
