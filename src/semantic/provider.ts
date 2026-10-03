@@ -1,4 +1,4 @@
-import type { EntryType, NoulQuestion, NoulResponse } from "@typesafe-ai/sdk";
+import type { EntryType, NoulQuestion } from "@typesafe-ai/sdk";
 import type { SemanticCandidate, SemanticResult } from "./types";
 
 // ---------------------------------------------------------------------------

@@ -56,7 +56,7 @@ async function runPipe(redactor: Redactor, options: CLIOptions): Promise<void> {
       options.semantic ?? false,
     );
 
-    await writeOutput(JSON.stringify(result, null, 2) + "\n");
+    await writeOutput(`${JSON.stringify(result, null, 2)}\n`);
 
     if (restoreEnabled && options.restoreMap && result.map) {
       await writeRestoreMap(result.map, options.restoreMap);
@@ -130,7 +130,7 @@ async function runFile(
   );
 
   if (options.json) {
-    await writeOutput(JSON.stringify(result, null, 2) + "\n", outputPath);
+    await writeOutput(`${JSON.stringify(result, null, 2)}\n`, outputPath);
 
     if (restoreEnabled && outputPath) {
       const mapPath = options.restoreMap ?? defaultMapPath(outputPath);
@@ -210,8 +210,8 @@ function defaultMapPath(outputPath: string): string {
   const dotIndex = outputPath.lastIndexOf(".");
 
   if (dotIndex > 0) {
-    return outputPath.slice(0, dotIndex) + ".map.json";
+    return `${outputPath.slice(0, dotIndex)}.map.json`;
   }
 
-  return outputPath + ".map.json";
+  return `${outputPath}.map.json`;
 }

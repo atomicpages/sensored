@@ -128,13 +128,13 @@ describe("person-name-lite semanticConfirm", () => {
     });
 
     expect(result).toBeDefined();
-    expect(result!.instructions).toEqual({
+    expect(result?.instructions).toEqual({
       task: "Determine whether the candidate text refers to a specific individual person.",
       candidate: "John Smith",
       before: "Contact ",
       after: " today",
     });
-    expect(result!.criteria).toEqual({
+    expect(result?.criteria).toEqual({
       true: "The candidate is the name of a specific individual person (e.g. 'John Smith', 'Dr. Jane Doe').",
       false:
         "The candidate is a place, organization, product, title, or sentence-start word (e.g. 'New York', 'Apple Inc').",

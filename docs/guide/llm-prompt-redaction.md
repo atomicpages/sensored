@@ -1,26 +1,25 @@
 # LLM Prompt Redaction
 
-When sending prompts to LLM providers like OpenAI or Anthropic, sensitive
-user data in the prompt is transmitted to a third-party API. sensored
-provides wrapper adapters that automatically redact PII from prompts
-before they leave your process and restore placeholders in the responses.
+When sending prompts to LLM providers like OpenAI or Anthropic, sensitive user
+data in the prompt is transmitted to a third-party API. sensored provides
+wrapper adapters that automatically redact PII from prompts before they leave
+your process and restore placeholders in the responses.
 
 ## How it works
 
-1. **Redact**: PII in the prompt is replaced with numbered placeholders
-   (e.g. `john@example.com` → `[EMAIL_1]`)
+1. **Redact**: PII in the prompt is replaced with numbered placeholders (e.g.
+   `john@example.com` → `[EMAIL_1]`)
 2. **Send**: The redacted prompt is sent to the LLM API
-3. **Restore**: Placeholders in the response are restored to original
-   values before returning to your code
+3. **Restore**: Placeholders in the response are restored to original values
+   before returning to your code
 
-The restoration map is held in memory for the duration of the API call.
-The same PII value gets the same placeholder within one call, so the LLM
-sees consistent references.
+The restoration map is held in memory for the duration of the API call. The same
+PII value gets the same placeholder within one call, so the LLM sees consistent
+references.
 
 ## OpenAI
 
-Wraps an OpenAI client, redacting the `messages` array and restoring
-responses.
+Wraps an OpenAI client, redacting the `messages` array and restoring responses.
 
 ### Install
 
@@ -59,13 +58,15 @@ console.log(response.choices[0]?.message?.content);
 
 ### Streaming
 
-Streaming responses are handled automatically. Placeholders split across
-chunk boundaries are reassembled correctly using `StreamRestorer`:
+Streaming responses are handled automatically. Placeholders split across chunk
+boundaries are reassembled correctly using `StreamRestorer`:
 
 ```ts
 const stream = await client.chat.completions.create({
   model: "gpt-4o",
-  messages: [{ role: "user", content: "Email john@example.com about order #123" }],
+  messages: [
+    { role: "user", content: "Email john@example.com about order #123" },
+  ],
   stream: true,
 });
 
@@ -106,8 +107,8 @@ const response = await client.chat.completions.create({
 
 ## Anthropic
 
-Wraps an Anthropic client, redacting the `messages` array and `system`
-prompt, and restoring responses.
+Wraps an Anthropic client, redacting the `messages` array and `system` prompt,
+and restoring responses.
 
 ### Install
 
@@ -134,9 +135,7 @@ const response = await client.messages.create({
   model: "claude-sonnet-4-5-20250514",
   max_tokens: 1024,
   system: "You are a helpful assistant for alice@corp.com",
-  messages: [
-    { role: "user", content: "Send the invoice to bob@example.com" },
-  ],
+  messages: [{ role: "user", content: "Send the invoice to bob@example.com" }],
 });
 // Model receives redacted system + messages; response is restored.
 for (const block of response.content) {
@@ -146,9 +145,9 @@ for (const block of response.content) {
 
 ### What gets redacted
 
-The Anthropic adapter redacts only the `messages` and `system` fields.
-Other parameters (`model`, `max_tokens`, `temperature`, `top_p`,
-`stop_sequences`, etc.) pass through unmodified.
+The Anthropic adapter redacts only the `messages` and `system` fields. Other
+parameters (`model`, `max_tokens`, `temperature`, `top_p`, `stop_sequences`,
+etc.) pass through unmodified.
 
 ### Streaming
 
@@ -203,9 +202,8 @@ const { text, map } = redactPrompt(
 
 ## detectOnly mode
 
-Use `detectOnly: true` to send prompts unmodified while still detecting
-PII. Useful for auditing what would be redacted before enabling it in
-production:
+Use `detectOnly: true` to send prompts unmodified while still detecting PII.
+Useful for auditing what would be redacted before enabling it in production:
 
 ```ts
 const client = wrapOpenAI(new OpenAI(), {
@@ -218,8 +216,8 @@ const client = wrapOpenAI(new OpenAI(), {
 
 ## Idempotent wrapping
 
-Wrapping an already-wrapped client is a no-op. The wrapper uses a
-Symbol to detect double-wrapping and returns the same client:
+Wrapping an already-wrapped client is a no-op. The wrapper uses a Symbol to
+detect double-wrapping and returns the same client:
 
 ```ts
 const wrapped = wrapOpenAI(client, config);
@@ -229,10 +227,9 @@ const doubleWrapped = wrapOpenAI(wrapped, config);
 
 ## Security considerations
 
-- The restoration map contains plaintext PII mappings. Treat it as
-  sensitive — do not log it or serialize it to unencrypted storage.
-- The map persists in memory until garbage-collected. JavaScript strings
-  are immutable and cannot be securely zeroed.
-- Redaction happens before the API call; restoration happens after the
-  response. PII never appears in the request payload sent to the LLM
-  provider.
+- The restoration map contains plaintext PII mappings. Treat it as sensitive —
+  do not log it or serialize it to unencrypted storage.
+- The map persists in memory until garbage-collected. JavaScript strings are
+  immutable and cannot be securely zeroed.
+- Redaction happens before the API call; restoration happens after the response.
+  PII never appears in the request payload sent to the LLM provider.

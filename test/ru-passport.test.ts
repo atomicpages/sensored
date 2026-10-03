@@ -30,7 +30,7 @@ describe("RU Passport detector", () => {
       entityType: "ru_passport",
       reasons: ["ru_passport.format", "ru_passport.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{4}\s?\d{6}/,
     );
   });
@@ -66,10 +66,10 @@ describe("RU Passport detector", () => {
     const text = "Passport: 1234 567890 and Passport: 9876 543210";
     const detections = ruPassportDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "1234 567890",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "9876 543210",
     );
   });

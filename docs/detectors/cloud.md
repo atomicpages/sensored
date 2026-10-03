@@ -77,3 +77,45 @@ redactor.redact("Token: xoxb-1234567890-abcdef");
 - **Context required**: No
 - **Stream supported**: Yes
 - **Validation**: xoxb-/xoxp-/xoxa-/xoxr- prefix + alphanumeric chars
+
+## cloudflare_api_token
+
+Detects Cloudflare API tokens (cfk_, cfut_, cfat_ followed by 20+ alphanumeric
+characters).
+
+```ts
+const redactor = createRedactor({
+  rules: { cloudflare_api_token: { action: "redact" } },
+});
+
+redactor.redact("Token: cfk_abcdefghijklmnopqrstuvwxyz");
+// "Token: [CLOUDFLARE_API_TOKEN_1]"
+```
+
+- **ID**: `cloudflare_api_token`
+- **Entity type**: `cloudflare_api_token`
+- **Context required**: No
+- **Stream supported**: Yes
+- **Validation**: cfk_/cfut_/cfat_ prefix + 20+ alphanumeric chars
+
+## digitalocean_token
+
+Detects DigitalOcean API tokens (dop_v1_, doo_v1_, or dor_v1_ followed by 64 hex
+characters).
+
+```ts
+const redactor = createRedactor({
+  rules: { digitalocean_token: { action: "redact" } },
+});
+
+redactor.redact(
+  "Token: dop_v1_0000000000000000000000000000000000000000000000000000000000000000",
+);
+// "Token: [DIGITALOCEAN_TOKEN_1]"
+```
+
+- **ID**: `digitalocean_token`
+- **Entity type**: `digitalocean_token`
+- **Context required**: No
+- **Stream supported**: Yes
+- **Validation**: dop_v1_/doo_v1_/dor_v1_ prefix + 64 hex chars

@@ -196,7 +196,7 @@ export class PersonNameLiteDetector extends Detector {
 
       if (words.length === 1 && hasHonorific) {
         // Single-word with honorific: check bloom filter only
-        if (!bf.has(words[0]!.toLowerCase())) {
+        if (words[0] && !bf.has(words[0]?.toLowerCase())) {
           continue;
         }
       } else {

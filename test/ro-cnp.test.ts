@@ -28,7 +28,7 @@ describe("RO CNP detector", () => {
       entityType: "ro_cnp",
       reasons: ["ro_cnp.structure", "ro_cnp.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{13}/,
     );
   });
@@ -64,10 +64,10 @@ describe("RO CNP detector", () => {
     const text = "CNP: 1901011234567 and CNP: 2850515123456";
     const detections = roCnpDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "1901011234567",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "2850515123456",
     );
   });

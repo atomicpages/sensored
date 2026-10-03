@@ -416,7 +416,7 @@ describe("v0: empty, single, and large chunk inputs", () => {
   });
 
   test("large input (100 KiB) with match at end across chunks", async () => {
-    const input = "x".repeat(102400) + "SSN: 123-45-6789";
+    const input = `${"x".repeat(102400)}SSN: 123-45-6789`;
     const expected = ssnRedactor.redact(input);
 
     for (const size of [4096, 8192, 16384]) {
@@ -428,7 +428,7 @@ describe("v0: empty, single, and large chunk inputs", () => {
   });
 
   test("large input (100 KiB) with match at start across chunks", async () => {
-    const input = "SSN: 123-45-6789" + "x".repeat(102400);
+    const input = `SSN: 123-45-6789${"x".repeat(102400)}`;
     const expected = ssnRedactor.redact(input);
 
     for (const size of [4096, 8192, 16384]) {
@@ -440,7 +440,7 @@ describe("v0: empty, single, and large chunk inputs", () => {
   });
 
   test("single chunk near buffer limit (60000 chars)", async () => {
-    const input = "x".repeat(60000) + "SSN: 123-45-6789";
+    const input = `${"x".repeat(60000)}SSN: 123-45-6789`;
     const expected = ssnRedactor.redact(input);
 
     async function* chunks(): AsyncIterable<string> {

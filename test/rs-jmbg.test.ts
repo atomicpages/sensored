@@ -29,7 +29,7 @@ describe("RS JMBG detector", () => {
       entityType: "rs_jmbg",
       reasons: ["rs_jmbg.structure", "rs_jmbg.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toMatch(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toMatch(
       /\d{13}/,
     );
   });
@@ -64,10 +64,10 @@ describe("RS JMBG detector", () => {
     const text = "JMBG: 0101990123456 and JMBG: 1505900123456";
     const detections = rsJmbgDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "0101990123456",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "1505900123456",
     );
   });

@@ -30,48 +30,48 @@ describe("listDetectors()", () => {
   test("includes us_ssn with contextHint", () => {
     const ssn = detectors.find((d) => d.id === "us_ssn");
     expect(ssn).toBeDefined();
-    expect(ssn!.contextHint).toBeDefined();
-    expect(ssn!.contextHint!.required).toBe(true);
-    expect(ssn!.contextHint!.labels).toContain("SSN");
-    expect(ssn!.contextHint!.labels).toContain("Social Security Number");
-    expect(ssn!.contextHint!.labels).toContain("Social Security No.");
-    expect(ssn!.contextHint!.position).toBe("both");
-    expect(ssn!.contextHint!.window.before).toBe(39);
-    expect(ssn!.contextHint!.window.after).toBe(32);
+    expect(ssn?.contextHint).toBeDefined();
+    expect(ssn?.contextHint?.required).toBe(true);
+    expect(ssn?.contextHint?.labels).toContain("SSN");
+    expect(ssn?.contextHint?.labels).toContain("Social Security Number");
+    expect(ssn?.contextHint?.labels).toContain("Social Security No.");
+    expect(ssn?.contextHint?.position).toBe("both");
+    expect(ssn?.contextHint?.window.before).toBe(39);
+    expect(ssn?.contextHint?.window.after).toBe(32);
   });
 
   test("context-optional detectors have no contextHint", () => {
     const email = detectors.find((d) => d.id === "email");
     expect(email).toBeDefined();
-    expect(email!.contextHint).toBeUndefined();
+    expect(email?.contextHint).toBeUndefined();
   });
 
   test("generic_api_key has contextHint with instructions", () => {
     const apiKey = detectors.find((d) => d.id === "generic_api_key");
     expect(apiKey).toBeDefined();
-    expect(apiKey!.contextHint).toBeDefined();
-    expect(apiKey!.contextHint!.required).toBe(true);
-    expect(apiKey!.contextHint!.labels).toContain("API key");
-    expect(apiKey!.contextHint!.position).toBe("preceding");
-    expect(apiKey!.contextHint!.instructions).toBeDefined();
-    expect(typeof apiKey!.contextHint!.instructions).toBe("string");
+    expect(apiKey?.contextHint).toBeDefined();
+    expect(apiKey?.contextHint?.required).toBe(true);
+    expect(apiKey?.contextHint?.labels).toContain("API key");
+    expect(apiKey?.contextHint?.position).toBe("preceding");
+    expect(apiKey?.contextHint?.instructions).toBeDefined();
+    expect(typeof apiKey?.contextHint?.instructions).toBe("string");
   });
 
   test("digital_identity has contextHint with instructions", () => {
     const di = detectors.find((d) => d.id === "digital_identity");
     expect(di).toBeDefined();
-    expect(di!.contextHint).toBeDefined();
-    expect(di!.contextHint!.labels).toContain("Username");
-    expect(di!.contextHint!.labels).toContain("Steam ID");
-    expect(di!.contextHint!.instructions).toBeDefined();
+    expect(di?.contextHint).toBeDefined();
+    expect(di?.contextHint?.labels).toContain("Username");
+    expect(di?.contextHint?.labels).toContain("Steam ID");
+    expect(di?.contextHint?.instructions).toBeDefined();
   });
 
   test("hr_compensation has contextHint", () => {
     const hr = detectors.find((d) => d.id === "hr_compensation");
     expect(hr).toBeDefined();
-    expect(hr!.contextHint).toBeDefined();
-    expect(hr!.contextHint!.labels).toContain("Salary");
-    expect(hr!.contextHint!.labels).toContain("401K Account No");
+    expect(hr?.contextHint).toBeDefined();
+    expect(hr?.contextHint?.labels).toContain("Salary");
+    expect(hr?.contextHint?.labels).toContain("401K Account No");
   });
 
   test("all contextHint objects are frozen", () => {
@@ -104,13 +104,13 @@ describe("redactor.describe()", () => {
 
   test("includes contextHint for us_ssn", () => {
     const ssn = descriptions.find((d) => d.id === "us_ssn");
-    expect(ssn!.contextHint).toBeDefined();
-    expect(ssn!.contextHint!.labels).toContain("SSN");
+    expect(ssn?.contextHint).toBeDefined();
+    expect(ssn?.contextHint?.labels).toContain("SSN");
   });
 
   test("email has no contextHint", () => {
     const email = descriptions.find((d) => d.id === "email");
-    expect(email!.contextHint).toBeUndefined();
+    expect(email?.contextHint).toBeUndefined();
   });
 });
 
@@ -137,15 +137,15 @@ describe("redactor.describe() with custom detector contextHint", () => {
     const desc = redactor.describe();
     expect(desc.length).toBe(1);
 
-    const hint = desc[0]!.contextHint;
+    const hint = desc[0]?.contextHint;
     expect(hint).toBeDefined();
-    expect(hint!.required).toBe(true);
-    expect(hint!.labels).toContain("Customer ID");
-    expect(hint!.labels).toContain("Account No");
-    expect(hint!.position).toBe("preceding");
-    expect(hint!.window.before).toBe(10);
-    expect(hint!.window.after).toBe(5);
-    expect(hint!.instructions).toBe("Label must appear before the value.");
+    expect(hint?.required).toBe(true);
+    expect(hint?.labels).toContain("Customer ID");
+    expect(hint?.labels).toContain("Account No");
+    expect(hint?.position).toBe("preceding");
+    expect(hint?.window.before).toBe(10);
+    expect(hint?.window.after).toBe(5);
+    expect(hint?.instructions).toBe("Label must appear before the value.");
   });
 });
 
@@ -165,6 +165,6 @@ describe("redactor.describe() with custom detector without contextHint", () => {
   test("contextHint is undefined when not provided", () => {
     const desc = redactor.describe();
     expect(desc.length).toBe(1);
-    expect(desc[0]!.contextHint).toBeUndefined();
+    expect(desc[0]?.contextHint).toBeUndefined();
   });
 });

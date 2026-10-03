@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
-      - run: bun audit
+      - run: bun run audit
 
   lint:
     name: Lint
@@ -123,7 +123,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
-      - run: rm -f eval/after.json && bun eval/cli.ts gate eval/corpus.json eval/after.json eval/baseline.json
+      - run: |
+          bun run eval:generate
+          rm -f eval/after.json
+          bun run eval:gate
 
   bench:
     name: Benchmark

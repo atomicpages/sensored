@@ -1,7 +1,6 @@
 import {
   collectMatches,
   createRestorationContext,
-  type RestorationContext,
   renderMatches,
 } from "../engine";
 import { createRedactor } from "../index";

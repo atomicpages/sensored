@@ -24,19 +24,19 @@ const validSuffixLetters = new Set([
 ]);
 
 function isValidNino(candidate: string): boolean {
-  const first = candidate[0]!.toUpperCase();
-  const second = candidate[1]!.toUpperCase();
-  const suffix = candidate[candidate.length - 1]!.toUpperCase();
+  const first = candidate[0]?.toUpperCase();
+  const second = candidate[1]?.toUpperCase();
+  const suffix = candidate[candidate.length - 1]?.toUpperCase();
 
-  if (invalidFirstLetters.has(first)) {
+  if (first && invalidFirstLetters.has(first)) {
     return false;
   }
 
-  if (invalidSecondLetters.has(second)) {
+  if (second && invalidSecondLetters.has(second)) {
     return false;
   }
 
-  if (!validSuffixLetters.has(suffix)) {
+  if (suffix && !validSuffixLetters.has(suffix)) {
     return false;
   }
 

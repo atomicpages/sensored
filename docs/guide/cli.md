@@ -43,23 +43,23 @@ sensored input.txt output.txt --preset pii
 
 **Flags:**
 
-| Flag | Description |
-| --- | --- |
-| `--preset <name>` | Apply a preset rule set |
-| `--rule <id>:<action>` | Override a single rule (can be repeated) |
-| `--allowlist <value>` | Exclude a value from redaction (can be repeated) |
-| `--allowlist-file <path>` | Load allowlist values from a file (one per line) |
-| `--restore` | Enable restoration map generation |
-| `--no-restore` | Disable restoration map (overrides config) |
-| `--restore-map <path>` | Path for restoration map (required with `--restore` in pipe mode) |
-| `--semantic` | Enable AI-powered semantic confirmation (requires `TYPESAFE_API_KEY`) |
-| `--max-input-length <n>` | Maximum input length in characters |
-| `--force` | Overwrite existing output files |
-| `--json` | Output JSON with text, detections, and map |
-| `--config <path>` | Path to config file |
-| `--no-config` | Disable config auto-discovery |
-| `--help` | Show help |
-| `--version` | Show version |
+| Flag                      | Description                                                           |
+| ------------------------- | --------------------------------------------------------------------- |
+| `--preset <name>`         | Apply a preset rule set                                               |
+| `--rule <id>:<action>`    | Override a single rule (can be repeated)                              |
+| `--allowlist <value>`     | Exclude a value from redaction (can be repeated)                      |
+| `--allowlist-file <path>` | Load allowlist values from a file (one per line)                      |
+| `--restore`               | Enable restoration map generation                                     |
+| `--no-restore`            | Disable restoration map (overrides config)                            |
+| `--restore-map <path>`    | Path for restoration map (required with `--restore` in pipe mode)     |
+| `--semantic`              | Enable AI-powered semantic confirmation (requires `TYPESAFE_API_KEY`) |
+| `--max-input-length <n>`  | Maximum input length in characters                                    |
+| `--force`                 | Overwrite existing output files                                       |
+| `--json`                  | Output JSON with text, detections, and map                            |
+| `--config <path>`         | Path to config file                                                   |
+| `--no-config`             | Disable config auto-discovery                                         |
+| `--help`                  | Show help                                                             |
+| `--version`               | Show version                                                          |
 
 **Rule actions:** `redact`, `mask`, `remove`, `format-preserve`,
 `token-replace`, `off`.
@@ -113,8 +113,8 @@ email               email               john@example.com                        
 Total: 1 detection(s)
 ```
 
-The "Total:" line is written to stderr so it doesn't interfere with piping
-the table output.
+The "Total:" line is written to stderr so it doesn't interfere with piping the
+table output.
 
 Use `--json` for machine-readable output:
 
@@ -137,10 +137,10 @@ echo "Contact [EMAIL_1]" | sensored restore --map map.json
 
 **Flags:**
 
-| Flag | Description |
-| --- | --- |
+| Flag           | Description                                                      |
+| -------------- | ---------------------------------------------------------------- |
 | `--map <path>` | Path to restoration map JSON file (or provide as 2nd positional) |
-| `--force` | Overwrite existing output files |
+| `--force`      | Overwrite existing output files                                  |
 
 ### `sensored list-detectors`
 
@@ -209,8 +209,8 @@ Config is the base, flags are patches:
 
 ## Exit codes
 
-| Code | Meaning |
-| --- | --- |
-| 0 | Success |
-| 1 | Runtime error (file not found, invalid config, etc.) |
-| 2 | Usage error (missing required args, no input) |
+| Code | Meaning                                              |
+| ---- | ---------------------------------------------------- |
+| 0    | Success                                              |
+| 1    | Runtime error (file not found, invalid config, etc.) |
+| 2    | Usage error (missing required args, no input)        |

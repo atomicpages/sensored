@@ -29,9 +29,9 @@ When `detectOnly` is `true`:
 
 ## Using inspect() to see what would be redacted
 
-`inspect()` is the primary tool for flag mode. It returns the original text
-and an array of detection groups — each with start/end offsets, the matched
-value, and the rule that triggered:
+`inspect()` is the primary tool for flag mode. It returns the original text and
+an array of detection groups — each with start/end offsets, the matched value,
+and the rule that triggered:
 
 ```ts
 const text = "Contact alice@example.com or call 555-867-5309";
@@ -52,8 +52,8 @@ for (const group of result.groups) {
 // 35 47 "555-867-5309"     ["phone"]
 ```
 
-The `replacement` field contains the original text slice (not a placeholder),
-so you can log or review exactly what was found.
+The `replacement` field contains the original text slice (not a placeholder), so
+you can log or review exactly what was found.
 
 ## Streaming with flag mode
 
@@ -84,8 +84,8 @@ A common production rollout strategy:
 
 1. **Flag mode** — Deploy with `detectOnly: true`. Log detection counts and
    types. No text is modified, so there's zero risk to existing behavior.
-2. **Review** — Analyze detection rates. Investigate false positives. Tune
-   rules and allowlists.
+2. **Review** — Analyze detection rates. Investigate false positives. Tune rules
+   and allowlists.
 3. **Redact mode** — Remove `detectOnly` (or set it to `false`). Redaction
    begins, replacing detected PII with placeholders.
 
@@ -146,10 +146,7 @@ const flagger = createRedactor({
   presets: ["pii"],
   rules: {},
   detectOnly: true,
-  allowlist: [
-    "noreply@company.com",
-    "support@company.com",
-  ],
+  allowlist: ["noreply@company.com", "support@company.com"],
 });
 
 const result = flagger.inspect(text);

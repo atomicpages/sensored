@@ -18,8 +18,8 @@ do not support `@version` syntax. `pii` includes 96 rules (all national-ID,
 identity, financial, healthcare, crypto, contact, and logistics detectors).
 `gdpr` includes 39 rules. `hipaa` includes 29 rules. `ccpa` includes 86 rules.
 `pci-dss` includes 6 rules. `healthcare` includes 19 rules. `finance` includes
-15 rules. `education` includes 6 rules. `soc2` includes 32 rules. `security`
-includes 16 rules. Validation logic lives in `validate.ts`. `validate.ts`
+15 rules. `education` includes 6 rules. `soc2` includes 56 rules. `security`
+includes 40 rules. Validation logic lives in `validate.ts`. `validate.ts`
 validates config shape, limits, per-rule settings, and custom detector
 definitions. Shared helpers (`isRecord`, `hasOnlyKeys`,
 `isNonNegativeInteger`) are exported for cross-file reuse.
@@ -30,7 +30,7 @@ All built-in detectors live under `detectors/` and are grouped by domain:
 
 ```
 detectors/
-  base.ts              Detector, ContextDetector, streamMeta, createContextMatcher, RegexDetector
+  base.ts              Detector, ContextDetector, KeywordDetector, streamMeta, createContextMatcher, RegexDetector
   checksum.ts          Shared Luhn validation (luhnValid, npiLuhnValid)
   checksum-detector.ts ChecksumDetector (shared matchAll → validate pipeline)
   registry.ts          Built-in detector registry (imports all groups)
@@ -143,16 +143,40 @@ detectors/
     url-with-auth.ts   UrlWithAuthDetector
     url-query-key.ts   UrlQueryKeyDetector
   cloud/
-    aws-access-key.ts  AwsAccessKeyDetector
-    google-api-key.ts  GoogleApiKeyDetector
-    stripe-api-key.ts  StripeApiKeyDetector
-    slack-token.ts     SlackTokenDetector
+    aws-access-key.ts         AwsAccessKeyDetector
+    google-api-key.ts         GoogleApiKeyDetector
+    stripe-api-key.ts          StripeApiKeyDetector
+    slack-token.ts             SlackTokenDetector
+    cloudflare-api-token.ts    CloudflareApiTokenDetector
+    digitalocean-token.ts      DigitalOceanTokenDetector
   token/
-    github-token.ts    GitHubTokenDetector
-    jwt-token.ts       JwtTokenDetector
-    private-key.ts     PrivateKeyDetector
-    generic-api-key.ts GenericApiKeyDetector
-    http-auth-header.ts HttpAuthHeaderDetector
+    github-token.ts            GitHubTokenDetector
+    jwt-token.ts               JwtTokenDetector
+    private-key.ts             PrivateKeyDetector
+    generic-api-key.ts         GenericApiKeyDetector
+    http-auth-header.ts        HttpAuthHeaderDetector
+    sendgrid-api-key.ts        SendGridApiKeyDetector
+    huggingface-token.ts       HuggingFaceTokenDetector
+    slack-webhook-url.ts       SlackWebhookUrlDetector
+    telegram-bot-token.ts      TelegramBotTokenDetector
+    gitlab-token.ts            GitLabTokenDetector
+    npm-token.ts               NpmTokenDetector
+    openai-api-key.ts          OpenAIApiKeyDetector
+    anthropic-api-key.ts       AnthropicApiKeyDetector
+    shopify-token.ts           ShopifyTokenDetector
+    twilio-sid.ts              TwilioSidDetector
+    mailchimp-api-key.ts       MailchimpApiKeyDetector
+    notion-token.ts            NotionTokenDetector
+    sentry-token.ts            SentryTokenDetector
+    heroku-api-key.ts          HerokuApiKeyDetector
+    linear-api-key.ts          LinearApiKeyDetector
+    mailgun-api-key.ts         MailgunApiKeyDetector
+    okta-token.ts              OktaTokenDetector
+    square-token.ts            SquareTokenDetector
+    discord-bot-token.ts       DiscordBotTokenDetector
+    datadog-api-key.ts         DatadogApiKeyDetector
+    pagerduty-token.ts         PagerDutyTokenDetector
+    scaleway-key.ts            ScalewayKeyDetector
   logistics/
     tracking-number.ts TrackingNumberDetector
   healthcare/
@@ -537,8 +561,8 @@ output plus opt-in reports. `renderFormatPreserve()` transforms digits to `X`
 and letters to `*` while keeping separators and structure. `renderTokenReplace()`
 generates deterministic fake data per entity type using `fnv1a32()` hashing;
 optional custom token mappings override defaults. `DEFAULT_TOKEN_GENERATORS`
-provides idempotent fake values for all 131 entity types (designed to not match
-any detector). Coverage: all 128 detector entity types plus `person_name_lite`.
+provides idempotent fake values for all 155 entity types (designed to not match
+any detector). Coverage: all 152 detector entity types plus `person_name_lite`.
 Fake values are constant (input-agnostic), format-valid, and idempotent —
 context-required detectors lack context labels in output, checksum-validated
 detectors fail checksum, and context-optional detectors use values that don't

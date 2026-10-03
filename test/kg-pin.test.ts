@@ -27,7 +27,7 @@ describe("Kyrgyzstan PIN detector", () => {
       entityType: "kg_pin",
       reasons: ["kg_pin.format", "kg_pin.context"],
     });
-    expect(input.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(input.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "12345678901234",
     );
   });
@@ -58,10 +58,10 @@ describe("Kyrgyzstan PIN detector", () => {
     const text = "PIN: 12345678901234 and PIN: 56789012345678";
     const detections = kgPinDetector.detect(text);
     expect(detections).toHaveLength(2);
-    expect(text.slice(detections[0]!.start, detections[0]!.end)).toBe(
+    expect(text.slice(detections[0]?.start, detections[0]?.end)).toBe(
       "12345678901234",
     );
-    expect(text.slice(detections[1]!.start, detections[1]!.end)).toBe(
+    expect(text.slice(detections[1]?.start, detections[1]?.end)).toBe(
       "56789012345678",
     );
   });

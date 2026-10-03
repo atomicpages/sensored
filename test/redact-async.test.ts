@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import type { AsyncRedactResult } from "../src";
 import { createRedactor, MAX_INPUT_LENGTH, SensoredError } from "../src";
 
 const basicRedactor = createRedactor({
@@ -86,13 +85,13 @@ describe("redactAsync — semantic config with person_name_lite", () => {
     expect(result.detections).toHaveLength(1);
     expect(result.detections[0]?.semanticConfirmed).toBe(true);
     expect(result.warnings).toBeDefined();
-    expect(result.warnings!.length).toBeGreaterThan(0);
+    expect(result.warnings?.length).toBeGreaterThan(0);
   }, 30000);
 
   test("warnings contain semantic failure message", async () => {
     const result = await semanticRedactor.redactAsync("Hello John Smith");
     expect(result.warnings).toBeDefined();
-    expect(result.warnings![0]).toContain("Semantic confirmation failed");
+    expect(result.warnings?.[0]).toContain("Semantic confirmation failed");
   }, 30000);
 });
 
@@ -105,7 +104,7 @@ describe("redactAsync — restore mode", () => {
   test("result includes map when restore is true", async () => {
     const result = await restoreRedactor.redactAsync("email john@example.com");
     expect(result.map).toBeDefined();
-    expect(result.map!["[EMAIL_1]"]).toBe("john@example.com");
+    expect(result.map?.["[EMAIL_1]"]).toBe("john@example.com");
   });
 
   test("result does not include map when restore is false", async () => {

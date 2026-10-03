@@ -89,7 +89,7 @@ describe("crypto_tx_hash detector — boundary cases", () => {
   });
 
   test("context at maximum left distance (40 chars)", () => {
-    const prefix = "x".repeat(26) + " Transaction: ";
+    const prefix = `${"x".repeat(26)} Transaction: `;
     const hash = "a".repeat(64);
     const text = `${prefix}${hash}`;
     const detections = cryptoTxHashDetector.detect(text);
@@ -97,7 +97,7 @@ describe("crypto_tx_hash detector — boundary cases", () => {
   });
 
   test("context beyond maximum left distance", () => {
-    const prefix = "Transaction: " + " ".repeat(28);
+    const prefix = `Transaction: ${" ".repeat(28)}`;
     const hash = "a".repeat(64);
     const text = `${prefix}${hash}`;
     const detections = cryptoTxHashDetector.detect(text);

@@ -318,6 +318,63 @@ export abstract class ContextDetector extends Detector {
 }
 
 // ---------------------------------------------------------------------------
+// KeywordDetector — shared pipeline for keyword-proximity detectors
+// ---------------------------------------------------------------------------
+
+/**
+ * Abstract base for detectors that require a keyword to appear within a
+ * bounded window of the match.  Subclasses provide a `pattern` and a list
+ * of `keywords`.  The detect pipeline runs matchAll → adjacency check →
+ * keyword-proximity check → filterGraphemeAligned.
+ */
+export abstract class KeywordDetector extends Detector {
+  protected abstract readonly pattern: RegExp;
+  protected abstract readonly keywords: readonly string[];
+  protected readonly keywordWindow = 40;
+
+  override detect(text: string): Detection[] {
+    const candidates: Detection[] = [];
+    const globalPattern = new RegExp(
+      this.pattern.source,
+      `${this.pattern.flags.replace(/g/g, "")}g`,
+    );
+
+    for (const match of text.matchAll(globalPattern)) {
+      const start = match.index;
+      const end = start + match[0].length;
+
+      if (this.isAdjacentForbidden(text, start, end)) {
+        continue;
+      }
+
+      const before = text
+        .slice(Math.max(0, start - this.keywordWindow), start)
+        .toLowerCase();
+      const after = text.slice(end, end + this.keywordWindow).toLowerCase();
+      const window = before + after;
+
+      const hasKeyword = this.keywords.some((keyword) =>
+        window.includes(keyword.toLowerCase()),
+      );
+
+      if (!hasKeyword) {
+        continue;
+      }
+
+      candidates.push({
+        start,
+        end,
+        ruleId: this.id,
+        entityType: this.entityType,
+        reasons: [`${this.id}.format`, `${this.id}.keyword`],
+      });
+    }
+
+    return this.filterGraphemeAligned(candidates, text);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // RegexDetector — wraps a DetectorDefinition
 // ---------------------------------------------------------------------------
 

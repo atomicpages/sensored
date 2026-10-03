@@ -38,9 +38,9 @@ const hints = redactor
   .filter((d) => d.contextHint)
   .map((d) => ({
     id: d.id,
-    labels: d.contextHint!.labels,
-    position: d.contextHint!.position,
-    instructions: d.contextHint!.instructions,
+    labels: d.contextHint?.labels,
+    position: d.contextHint?.position,
+    instructions: d.contextHint?.instructions,
   }));
 
 console.log("--- Context Hints (for LLM steering) ---");
