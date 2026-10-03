@@ -3,7 +3,8 @@ import { wrapAnthropic } from "../../src/adapters/anthropic";
 
 describe("wrapAnthropic", () => {
   test("non-streaming: messages + system prompt redacted, response restored", async () => {
-    let capturedParams: Record<string, unknown>;
+    let capturedParams: Record<string, unknown> | undefined;
+
     const fakeClient = {
       messages: {
         create: async (params: Record<string, unknown>) => {
@@ -92,7 +93,7 @@ describe("wrapAnthropic", () => {
   });
 
   test("system prompt as text blocks is redacted", async () => {
-    let capturedParams: Record<string, unknown>;
+    let capturedParams: Record<string, unknown> | undefined;
     const fakeClient = {
       messages: {
         create: async (params: Record<string, unknown>) => {
@@ -119,7 +120,7 @@ describe("wrapAnthropic", () => {
   });
 
   test("content blocks with tool_use are redacted and restored", async () => {
-    let capturedParams: Record<string, unknown>;
+    let capturedParams: Record<string, unknown> | undefined;
     const fakeClient = {
       messages: {
         create: async (params: Record<string, unknown>) => {
@@ -163,12 +164,14 @@ describe("wrapAnthropic", () => {
 
     const msgs = capturedParams?.messages as Array<Record<string, unknown>>;
     const content = msgs[0]?.content as Array<Record<string, unknown>>;
-    expect((content[0]?.input as Record<string, unknown>).to).toBe("[EMAIL_1]");
+    const reqInput = content[0]?.input as Record<string, unknown> | undefined;
+    expect(reqInput?.to).toBe("[EMAIL_1]");
 
     const respContent = response.content as Array<Record<string, unknown>>;
-    expect((respContent[0]?.input as Record<string, unknown>).to).toBe(
-      "alice@example.com",
-    );
+    const respInput = respContent[0]?.input as
+      | Record<string, unknown>
+      | undefined;
+    expect(respInput?.to).toBe("alice@example.com");
   });
 
   test("idempotent wrapping", () => {
@@ -243,7 +246,7 @@ describe("wrapAnthropic", () => {
   });
 
   test("detectOnly mode: prompts not modified", async () => {
-    let capturedParams: Record<string, unknown>;
+    let capturedParams: Record<string, unknown> | undefined;
     const fakeClient = {
       messages: {
         create: async (params: Record<string, unknown>) => {

@@ -67,6 +67,7 @@
     "generate:bloom": "bun scripts/generate-bloom-filter.ts",
     "lint": "biome check . --diagnostic-level error",
     "prepare": "husky",
+    "audit": "bun audit --ignore GHSA-vfj7-8cjw-p6xm --ignore GHSA-ch52-4w7c-c8xp",
     "test": "bun test --randomize",
     "typecheck": "tsc --noEmit --incremental -p tsconfig.src.json",
     "typecheck:build": "tsc --noEmit --incremental",

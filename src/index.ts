@@ -187,10 +187,12 @@ export function createRedactor(config: RedactorConfig) {
       }
 
       const value = text.slice(match.detection.start, match.detection.end);
+
       const before = text.slice(
         Math.max(0, match.detection.start - contextWindow),
         match.detection.start,
       );
+
       const after = text.slice(
         match.detection.end,
         match.detection.end + contextWindow,
@@ -211,6 +213,7 @@ export function createRedactor(config: RedactorConfig) {
           after,
           question,
         });
+
         candidateMatchIndices.push(i);
       }
     }

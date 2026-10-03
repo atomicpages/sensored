@@ -108,7 +108,7 @@ export function createStream(
 
   const maxLeftContext = Math.max(
     0,
-    ...rules.map((r) => r.detector.stream?.leftContext),
+    ...rules.map((r) => r.detector.stream?.leftContext ?? 0),
   );
 
   return async function* (

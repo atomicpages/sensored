@@ -16,7 +16,6 @@ _.log
 report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 eval/report.json
 eval/corpus.json
-eval/baseline.json
 
 # dotenv environment variable files
 .env

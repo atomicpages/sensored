@@ -19,9 +19,11 @@ not count as independent evaluation evidence.
 Corpus revision: `independent`.
 Provenance: `independent`.
 
-The corpus and baseline are gitignored because synthetic tokens can match
-real secret-scanning patterns (e.g. GitHub Push Protection). Regenerate
-locally with `bun run eval:generate && bun run eval:score`.
+The corpus is gitignored because synthetic tokens can match real
+secret-scanning patterns (e.g. GitHub Push Protection). Regenerate
+locally with `bun run eval:generate && bun run eval:score`. The baseline
+report is metrics-only (case IDs + outcome tuples, no corpus text) and
+stays committed so CI can gate after regenerating the corpus.
 
 ## Release gate
 

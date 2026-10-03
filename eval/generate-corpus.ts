@@ -4041,7 +4041,7 @@ function generateSlackWebhookUrlPositive(): Case {
 }
 
 function generateTelegramBotTokenPositive(): Case {
-  const botId = faker.string.numeric({ min: 8, max: 12 });
+  const botId = faker.string.numeric({ length: { min: 8, max: 12 } });
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
   let body = "";
 

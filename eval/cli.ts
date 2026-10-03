@@ -70,6 +70,13 @@ try {
   console.log(
     `Scored ${report.documents.scored} documents; release gate ${failures.length === 0 ? "passed" : "blocked"}.`,
   );
+
+  if (failures.length > 0) {
+    for (const failure of failures) {
+      console.error(`  - ${failure}`);
+    }
+  }
+
   if (command === "gate" && failures.length > 0) {
     process.exitCode = 1;
   }
