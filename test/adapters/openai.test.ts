@@ -149,7 +149,8 @@ describe("wrapOpenAI", () => {
     });
 
     const msgs = capturedMessages as Array<Record<string, unknown>>;
-    const tc = (msgs[0]?.tool_calls as Array<Record<string, unknown>>)[0]!;
+    const msg = msgs[0] as Record<string, unknown>;
+    const tc = (msg.tool_calls as Array<Record<string, unknown>>)[0]!;
     const fn = tc.function as Record<string, unknown>;
     expect(fn.arguments).toBe('{"to": "[PHONE_1]"}');
 
