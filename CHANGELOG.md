@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/atomicpages/sensored/compare/v1.4.0...v1.5.0) (2026-10-03)
+
+
+### Features
+
+* add 24 secret detectors ([#6](https://github.com/atomicpages/sensored/issues/6)) ([a1d2b2c](https://github.com/atomicpages/sensored/commit/a1d2b2c2cbb81b45ae3e5c0149feceb3e8b27fa5))
+
 # [1.4.0](https://github.com/atomicpages/sensored/compare/v1.3.0...v1.4.0) (2026-10-02)
 
 
