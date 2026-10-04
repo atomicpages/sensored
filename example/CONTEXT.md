@@ -22,6 +22,7 @@ examples by integration pattern.
   - `morgan.ts` — Morgan HTTP access log adapter.
   - `bunyan.ts` — Bunyan adapter.
   - `log4js.ts` — log4js wrapper appender.
+  - `console.ts` — Console method wrapping adapter.
 
 - `advanced/` — Advanced patterns.
   - `custom-detector.ts` — `DetectorDefinition` extension contract.

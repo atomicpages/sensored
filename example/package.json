@@ -17,6 +17,7 @@
     "run:morgan": "bun run logging/morgan.ts",
     "run:bunyan": "bun run logging/bunyan.ts",
     "run:log4js": "bun run logging/log4js.ts",
+    "run:console": "bun run logging/console.ts",
     "run:openai": "bun run llm/openai.ts",
     "run:anthropic": "bun run llm/anthropic.ts",
     "run:session": "bun run llm/session.ts"

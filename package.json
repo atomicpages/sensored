@@ -42,6 +42,7 @@
     "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
     "./adapters/openai": "./dist/src/adapters/openai.mjs",
     "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",
+    "./loggers/console": "./dist/src/loggers/console.mjs",
     "./loggers/log4js": "./dist/src/loggers/log4js.mjs",
     "./loggers/morgan": "./dist/src/loggers/morgan.mjs",
     "./loggers/pino": "./dist/src/loggers/pino.mjs",

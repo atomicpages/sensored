@@ -173,6 +173,15 @@ const stream = bunyanRedact({ presets: ["pii"], rules: {} }, process.stdout);
 ```
 
 ```ts
+// Console
+import { wrapConsole } from "sensored/loggers/console";
+
+const restore = wrapConsole({ presets: ["pii"], rules: {} });
+console.log("Contact alice@example.com"); // → Contact [EMAIL_1]
+restore();
+```
+
+```ts
 // log4js
 import log4js from "log4js";
 
