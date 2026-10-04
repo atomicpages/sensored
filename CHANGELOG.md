@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/atomicpages/sensored/compare/v1.5.0...v1.6.0) (2026-10-04)
+
+
+### Features
+
+* add session subsystem with multi-turn PII dedup and hydration ([#7](https://github.com/atomicpages/sensored/issues/7)) ([e6d3c4f](https://github.com/atomicpages/sensored/commit/e6d3c4fd79cea56299da3baee1e36dd53ee529f4))
+
 # [1.5.0](https://github.com/atomicpages/sensored/compare/v1.4.0...v1.5.0) (2026-10-03)
 
 

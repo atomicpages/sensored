@@ -1,6 +1,6 @@
 {
   "name": "sensored",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "A streaming-first PII redaction library for TypeScript",
   "keywords": [
     "pii",
@@ -39,7 +39,6 @@
     "./cli": "./dist/cli/index.mjs",
     "./cli/config": "./dist/cli/config.mjs",
     ".": "./dist/src/index.mjs",
-    "./session": "./dist/src/session.mjs",
     "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
     "./adapters/openai": "./dist/src/adapters/openai.mjs",
     "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",
@@ -47,6 +46,7 @@
     "./loggers/morgan": "./dist/src/loggers/morgan.mjs",
     "./loggers/pino": "./dist/src/loggers/pino.mjs",
     "./loggers/winston": "./dist/src/loggers/winston.mjs",
+    "./session": "./dist/src/session.mjs",
     "./package.json": "./package.json"
   },
   "bin": {
