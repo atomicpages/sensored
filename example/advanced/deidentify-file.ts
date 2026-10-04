@@ -10,8 +10,9 @@
 
 import { createRedactor } from "sensored";
 
-const INPUT_PATH = "sample-clinical-note.txt";
-const OUTPUT_PATH = "redacted-clinical-note.txt";
+const SHARED = `${import.meta.dir}/../shared`;
+const INPUT_PATH = `${SHARED}/sample-clinical-note.txt`;
+const OUTPUT_PATH = `${SHARED}/redacted-clinical-note.txt`;
 
 const redactor = createRedactor({
   presets: ["hipaa"],

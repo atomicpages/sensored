@@ -39,6 +39,7 @@
     "./cli": "./dist/cli/index.mjs",
     "./cli/config": "./dist/cli/config.mjs",
     ".": "./dist/src/index.mjs",
+    "./session": "./dist/src/session.mjs",
     "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
     "./adapters/openai": "./dist/src/adapters/openai.mjs",
     "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",

@@ -570,10 +570,12 @@ match the regex. Masks count grapheme clusters; hidden regions union across
 contributing matches. Redact priority is explicit, and equally ranked different
 replacements fall back to [REDACTED]. Adjacent spans remain separate groups.
 Idempotency is enforced via placeholder filtering: `findPlaceholderSpans` scans
-for `[UPPERCASE]` and `[UPPERCASE_N]` patterns (including `[REDACTED]`), and
-`filterPlaceholderMatches` drops any detection overlapping those spans so
-re-redacting already-redacted text is a no-op. The public seam between engine
-and stream is `detectAndRender`: it collects matches from all rules, filters
+for `[UPPERCASE]` and `[UPPERCASE_N]` patterns (including `[REDACTED]`) using
+`REDACT_SPAN_PATTERN`, and `filterPlaceholderMatches` drops any detection
+overlapping those spans so re-redacting already-redacted text is a no-op.
+`detectAndRender` delegates to `collectMatches` for match collection and
+filtering. The public seam between engine and stream is `detectAndRender`:
+it collects matches from all rules, filters
 placeholder overlaps, and renders the safe portion up to a flush point.
 `processText` delegates to `detectAndRender` for complete-string use;
 `stream.ts` calls `detectAndRender` per flush. Internal helpers (`AppliedMatch`,
@@ -643,13 +645,31 @@ token-replace) and is idempotent. The `createRedactor` function uses TypeScript
 overloads so callers with `restore: true` get a `RedactResult` return type while
 callers without it get `string`, preserving backward compatibility.
 `placeholders.ts` exports the shared `PLACEHOLDER_PATTERN` (matches numbered
-placeholders like `[EMAIL_1]`) and `PARTIAL_PATTERN` (matches incomplete
-placeholders split across chunk boundaries). Imported by `restore.ts` and
-`stream-restore.ts` so placeholder format lives in one module.
+placeholders like `[EMAIL_1]`), `PLACEHOLDER_TEST` (non-global variant for safe
+`.test()` usage), and `PARTIAL_PATTERN` (matches incomplete placeholders split
+across chunk boundaries). Imported by `restore.ts`, `stream-restore.ts`, and
+`adapters/shared.ts` so placeholder format lives in one module.
+`symbols.ts` exports `SESSION_BRAND` (`Symbol.for("sensored.session")`),
+shared by `session.ts` and `adapters/shared.ts` to avoid duplication.
+`session.ts` exports `createSession(config, existingMap?)` and the `Session`
+interface — a persistent redaction context for multi-turn LLM conversations.
+`createSession` returns a `Session` with `redact(text)`, `redactMessages(messages)`,
+`restore(text)`, `stream()`, `reset()`, `map`, and a `SESSION_BRAND` symbol
+property. Same PII value → same placeholder across all `redact()` calls within
+a session (dedup enabled via `reverseMap` in `RestorationContext`). Throws
+`INVALID_CONFIG` if `detectOnly: true`. Optional `existingMap` hydrates the
+session from a previously stored `RestorationMap` (parses placeholder keys to
+derive counters, skips malformed keys silently). `stream()` returns a
+`StreamRestorer` bound to a snapshot of the current map. `reset()` clears the
+map and reverse lookup for reuse, preserving the hydration map from session
+creation. `SESSION_BRAND` is imported from `symbols.ts` and re-exported by
+`session.ts`; used by `isSession()` in `adapters/shared.ts` to discriminate
+Session from `RedactorConfig` in adapter overloads.
 
 **Security note:** The `RestorationMap` contains plaintext PII mappings
-(placeholder → original value). The map is frozen via `Object.freeze()` but is
-not encrypted or cleared from memory. Callers must treat the map as sensitive:
+(placeholder → original value). The map is typed as
+`Readonly<Record<string, string>>` but is not encrypted or cleared from
+memory. Callers must treat the map as sensitive:
 do not log it, serialize it to unencrypted storage, or transmit it over
 unsecured channels. JavaScript strings are immutable and cannot be securely
 zeroed; the map will persist in memory until garbage-collected.

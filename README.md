@@ -200,7 +200,7 @@ responses automatically:
 ```ts
 // OpenAI
 import OpenAI from "openai";
-import { wrapOpenAI } from "sensored/providers/openai";
+import { wrapOpenAI } from "sensored/adapters/openai";
 
 const client = wrapOpenAI(new OpenAI(), { presets: ["pii"], rules: {} });
 const response = await client.chat.completions.create({
@@ -213,7 +213,7 @@ const response = await client.chat.completions.create({
 ```ts
 // Anthropic
 import Anthropic from "@anthropic-ai/sdk";
-import { wrapAnthropic } from "sensored/providers/anthropic";
+import { wrapAnthropic } from "sensored/adapters/anthropic";
 
 const client = wrapAnthropic(new Anthropic(), { presets: ["pii"], rules: {} });
 const response = await client.messages.create({
@@ -223,7 +223,36 @@ const response = await client.messages.create({
 });
 ```
 
-See the [LLM Prompt Redaction guide](https://atomicpages.github.io/sensored/guide/llm-prompt-redaction)
+### Sessions
+
+For multi-turn LLM conversations, `createSession` provides a persistent
+redaction context that deduplicates PII across calls — the same value always
+gets the same placeholder:
+
+```ts
+import { createSession } from "sensored";
+
+const session = createSession({ presets: ["pii"], rules: {} });
+
+const turn1 = session.redact("Email john@example.com");
+// "Email [EMAIL_1]"
+const turn2 = session.redact("Reply to john@example.com please");
+// "Reply to [EMAIL_1] please"
+
+// Restore placeholders in LLM responses
+const restored = session.restore("Sure, I emailed [EMAIL_1]");
+// "Sure, I emailed john@example.com"
+
+// Access the map for persistence
+const map = session.map; // { "[EMAIL_1]": "john@example.com" }
+
+// Reset between conversations (preserves hydration map)
+session.reset();
+```
+
+Pass a `Session` to `wrapOpenAI` or `wrapAnthropic` instead of a config to
+use session-based redaction with LLM adapters. See the
+[LLM Prompt Redaction guide](https://atomicpages.github.io/sensored/guide/llm-prompt-redaction)
 for streaming, tool calls, and more.
 
 ## Presets

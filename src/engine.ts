@@ -28,7 +28,7 @@ export interface RenderedSegment {
  * Filtering detections that overlap these spans ensures redacting
  * already-redacted text is a no-op.
  */
-const PLACEHOLDER_PATTERN = /\[[A-Z][A-Z0-9_]*\]/g;
+const REDACT_SPAN_PATTERN = /\[[A-Z][A-Z0-9_]*\]/g;
 
 /** Find spans of placeholder text in the input. */
 function findPlaceholderSpans(
@@ -36,7 +36,7 @@ function findPlaceholderSpans(
 ): readonly { start: number; end: number }[] {
   const spans: { start: number; end: number }[] = [];
 
-  for (const match of text.matchAll(PLACEHOLDER_PATTERN)) {
+  for (const match of text.matchAll(REDACT_SPAN_PATTERN)) {
     if (match.index !== undefined) {
       spans.push({ start: match.index, end: match.index + match[0].length });
     }
@@ -150,12 +150,14 @@ function groupOverlappingMatches(matches: AppliedMatch[]): MatchGroup[] {
 export interface RestorationContext {
   readonly map: Map<string, string>;
   readonly counters: Map<string, number>;
+  readonly reverseMap?: Map<string, string>;
 }
 
-export function createRestorationContext(): RestorationContext {
+export function createRestorationContext(dedup?: boolean): RestorationContext {
   return {
     map: new Map(),
     counters: new Map(),
+    reverseMap: dedup ? new Map() : undefined,
   };
 }
 
@@ -345,13 +347,7 @@ export function detectAndRender(
   groups: InspectionGroup[];
   consumed: number;
 } {
-  const matches = rules.flatMap((rule) =>
-    rule.detector.detect(text).map((detection) => ({ detection, rule })),
-  );
-
-  const placeholders = findPlaceholderSpans(text);
-  const filtered = filterPlaceholderMatches(matches, placeholders);
-  const allowlisted = filterAllowlisted(filtered, allowlist, text);
+  const allowlisted = collectMatches(text, rules, allowlist);
 
   return renderSafePortion(
     text,
@@ -393,7 +389,7 @@ export function processText(
   };
 
   if (restoration) {
-    result.map = Object.freeze(Object.fromEntries(restoration.map.entries()));
+    result.map = Object.fromEntries(restoration.map.entries());
   }
 
   return result;

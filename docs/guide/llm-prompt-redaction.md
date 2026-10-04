@@ -31,7 +31,7 @@ bun add openai
 
 ```ts
 import OpenAI from "openai";
-import { wrapOpenAI } from "sensored/providers/openai";
+import { wrapOpenAI } from "sensored/adapters/openai";
 
 const client = wrapOpenAI(new OpenAI(), {
   presets: ["pii"],
@@ -120,7 +120,7 @@ bun add @anthropic-ai/sdk
 
 ```ts
 import Anthropic from "@anthropic-ai/sdk";
-import { wrapAnthropic } from "sensored/providers/anthropic";
+import { wrapAnthropic } from "sensored/adapters/anthropic";
 
 const client = wrapAnthropic(new Anthropic(), {
   presets: ["pii"],
@@ -190,7 +190,7 @@ const response = await client.messages.create({
 For cases where you don't need a client wrapper, use `redactPrompt`:
 
 ```ts
-import { redactPrompt } from "sensored/providers/openai";
+import { redactPrompt } from "sensored/adapters/openai";
 
 const { text, map } = redactPrompt(
   "Contact john@example.com about order #123",
@@ -199,6 +199,76 @@ const { text, map } = redactPrompt(
 // text: "Contact [EMAIL_1] about order #123"
 // map: { "[EMAIL_1]": "john@example.com" }
 ```
+
+## Multi-turn sessions
+
+For multi-turn LLM conversations, use `createSession` to maintain a persistent
+placeholder map across turns. The same PII value maps to the same placeholder in
+every `redact()` call within a session, so the model sees consistent references
+throughout the conversation.
+
+### Basic usage
+
+```ts
+import { createSession } from "sensored/session";
+
+const session = createSession({
+  presets: ["pii"],
+  rules: { email: { action: "redact" } },
+});
+
+const turn1 = session.redact("Email john@example.com");
+// "Email [EMAIL_1]"
+const turn2 = session.redact("Also CC john@example.com");
+// "Also CC [EMAIL_1]"  — same value, same placeholder
+```
+
+### With adapter wrappers
+
+Pass a session instead of a config object to `wrapOpenAI` or `wrapAnthropic`:
+
+```ts
+import OpenAI from "openai";
+import { wrapOpenAI } from "sensored/adapters/openai";
+import { createSession } from "sensored/session";
+
+const session = createSession({
+  presets: ["pii"],
+  rules: { email: { action: "redact" } },
+});
+
+const client = wrapOpenAI(new OpenAI(), session);
+```
+
+### Hydration
+
+Pass an existing `RestorationMap` to resume a session:
+
+```ts
+const session = createSession(config, existingMap);
+```
+
+### Reset
+
+Clear the map to start a new conversation:
+
+```ts
+session.reset();
+```
+
+### Streaming
+
+Use `stream()` for streaming restoration of model responses:
+
+```ts
+const restorer = session.stream();
+for await (const chunk of modelStream) {
+  process.stdout.write(restorer.push(chunk.text));
+}
+process.stdout.write(restorer.flush());
+```
+
+See [Restoration](./restoration) for the full Session API reference.
 
 ## detectOnly mode
 

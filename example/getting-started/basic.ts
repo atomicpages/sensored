@@ -8,7 +8,7 @@
 
 import OpenAI from "openai";
 import { createRedactor, type RestorationMap } from "sensored";
-import { env } from "./env";
+import { env } from "../shared/env";
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 

@@ -3,6 +3,7 @@ import { defineConfig } from "tsdown";
 export default defineConfig({
   entry: [
     "src/index.ts",
+    "src/session.ts",
     "src/adapters/openai.ts",
     "src/adapters/anthropic.ts",
     "src/loggers/bunyan.ts",
