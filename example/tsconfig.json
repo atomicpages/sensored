@@ -21,6 +21,7 @@
       "sensored/loggers/morgan": ["../src/loggers/morgan.ts"],
       "sensored/loggers/pino": ["../src/loggers/pino.ts"],
       "sensored/loggers/winston": ["../src/loggers/winston.ts"],
+      "sensored/loggers/console": ["../src/loggers/console.ts"],
       "sensored/providers/openai": ["../src/adapters/openai.ts"],
       "sensored/providers/anthropic": ["../src/adapters/anthropic.ts"]
     },

@@ -282,3 +282,47 @@ The wrapper appender resolves the wrapped appender via `findAppender` at call
 time, redacts string args via `redactor.redact()` and object args via
 `redactValue()`, creates a new event with the redacted data (no mutation), and
 delegates to the wrapped appender.
+
+## Console Wrapping
+
+`wrapConsole` patches the global `console.*` methods so every argument is
+redacted before output — useful for development, CLI tools, and any code that
+logs directly to the console without a structured logger.
+
+### Usage
+
+```ts
+import { wrapConsole } from "sensored/loggers/console";
+
+const restore = wrapConsole({ presets: ["pii"], rules: {} });
+
+console.log("Contact alice@example.com"); // → Contact [EMAIL_1]
+console.info({ user: "John Smith", email: "john@example.com" });
+// → { user: "[PERSON_NAME_1]", email: "[EMAIL_1]" }
+
+restore();
+console.log("Contact alice@example.com"); // → Contact alice@example.com
+```
+
+### restore()
+
+`wrapConsole` returns a `restore()` function that reverts all patched methods
+to their original implementations. Always call `restore()` when you're done —
+or scope it with `try/finally` — to avoid leaving console methods patched in
+long-running processes.
+
+### Custom Console instances
+
+By default, `wrapConsole` patches the global `console` object. Pass a second
+argument to patch a custom `Console` instance instead:
+
+```ts
+import { wrapConsole } from "sensored/loggers/console";
+import { Console } from "node:console";
+
+const myConsole = new Console(process.stdout, process.stderr);
+const restore = wrapConsole({ presets: ["pii"], rules: {} }, myConsole);
+
+myConsole.log("Contact alice@example.com"); // → Contact [EMAIL_1]
+restore();
+```

@@ -19,6 +19,11 @@ popular TypeScript logging frameworks.
   `log` function delegates to `createLogRedactor` from `../adapters/shared`.
 - `winston.ts` — `winstonRedact(config)` returns a Winston transform function
   that delegates to `createLogRedactor` from `../adapters/shared`.
+- `console.ts` — `wrapConsole(config, consoleObj?)` patches `console.*` methods
+  (`log`, `info`, `warn`, `error`, `debug`, `trace`, `dir`, `dirxml`, `group`,
+  `groupCollapsed`) so every argument is redacted on the way out. Returns a
+  `restore()` function that reverts all methods to their originals. String args
+  go through `redactor.redact()`, objects through `redactValue()`.
 
 ## Peer dependencies
 

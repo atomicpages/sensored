@@ -11,6 +11,7 @@ export default defineConfig({
     "src/loggers/morgan.ts",
     "src/loggers/pino.ts",
     "src/loggers/winston.ts",
+    "src/loggers/console.ts",
     "cli/index.ts",
     "cli/config.ts",
   ],
