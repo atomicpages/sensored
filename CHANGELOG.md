@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/atomicpages/sensored/compare/v1.6.0...v1.7.0) (2026-10-04)
+
+
+### Features
+
+* add wrapConsole adapter for console method redaction ([#8](https://github.com/atomicpages/sensored/issues/8)) ([254dc38](https://github.com/atomicpages/sensored/commit/254dc3854e9910d852e955b70ea23432ce22722c))
+
 # [1.6.0](https://github.com/atomicpages/sensored/compare/v1.5.0...v1.6.0) (2026-10-04)
 
 
