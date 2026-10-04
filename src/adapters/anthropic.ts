@@ -1,22 +1,45 @@
 import { restore } from "../index";
 import { resolvePolicy } from "../policy";
+import type { Session } from "../session";
 import { StreamRestorer } from "../stream-restore";
 import { redactValue } from "../traverse";
 import type { RedactorConfig, RestorationMap } from "../types";
-import { createSharedRedactor } from "./shared";
+import {
+  createSharedRedactor,
+  isSession,
+  type RedactionAdapter,
+} from "./shared";
 
 const WRAPPED = Symbol("sensored.anthropic.wrapped");
 
 export function wrapAnthropic<T extends object>(
   client: T,
   config: RedactorConfig,
+): T;
+export function wrapAnthropic<T extends object>(client: T, session: Session): T;
+export function wrapAnthropic<T extends object>(
+  client: T,
+  configOrSession: RedactorConfig | Session,
 ): T {
   if ((client as Record<symbol, unknown>)[WRAPPED]) {
     return client;
   }
 
-  const { rules, allowlist, detectOnly } = resolvePolicy(config);
-  const shared = createSharedRedactor(rules, allowlist);
+  let adapter: RedactionAdapter;
+  let detectOnly: boolean;
+
+  if (isSession(configOrSession)) {
+    adapter = configOrSession;
+    detectOnly = false;
+  } else {
+    const {
+      rules,
+      allowlist,
+      detectOnly: doFlag,
+    } = resolvePolicy(configOrSession);
+    adapter = createSharedRedactor(rules, allowlist);
+    detectOnly = doFlag;
+  }
 
   type CreateFn = (params: Record<string, unknown>) => Promise<unknown>;
 
@@ -41,16 +64,16 @@ export function wrapAnthropic<T extends object>(
     const redactedParams = { ...params };
 
     if (params.system) {
-      redactedParams.system = redactValue(params.system, shared);
+      redactedParams.system = redactValue(params.system, adapter);
     }
 
     if (params.messages) {
-      redactedParams.messages = redactValue(params.messages, shared);
+      redactedParams.messages = redactValue(params.messages, adapter);
     }
 
     const response = await originalCreate(redactedParams);
 
-    const map = shared.map;
+    const map = adapter.map;
 
     if (params.stream) {
       return wrapAnthropicStream(

@@ -16,8 +16,9 @@
 
 import { createRedactor } from "sensored";
 
-const INPUT_PATH = "sample-clinical-note.txt";
-const OUTPUT_PATH = "redacted-clinical-note-ner.txt";
+const SHARED = `${import.meta.dir}/../shared`;
+const INPUT_PATH = `${SHARED}/sample-clinical-note.txt`;
+const OUTPUT_PATH = `${SHARED}/redacted-clinical-note-ner.txt`;
 
 const original = await Bun.file(INPUT_PATH).text();
 

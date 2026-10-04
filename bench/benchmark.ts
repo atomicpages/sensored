@@ -1,5 +1,6 @@
 import { do_not_optimize, measure } from "mitata";
 import { createRedactor } from "../src/index.ts";
+import { createSession } from "../src/session.ts";
 import type { StreamEvent } from "../src/types.ts";
 
 // person_name_lite uses lightweight regex + bloom filter (no compromise.js).
@@ -58,6 +59,11 @@ const allowlistRedactor = createRedactor({
   ],
 });
 
+const session = createSession({
+  presets: ["pii"],
+  rules: extraRules,
+});
+
 const CHAT_SIZE = 4096;
 const DOC_SIZE = 1_048_576;
 const FRAGMENT_SIZES = [1, 16, 256, 4096];
@@ -112,6 +118,12 @@ interface BenchReport {
   allowlist: {
     chatP95: number;
     throughputMibPerSec: number;
+  };
+  session: {
+    chatP95: number;
+    throughputMibPerSec: number;
+    restoreP95: number;
+    dedupP95: number;
   };
   targets: {
     chatP95: number;
@@ -498,6 +510,39 @@ console.log(
   `  allowlist throughput: ${allowlistThroughputMib.toFixed(1)} MiB/s`,
 );
 
+// --- Session benchmark ---
+
+console.log("\n--- Session ---");
+
+const sessionChatResult = toTimingResult(
+  await benchSync(() => session.redact(chatAsciiLow)),
+);
+console.log(`  session chat p95: ${sessionChatResult.p95.toFixed(3)}ms`);
+
+const sessionThroughputStats = await benchSync(() =>
+  session.redact(throughputInput),
+);
+const sessionThroughputMib =
+  DOC_SIZE / 1024 / 1024 / (nsToMs(sessionThroughputStats.avg) / 1000);
+console.log(`  session throughput: ${sessionThroughputMib.toFixed(1)} MiB/s`);
+
+const redactedText = session.redact(chatAsciiLow);
+const sessionRestoreResult = toTimingResult(
+  await benchSync(() => session.restore(redactedText)),
+);
+console.log(`  session restore p95: ${sessionRestoreResult.p95.toFixed(3)}ms`);
+
+const sessionDedupResult = toTimingResult(
+  await benchSync(() => {
+    session.redact(chatAsciiLow);
+    session.redact(chatAsciiLow);
+    session.redact(chatAsciiLow);
+    session.redact(chatAsciiLow);
+    session.redact(chatAsciiLow);
+  }),
+);
+console.log(`  session dedup p95: ${sessionDedupResult.p95.toFixed(3)}ms`);
+
 // --- Target evaluation ---
 
 console.log("\n--- Target evaluation ---");
@@ -582,6 +627,12 @@ const report: BenchReport = {
   allowlist: {
     chatP95: allowlistChatResult.p95,
     throughputMibPerSec: allowlistThroughputMib,
+  },
+  session: {
+    chatP95: sessionChatResult.p95,
+    throughputMibPerSec: sessionThroughputMib,
+    restoreP95: sessionRestoreResult.p95,
+    dedupP95: sessionDedupResult.p95,
   },
   targets,
   targetMet,

@@ -39,3 +39,10 @@ running the original commit's code produces the same degraded numbers.
 to all three redaction mode benchmarks. Allowlist benchmark added to measure
 the performance impact of exact-match allowlist filtering on chat and
 throughput workloads.
+
+**Session benchmark:** Added to measure session-level redaction performance.
+The session uses `dedup: true` which adds reverse-lookup cost for repeated PII
+values across calls. Measures chat p95 (4 KiB input, same as chat workload),
+throughput (MiB/s, same 1 MiB input as throughput benchmark), restore p95
+(redacting then restoring a 4 KiB chat input), and dedup overhead (5 sequential
+redact calls with overlapping PII values to measure reverse-lookup cost).

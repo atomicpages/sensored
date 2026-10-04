@@ -95,3 +95,57 @@ won't be accidentally modified.
 Redaction is also idempotent: re-redacting already-redacted text is a no-op
 because the library detects existing placeholders and skips detection within
 those spans.
+
+## Session API
+
+For multi-turn conversations (e.g. LLM chat), `createSession` provides a
+stateful redactor that persists the placeholder map across calls. The same
+PII value always maps to the same placeholder, even across different turns.
+
+```ts
+import { createSession } from "sensored/session";
+
+const session = createSession({
+  rules: { email: { action: "redact" }, phone: { action: "redact" } },
+});
+
+// Turn 1
+session.redact("email john@example.com");   // "email [EMAIL_1]"
+
+// Turn 2 — same value, same placeholder
+session.redact("also email john@example.com"); // "also email [EMAIL_1]"
+
+// Restore at any time
+session.restore("contact [EMAIL_1]");       // "contact john@example.com"
+
+// Access the accumulated map
+session.map; // { "[EMAIL_1]": "john@example.com" }
+
+// Reset for a new conversation
+session.reset();
+```
+
+### Hydration
+
+Pass an existing `RestorationMap` to resume a session:
+
+```ts
+const session = createSession(config, existingMap);
+// Counters resume from the highest existing number per entity type.
+// Malformed keys are skipped silently.
+```
+
+### Using sessions with LLM adapters
+
+`wrapOpenAI` and `wrapAnthropic` accept a `Session` directly:
+
+```ts
+import { wrapOpenAI } from "sensored/adapters/openai";
+import { createSession } from "sensored/session";
+
+const session = createSession({ presets: ["pii"] });
+const client = wrapOpenAI(new OpenAI({ apiKey }), session);
+```
+
+When a session is passed, the adapter uses `session.redact()` for prompts and
+`session.map` for response restoration. `detectOnly` is always false.

@@ -462,6 +462,53 @@ import { restore } from "sensored";
 function restore(text: string, map: RestorationMap): string;
 ```
 
+### createSession
+
+Creates a stateful session for multi-turn redaction with persistent placeholder
+mapping. Same PII values map to the same placeholder across all `redact()` calls
+within a session. Throws `INVALID_CONFIG` if `detectOnly` is `true`.
+
+```ts
+import { createSession } from "sensored/session";
+
+function createSession(config: RedactorConfig): Session;
+function createSession(config: RedactorConfig, existingMap?: RestorationMap): Session;
+```
+
+### Session
+
+A stateful redaction session with a persistent placeholder map.
+
+```ts
+interface Session {
+  readonly redact: (text: string) => string;
+  readonly redactMessages: <T extends readonly { role: string; content: unknown }[]>(
+    messages: T,
+  ) => T;
+  readonly restore: (text: string) => string;
+  readonly stream: () => StreamRestorer;
+  readonly reset: () => void;
+  readonly map: RestorationMap;
+  readonly [SESSION_BRAND]: true;
+}
+```
+
+- **redact(text)** — Redacts PII, returns redacted text. Same PII value gets same placeholder.
+- **redactMessages(messages)** — Redacts a chat message array.
+- **restore(text)** — Restores placeholders using the session's map.
+- **stream()** — Returns a `StreamRestorer` bound to the current map snapshot.
+- **reset()** — Clears the map and reverse lookup for a new conversation.
+- **map** — Readonly access to the placeholder→original vault (for persistence).
+
+### SESSION_BRAND
+
+Symbol used to brand session objects for runtime discrimination in adapter
+overloads.
+
+```ts
+const SESSION_BRAND: unique symbol = Symbol.for("sensored.session");
+```
+
 ---
 
 ## Constants

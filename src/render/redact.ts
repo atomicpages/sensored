@@ -114,11 +114,22 @@ function resolveRestorationPlaceholder(
   const entityType = resolveWinningEntityType(matches);
   const placeholderBase = entityType.toUpperCase();
 
+  if (restoration.reverseMap) {
+    const existing = restoration.reverseMap.get(originalText);
+    if (existing) {
+      return existing;
+    }
+  }
+
   const counter = (restoration.counters.get(placeholderBase) ?? 0) + 1;
   restoration.counters.set(placeholderBase, counter);
 
   const placeholder = `[${placeholderBase}_${counter}]`;
   restoration.map.set(placeholder, originalText);
+
+  if (restoration.reverseMap) {
+    restoration.reverseMap.set(originalText, placeholder);
+  }
 
   return placeholder;
 }

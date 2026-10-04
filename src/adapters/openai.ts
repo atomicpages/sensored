@@ -1,22 +1,45 @@
 import { createRedactor, restore } from "../index";
 import { resolvePolicy } from "../policy";
+import type { Session } from "../session";
 import { StreamRestorer } from "../stream-restore";
 import { redactValue } from "../traverse";
 import type { RedactorConfig, RestorationMap } from "../types";
-import { createSharedRedactor } from "./shared";
+import {
+  createSharedRedactor,
+  isSession,
+  type RedactionAdapter,
+} from "./shared";
 
 const WRAPPED = Symbol("sensored.openai.wrapped");
 
 export function wrapOpenAI<T extends object>(
   client: T,
   config: RedactorConfig,
+): T;
+export function wrapOpenAI<T extends object>(client: T, session: Session): T;
+export function wrapOpenAI<T extends object>(
+  client: T,
+  configOrSession: RedactorConfig | Session,
 ): T {
   if ((client as Record<symbol, unknown>)[WRAPPED]) {
     return client;
   }
 
-  const { rules, allowlist, detectOnly } = resolvePolicy(config);
-  const shared = createSharedRedactor(rules, allowlist);
+  let adapter: RedactionAdapter;
+  let detectOnly: boolean;
+
+  if (isSession(configOrSession)) {
+    adapter = configOrSession;
+    detectOnly = false;
+  } else {
+    const {
+      rules,
+      allowlist,
+      detectOnly: doFlag,
+    } = resolvePolicy(configOrSession);
+    adapter = createSharedRedactor(rules, allowlist);
+    detectOnly = doFlag;
+  }
 
   type CreateFn = (params: Record<string, unknown>) => Promise<unknown>;
 
@@ -42,7 +65,7 @@ export function wrapOpenAI<T extends object>(
 
     const redactedMessages = detectOnly
       ? messages
-      : redactValue(messages, shared);
+      : redactValue(messages, adapter);
 
     const response = await originalCreate({
       ...params,
@@ -53,7 +76,7 @@ export function wrapOpenAI<T extends object>(
       return response;
     }
 
-    const map = shared.map;
+    const map = adapter.map;
 
     if (params.stream) {
       return wrapOpenAIStream(
