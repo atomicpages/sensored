@@ -61,6 +61,7 @@ jobs:
         with:
           name: dist
           path: packages/sensored/dist/
+          include-hidden-files: true
 
   test:
     name: Test
