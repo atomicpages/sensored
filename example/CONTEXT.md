@@ -28,6 +28,7 @@ examples by integration pattern.
   - `custom-detector.ts` — `DetectorDefinition` extension contract.
   - `deidentify-file.ts` — HIPAA preset file de-identification.
   - `ner-redaction.ts` — Compromise NER vs bloom filter comparison.
+  - `vault.ts` — Encrypted persistence for restoration maps (seal/open/hydrate).
 
 - `server/` — HTTP server middleware.
   - `server.ts` — Bun HTTP echo server with PII redaction.
@@ -41,7 +42,7 @@ examples by integration pattern.
 
 ## Import paths
 
-Examples import sensored via a tsconfig path alias (`sensored` → `../src/index.ts`),
+Examples import sensored via a tsconfig path alias (`sensored` → `../packages/sensored/src/index.ts`),
 so no build step is required. Examples that need API keys import `env` from
 `../shared/env`. Sample data files live in `shared/` and are referenced via
 relative paths from the consuming example.

@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 'lts/*'
 
-      - run: bun run build
+      - run: bun run --filter sensored build
 
       - name: Semantic Release
         id: semantic
@@ -65,7 +65,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Build binary
-        run: bun build --compile --target=${{ matrix.target }} ./cli/index.ts --outfile ${{ matrix.artifact }}
+        run: bun build --compile --target=${{ matrix.target }} ./packages/sensored/cli/index.ts --outfile ${{ matrix.artifact }}
 
       - name: Upload to release
         env:

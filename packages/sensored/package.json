@@ -1,0 +1,119 @@
+{
+  "name": "sensored",
+  "version": "1.7.0",
+  "description": "A streaming-first PII redaction library for TypeScript",
+  "keywords": [
+    "pii",
+    "redaction",
+    "privacy",
+    "gdpr",
+    "hipaa",
+    "ccpa",
+    "pci-dss",
+    "security",
+    "compliance",
+    "streaming",
+    "browser",
+    "edge",
+    "deno",
+    "cloudflare-workers",
+    "isomorphic",
+    "universal"
+  ],
+  "homepage": "https://github.com/atomicpages/sensored",
+  "bugs": {
+    "url": "https://github.com/atomicpages/sensored/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomicpages/sensored.git"
+  },
+  "license": "MIT",
+  "author": "Dennis Thompson",
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./cli": "./dist/cli/index.mjs",
+    "./cli/config": "./dist/cli/config.mjs",
+    ".": "./dist/src/index.mjs",
+    "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
+    "./adapters/openai": "./dist/src/adapters/openai.mjs",
+    "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",
+    "./loggers/console": "./dist/src/loggers/console.mjs",
+    "./loggers/log4js": "./dist/src/loggers/log4js.mjs",
+    "./loggers/morgan": "./dist/src/loggers/morgan.mjs",
+    "./loggers/pino": "./dist/src/loggers/pino.mjs",
+    "./loggers/winston": "./dist/src/loggers/winston.mjs",
+    "./session": "./dist/src/session.mjs",
+    "./vault": "./dist/src/vault/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "sensored": "./dist/cli/index.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "bench": "bun run bench/benchmark.ts",
+    "build": "tsdown",
+    "eval:gate": "bun eval/cli.ts gate eval/corpus.json eval/after.json eval/baseline.json",
+    "eval:generate": "bun eval/generate-corpus.ts",
+    "eval:score": "bun eval/cli.ts score eval/corpus.json eval/report.json eval/baseline.json",
+    "generate:bloom": "bun scripts/generate-bloom-filter.ts",
+    "test": "bun test --randomize",
+    "typecheck": "tsc --noEmit --incremental -p tsconfig.src.json",
+    "typecheck:build": "tsc --noEmit --incremental",
+    "typecheck:test": "tsc --noEmit --incremental -p tsconfig.test.json"
+  },
+  "peerDependencies": {
+    "@typesafe-ai/sdk": "^1.0.0",
+    "compromise": "^14.17.0",
+    "pino": "^9.0.0",
+    "winston": "^3.0.0",
+    "openai": "^4.0.0",
+    "@anthropic-ai/sdk": "^0.30.0",
+    "bunyan": "^1.8.0",
+    "log4js": "^6.0.0",
+    "morgan": "^1.10.0",
+    "typescript": "^7"
+  },
+  "peerDependenciesMeta": {
+    "@typesafe-ai/sdk": {
+      "optional": true
+    },
+    "compromise": {
+      "optional": true
+    },
+    "pino": {
+      "optional": true
+    },
+    "winston": {
+      "optional": true
+    },
+    "openai": {
+      "optional": true
+    },
+    "@anthropic-ai/sdk": {
+      "optional": true
+    },
+    "bunyan": {
+      "optional": true
+    },
+    "log4js": {
+      "optional": true
+    },
+    "morgan": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "inlinedDependencies": {
+    "citty": "0.2.2"
+  }
+}

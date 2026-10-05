@@ -4,6 +4,7 @@ export default defineConfig({
   entry: [
     "src/index.ts",
     "src/session.ts",
+    "src/vault/index.ts",
     "src/adapters/openai.ts",
     "src/adapters/anthropic.ts",
     "src/loggers/bunyan.ts",

@@ -1,0 +1,5 @@
+{
+  "include": ["src/", "cli/"],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {}
+}

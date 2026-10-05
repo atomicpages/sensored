@@ -12,11 +12,11 @@ import {
   PLAYGROUND_TEMPLATES,
   parseAllowlist,
   validatePlaygroundInput,
-} from "../docs/.vitepress/theme/playground";
+} from "../../../docs/.vitepress/theme/playground";
 import {
   savePlaygroundHandoff,
   takePlaygroundHandoff,
-} from "../docs/.vitepress/theme/playground-handoff";
+} from "../../../docs/.vitepress/theme/playground-handoff";
 import { createRedactor } from "../src";
 
 describe("playground state", () => {

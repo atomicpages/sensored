@@ -8,8 +8,8 @@
 
 import OpenAI from "openai";
 import type { ChatCompletionMessageParam } from "openai/resources";
-import { wrapOpenAI } from "../../src/adapters/openai";
-import { createSession } from "../../src/session";
+import { wrapOpenAI } from "sensored/providers/openai";
+import { createSession } from "sensored/session";
 import { env } from "../shared/env";
 
 const SYSTEM_PROMPT = [

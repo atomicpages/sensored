@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**/*.ts", "**/*.js", "**/*.jsonc", "**/*.md", "!eval"]
+    "includes": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.jsonc",
+      "**/*.md",
+      "!**/eval",
+      "!**/*.d.ts"
+    ]
   },
   "formatter": {
     "useEditorconfig": true

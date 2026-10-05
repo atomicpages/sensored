@@ -1,6 +1,6 @@
 bun run audit
-bun test --randomize
-bun lint
-bun typecheck
-bun typecheck:build
-bun typecheck:test
+bun run --filter sensored test --randomize
+bun run lint
+bun run --filter sensored typecheck
+bun run --filter sensored typecheck:build
+bun run --filter sensored typecheck:test

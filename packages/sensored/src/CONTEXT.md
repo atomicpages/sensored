@@ -673,3 +673,97 @@ memory. Callers must treat the map as sensitive:
 do not log it, serialize it to unencrypted storage, or transmit it over
 unsecured channels. JavaScript strings are immutable and cannot be securely
 zeroed; the map will persist in memory until garbage-collected.
+
+## Vault
+
+`vault/` provides encrypted persistence for restoration maps and in-memory
+encryption for sessions. Uses `node:crypto` (AES-256-GCM) — Node.js 20+ or Bun
+only, not available in browsers or edge runtimes.
+
+### Module structure
+
+```
+vault/
+  types.ts           VaultProvider interface, EncryptedSession, SealedBlob, VaultError, VaultErrorCode, SEALED_BLOB_VERSION
+  aes.ts             Shared AES-256-GCM utility: aesGcmEncrypt(), aesGcmDecrypt(), IV_LENGTH, TAG_LENGTH
+  dek.ts             DEK management: generateDek(), encryptWithDek(), decryptWithDek(), zeroDek(), DEK_LENGTH
+  local-provider.ts  LocalVaultProvider class + LocalVaultProviderOptions
+  seal.ts            seal(), open(), serializeSealedBlob(), deserializeSealedBlob() + type guards
+  session.ts         createEncryptedSession()
+  index.ts           Barrel exports
+```
+
+### VaultProvider interface
+
+Four methods + `name` property: `encrypt()`, `decrypt()`,
+`generateDataKey()`, `decryptDataKey()`. Uses envelope encryption: a DEK
+encrypts data, the provider's master key encrypts the DEK. The MIT-licensed
+package ships `LocalVaultProvider`. Cloud KMS providers (AWS KMS, GCP KMS,
+Azure Key Vault, HashiCorp Vault, WorkOS EKM) live in the commercial
+`@sensored/enterprise` package with lazy SDK imports and no hard deps.
+
+### LocalVaultProvider
+
+Accepts `key` (raw 32-byte Buffer, priority) or `passphrase` (string,
+HKDF-SHA256 with random 16-byte salt). Salt is embedded as a prefix in
+encrypted output. `LocalVaultProviderOptions` is exported from
+`local-provider.ts`.
+
+### DEK management
+
+`dek.ts` exports `generateDek()` (returns 32-byte random Buffer),
+`encryptWithDek(plaintext, dek)` (returns base64 of `iv || ciphertext || authTag`,
+12-byte IV, 16-byte tag), `decryptWithDek(ciphertext, dek)`, and
+`zeroDek(dek)` (fills Buffer with zeros).
+
+### Sealed blob
+
+`SealedBlob` is a JSON object with `version`, `provider`, `createdAt`,
+`encryptedDek`, `encryptedMap`, optional `metadata`. Base64-encoded via
+`serializeSealedBlob()` / `deserializeSealedBlob()` (internal to `seal.ts`,
+not exported from barrel). `SEALED_BLOB_VERSION` is `1`. `open()` throws
+`VAULT_PROVIDER_MISMATCH` if the provider name doesn't match. `seal()` accepts
+optional `SealedBlobMetadata` (string key-value pairs).
+
+### EncryptedSession
+
+`createEncryptedSession(config: VaultConfig)` returns `Promise<EncryptedSession>`.
+`VaultConfig` has `provider`, `redactorConfig`, optional `existingMap`. The DEK
+is fetched async at init, then encrypt/decrypt are sync via `node:crypto`.
+The restoration map is stored as base64 strings (via `encryptWithDek`/`decryptWithDek`
+from `dek.ts`) in a `Map<string, string>` and decrypted on demand for `restore()`,
+`stream()`, and `map` getter. `seal()` returns a base64 sealed blob. `dispose()`
+clears entries and zeros the DEK. Uses `session.redact(text)` (not `this.redact(text)`)
+to avoid `PromiseLike<EncryptedSession>` type narrowing issue. Throws
+`VAULT_ENCRYPT_FAILED` if `detectOnly: true`.
+
+### Errors
+
+`VaultError` extends `Error` with `code: VaultErrorCode` and
+`override readonly cause?: unknown`. Codes: `VAULT_ENCRYPT_FAILED`,
+`VAULT_DECRYPT_FAILED`, `VAULT_INVALID_KEY`,
+`VAULT_INVALID_SEALED_BLOB`, `VAULT_PROVIDER_MISMATCH`,
+`VAULT_DEK_GENERATION_FAILED`, `VAULT_DEK_DECRYPT_FAILED`.
+
+### Exports
+
+Exported via `sensored/vault` subpath. `package.json` has `"./vault"` export
+entry. `tsdown.config.ts` has `src/vault/index.ts` entry. `tsconfig.src.json`
+uses `"types": ["bun"]` to provide `Buffer` and `node:crypto` globals needed
+by the vault module.
+
+### Enterprise package
+
+`enterprise/` is a Bun workspace at the repo root. Ships as
+`@sensored/enterprise` on npm with a commercial EULA (not MIT). Provider stubs
+in `enterprise/src/providers/`: `base.ts` (`BaseKmsProvider<T>` base class),
+`aws-kms.ts`, `gcp-kms.ts`, `azure-key-vault.ts`, `hashicorp-vault.ts`,
+`workos-ekm.ts`. All cloud SDKs are lazy-loaded with no hard dependencies.
+`BaseKmsProvider<T>` uses a template method pattern: providers implement
+`encryptRaw()` / `decryptRaw()` (protected abstract); the base class provides
+concrete `encrypt()` / `decrypt()` that wrap calls in try/catch and rethrow
+as `VaultError`. Provides `getClient()` (lazy init via `createClient()`),
+`generateDataKey()` (local DEK + encrypt), and `decryptDataKey()` (decrypt).
+AWS KMS overrides `generateDataKey()` / `decryptDataKey()` to use the native
+`GenerateDataKey` API, with its own try/catch wrapping. Each provider defines
+a minimal client interface instead of `client: unknown`.

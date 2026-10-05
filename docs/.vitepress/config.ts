@@ -3,7 +3,10 @@ import llmstxt, {
   copyOrDownloadAsMarkdownButtons,
 } from "vitepress-plugin-llms";
 
-const sensoredEntry = new URL("../../src/index.ts", import.meta.url).pathname;
+const sensoredEntry = new URL(
+  "../../packages/sensored/src/index.ts",
+  import.meta.url,
+).pathname;
 
 export default defineConfig({
   lang: "en-US",
@@ -78,6 +81,7 @@ export default defineConfig({
             { text: "LLM Steering", link: "/guide/llm-steering" },
             { text: "Streaming", link: "/guide/streaming" },
             { text: "Restoration", link: "/guide/restoration" },
+            { text: "Vault", link: "/guide/vault" },
             { text: "Flag Mode", link: "/guide/flag-mode" },
             { text: "Errors", link: "/guide/errors" },
           ],
