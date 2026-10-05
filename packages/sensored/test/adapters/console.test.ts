@@ -56,7 +56,7 @@ describe("wrapConsole", () => {
     );
 
     mock.obj[method]("alice@example.com");
-    expect(mock.calls[method][0]![0]).toBe("[EMAIL]");
+    expect(mock.calls[method][0]?.[0]).toBe("[EMAIL]");
     restore();
   });
 
@@ -67,8 +67,8 @@ describe("wrapConsole", () => {
       mock.obj,
     );
     mock.obj.log("user", { email: "alice@example.com" });
-    expect(mock.calls.log[0]![0]).toBe("user");
-    const objArg = mock.calls.log[0]![1] as { email: string };
+    expect(mock.calls.log[0]?.[0]).toBe("user");
+    const objArg = mock.calls.log[0]?.[1] as { email: string };
     expect(objArg.email).toBe("[EMAIL]");
     restore();
   });
@@ -80,7 +80,7 @@ describe("wrapConsole", () => {
       mock.obj,
     );
     mock.obj.log({ authorization: "Bearer abc123" });
-    const objArg = mock.calls.log[0]![0] as { authorization: string };
+    const objArg = mock.calls.log[0]?.[0] as { authorization: string };
     expect(objArg.authorization).toBe("[REDACTED]");
     restore();
   });
@@ -92,10 +92,10 @@ describe("wrapConsole", () => {
       mock.obj,
     );
     mock.obj.log("alice@example.com");
-    expect(mock.calls.log[0]![0]).toBe("[EMAIL]");
+    expect(mock.calls.log[0]?.[0]).toBe("[EMAIL]");
     restore();
     mock.obj.log("alice@example.com");
-    expect(mock.calls.log[1]![0]).toBe("alice@example.com");
+    expect(mock.calls.log[1]?.[0]).toBe("alice@example.com");
   });
 
   test("detectOnly mode leaves args unmodified", () => {
@@ -105,7 +105,7 @@ describe("wrapConsole", () => {
       mock.obj,
     );
     mock.obj.log("alice@example.com");
-    expect(mock.calls.log[0]![0]).toBe("alice@example.com");
+    expect(mock.calls.log[0]?.[0]).toBe("alice@example.com");
     restore();
   });
 
@@ -132,12 +132,12 @@ describe("wrapConsole", () => {
       mock.obj,
     );
     mock.obj.log("alice@example.com +1-555-123-4567");
-    expect(mock.calls.log[0]![0]).toBe("[EMAIL] [PHONE]");
+    expect(mock.calls.log[0]?.[0]).toBe("[EMAIL] [PHONE]");
     restoreInner();
     mock.obj.log("alice@example.com +1-555-123-4567");
-    expect(mock.calls.log[1]![0]).toBe("[EMAIL] +1-555-123-4567");
+    expect(mock.calls.log[1]?.[0]).toBe("[EMAIL] +1-555-123-4567");
     restoreOuter();
     mock.obj.log("alice@example.com +1-555-123-4567");
-    expect(mock.calls.log[2]![0]).toBe("alice@example.com +1-555-123-4567");
+    expect(mock.calls.log[2]?.[0]).toBe("alice@example.com +1-555-123-4567");
   });
 });

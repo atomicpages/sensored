@@ -9,7 +9,7 @@
  */
 
 import OpenAI from "openai";
-import { wrapOpenAI } from "../../src/adapters/openai";
+import { wrapOpenAI } from "sensored/providers/openai";
 import { env } from "../shared/env";
 
 const client = wrapOpenAI(new OpenAI({ apiKey: env.OPENAI_API_KEY }), {

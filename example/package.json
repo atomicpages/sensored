@@ -20,7 +20,8 @@
     "run:console": "bun run logging/console.ts",
     "run:openai": "bun run llm/openai.ts",
     "run:anthropic": "bun run llm/anthropic.ts",
-    "run:session": "bun run llm/session.ts"
+    "run:session": "bun run llm/session.ts",
+    "run:vault": "bun run advanced/vault.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

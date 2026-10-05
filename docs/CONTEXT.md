@@ -59,7 +59,7 @@ light/dark/mono).
 - Each built-in preset has matching sample input. Preset changes replace the
   sample until the user edits or clears the input; user-modified and handed-off
   input is preserved.
-- `config.ts` aliases `@sensored-core` to `src/index.ts`. The component imports
+- `config.ts` aliases `@sensored-core` to `packages/sensored/src/index.ts`. The component imports
   that alias dynamically near viewport entry, keeping the redactor out of the
   initial page chunk. The optional `compromise` NER dependency loads only after
   the full playground enables `person_name`.

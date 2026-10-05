@@ -177,6 +177,18 @@ required.
 bun run advanced/ner-redaction.ts
 ```
 
+### vault.ts
+
+Encrypted persistence for restoration maps using `LocalVaultProvider`.
+Demonstrates the full vault lifecycle: create an encrypted session, redact PII,
+seal the session to a base64 blob, open the blob to recover the restoration
+map, hydrate a new session, restore the redacted text, and dispose. No API
+keys required.
+
+```bash
+bun run advanced/vault.ts
+```
+
 ## server/
 
 ### server.ts

@@ -264,6 +264,40 @@ use session-based redaction with LLM adapters. See the
 [LLM Prompt Redaction guide](https://atomicpages.github.io/sensored/guide/llm-prompt-redaction)
 for streaming, tool calls, and more.
 
+### Vault
+
+For encrypted persistence of restoration maps, the vault module provides
+AES-256-GCM envelope encryption. The restoration map is encrypted in memory
+and can be sealed into a portable base64 blob for storage:
+
+```ts
+import { createEncryptedSession, LocalVaultProvider } from "sensored/vault";
+import { randomBytes } from "node:crypto";
+
+const provider = new LocalVaultProvider({ key: randomBytes(32) });
+
+const session = await createEncryptedSession({
+  provider,
+  redactorConfig: { presets: ["pii"], rules: {} },
+});
+
+session.redact("Email john@example.com"); // "Email [EMAIL_1]"
+
+// Seal the map for persistence
+const sealed = await session.seal(); // base64 blob — safe to store
+
+// Reopen later
+import { open } from "sensored/vault";
+const map = await open(sealed, provider);
+
+session.dispose(); // zeroes the DEK from memory
+```
+
+Requires Node.js 20+ or Bun. Cloud KMS providers (AWS KMS, GCP KMS, Azure Key
+Vault, HashiCorp Vault, WorkOS EKM) available in `@sensored/enterprise`. See
+the [Vault guide](https://atomicpages.github.io/sensored/guide/vault) for
+details.
+
 ## Presets
 
 | Preset       | Rules | Use case                            |

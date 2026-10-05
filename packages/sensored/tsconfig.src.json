@@ -3,7 +3,7 @@
   "include": ["src/"],
   "exclude": [],
   "compilerOptions": {
-    "types": [],
+    "types": ["bun"],
     "lib": ["ESNext", "DOM", "DOM.Iterable", "WebWorker"]
   }
 }

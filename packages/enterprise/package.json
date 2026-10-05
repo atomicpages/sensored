@@ -1,0 +1,80 @@
+{
+  "name": "@sensored/enterprise",
+  "version": "0.0.1",
+  "description": "Cloud KMS provider integrations for sensored vault encryption",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "author": "Dennis Thompson",
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./kms/aws": "./dist/providers/aws-kms.mjs",
+    "./kms/azure": "./dist/providers/azure-key-vault.mjs",
+    "./kms/gcp": "./dist/providers/gcp-kms.mjs",
+    "./kms/hashicorp": "./dist/providers/hashicorp-vault.mjs",
+    "./kms/workos": "./dist/providers/workos-ekm.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "lint": "biome check . --diagnostic-level error",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit --incremental"
+  },
+  "dependencies": {
+    "sensored": "workspace:*"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-kms": "^3.0.0",
+    "@azure/abort-controller": "^2.0.0",
+    "@azure/keyvault-keys": "^4.8.0",
+    "@azure/identity": "^4.0.0",
+    "@google-cloud/kms": "^4.0.0",
+    "node-vault": "^0.12.0",
+    "@workos-inc/node": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@aws-sdk/client-kms": {
+      "optional": true
+    },
+    "@azure/abort-controller": {
+      "optional": true
+    },
+    "@azure/keyvault-keys": {
+      "optional": true
+    },
+    "@azure/identity": {
+      "optional": true
+    },
+    "@google-cloud/kms": {
+      "optional": true
+    },
+    "node-vault": {
+      "optional": true
+    },
+    "@workos-inc/node": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@aws-sdk/client-kms": "^3.0.0",
+    "@azure/abort-controller": "^2.0.0",
+    "@azure/keyvault-keys": "^4.8.0",
+    "@azure/identity": "^4.0.0",
+    "@biomejs/biome": "2.5.14",
+    "@google-cloud/kms": "^4.0.0",
+    "@types/bun": "1.4.2",
+    "@workos-inc/node": "^7.0.0",
+    "node-vault": "^0.12.0",
+    "tsdown": "^0.23.0",
+    "typescript": "^7"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

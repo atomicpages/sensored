@@ -15,15 +15,16 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "paths": {
-      "sensored": ["../src/index.ts"],
-      "sensored/loggers/bunyan": ["../src/loggers/bunyan.ts"],
-      "sensored/loggers/log4js": ["../src/loggers/log4js.ts"],
-      "sensored/loggers/morgan": ["../src/loggers/morgan.ts"],
-      "sensored/loggers/pino": ["../src/loggers/pino.ts"],
-      "sensored/loggers/winston": ["../src/loggers/winston.ts"],
-      "sensored/loggers/console": ["../src/loggers/console.ts"],
-      "sensored/providers/openai": ["../src/adapters/openai.ts"],
-      "sensored/providers/anthropic": ["../src/adapters/anthropic.ts"]
+      "sensored": ["../packages/sensored/src/index.ts"],
+      "sensored/loggers/bunyan": ["../packages/sensored/src/loggers/bunyan.ts"],
+      "sensored/loggers/log4js": ["../packages/sensored/src/loggers/log4js.ts"],
+      "sensored/loggers/morgan": ["../packages/sensored/src/loggers/morgan.ts"],
+      "sensored/loggers/pino": ["../packages/sensored/src/loggers/pino.ts"],
+      "sensored/loggers/winston": ["../packages/sensored/src/loggers/winston.ts"],
+      "sensored/loggers/console": ["../packages/sensored/src/loggers/console.ts"],
+      "sensored/providers/openai": ["../packages/sensored/src/adapters/openai.ts"],
+      "sensored/providers/anthropic": ["../packages/sensored/src/adapters/anthropic.ts"],
+      "sensored/vault": ["../packages/sensored/src/vault/index.ts"]
     },
 
     // Best practices

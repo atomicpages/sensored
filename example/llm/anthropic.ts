@@ -8,7 +8,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { wrapAnthropic } from "../../src/adapters/anthropic";
+import { wrapAnthropic } from "sensored/providers/anthropic";
 import { env } from "../shared/env";
 
 const client = wrapAnthropic(new Anthropic({ apiKey: env.ANTHROPIC_API_KEY }), {

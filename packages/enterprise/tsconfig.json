@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/"],
+  "compilerOptions": {
+    "types": ["bun"],
+    "noEmit": true,
+    "paths": {
+      "sensored": ["../sensored/src/index.ts"],
+      "sensored/vault": ["../sensored/src/vault/index.ts"]
+    }
+  }
+}
