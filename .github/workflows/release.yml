@@ -4,38 +4,47 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    environment: npm
     permissions:
       contents: write
-      id-token: write
-      issues: write
       pull-requests: write
-      packages: write
-    environment: npm
+      id-token: write
     outputs:
-      released: ${{ steps.semantic.outputs.new_release_published }}
-      tag: ${{ steps.semantic.outputs.new_release_version }}
+      published: ${{ steps.changesets.outputs.published }}
+      published-packages: ${{ steps.changesets.outputs.published-packages }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          fetch-tags: true
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - uses: ./.github/actions/setup
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 'lts/*'
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
 
       - run: bun run --filter sensored build
+      - run: bun run --filter @sensored/enterprise build
 
-      - name: Semantic Release
-        id: semantic
-        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51
+        with:
+          version-script: bunx changeset version && bun install
+          publish-script: bun run scripts/changeset-publish.ts
+          commit-message: "chore: version packages"
+          pr-title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GIT_AUTHOR_NAME: github-actions[bot]
@@ -46,7 +55,7 @@ jobs:
   binaries:
     name: Build binaries
     needs: release
-    if: needs.release.outputs.released == 'true'
+    if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -64,11 +73,25 @@ jobs:
 
       - uses: ./.github/actions/setup
 
+      - name: Get sensored version
+        id: version
+        run: |
+          PUBLISHED='${{ needs.release.outputs.published-packages }}'
+          VERSION=$(echo "$PUBLISHED" | jq -r '.[] | select(.name == "sensored") | .version')
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build binary
+        if: steps.version.outputs.skip != 'true'
         run: bun build --compile --target=${{ matrix.target }} ./packages/sensored/cli/index.ts --outfile ${{ matrix.artifact }}
 
       - name: Upload to release
+        if: steps.version.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload "v${{ needs.release.outputs.tag }}" "${{ matrix.artifact }}" --clobber
+          gh release upload "sensored@${{ steps.version.outputs.version }}" "${{ matrix.artifact }}" --clobber

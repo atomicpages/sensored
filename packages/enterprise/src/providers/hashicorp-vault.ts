@@ -23,6 +23,7 @@ export class HashiCorpVaultProvider extends BaseKmsProvider<VaultClient> {
 
   constructor(options: HashiCorpVaultProviderOptions) {
     super();
+
     this.vaultUrl = options.vaultUrl;
     this.token = options.token;
     this.keyName = options.keyName;
@@ -31,10 +32,12 @@ export class HashiCorpVaultProvider extends BaseKmsProvider<VaultClient> {
 
   protected async createClient(): Promise<VaultClient> {
     const vault = await import("node-vault");
+
     const client = vault.default({
       endpoint: this.vaultUrl,
       token: this.token,
     }) as VaultClient;
+
     return client;
   }
 

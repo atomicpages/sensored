@@ -25,6 +25,7 @@ export class AzureKeyVaultProvider extends BaseKmsProvider<AzureCryptoClient> {
 
   constructor(options: AzureKeyVaultProviderOptions) {
     super();
+
     this.vaultUrl = options.vaultUrl;
     this.keyName = options.keyName;
     this.credential = options.credential;
@@ -40,6 +41,7 @@ export class AzureKeyVaultProvider extends BaseKmsProvider<AzureCryptoClient> {
     const credential = this.credential ?? new DefaultAzureCredential();
     const keyClient = new KeyClient(this.vaultUrl, credential as never);
     const key = await keyClient.getKey(this.keyName);
+
     return new CryptographyClient(
       key,
       credential as never,

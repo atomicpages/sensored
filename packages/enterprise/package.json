@@ -10,11 +10,12 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
-    "./aws-kms": "./dist/providers/aws-kms.mjs",
-    "./gcp-kms": "./dist/providers/gcp-kms.mjs",
-    "./azure-key-vault": "./dist/providers/azure-key-vault.mjs",
-    "./hashicorp-vault": "./dist/providers/hashicorp-vault.mjs",
-    "./workos-ekm": "./dist/providers/workos-ekm.mjs"
+    "./kms/aws": "./dist/providers/aws-kms.mjs",
+    "./kms/azure": "./dist/providers/azure-key-vault.mjs",
+    "./kms/gcp": "./dist/providers/gcp-kms.mjs",
+    "./kms/hashicorp": "./dist/providers/hashicorp-vault.mjs",
+    "./kms/workos": "./dist/providers/workos-ekm.mjs",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -38,13 +39,27 @@
     "@workos-inc/node": "^7.0.0"
   },
   "peerDependenciesMeta": {
-    "@aws-sdk/client-kms": { "optional": true },
-    "@azure/abort-controller": { "optional": true },
-    "@azure/keyvault-keys": { "optional": true },
-    "@azure/identity": { "optional": true },
-    "@google-cloud/kms": { "optional": true },
-    "node-vault": { "optional": true },
-    "@workos-inc/node": { "optional": true }
+    "@aws-sdk/client-kms": {
+      "optional": true
+    },
+    "@azure/abort-controller": {
+      "optional": true
+    },
+    "@azure/keyvault-keys": {
+      "optional": true
+    },
+    "@azure/identity": {
+      "optional": true
+    },
+    "@google-cloud/kms": {
+      "optional": true
+    },
+    "node-vault": {
+      "optional": true
+    },
+    "@workos-inc/node": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@aws-sdk/client-kms": "^3.0.0",
