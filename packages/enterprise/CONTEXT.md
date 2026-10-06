@@ -50,8 +50,8 @@ cloud SDKs are optional peer deps.
 ### Providers
 
 - **AwsKmsProvider** — overrides `generateDataKey()` and `decryptDataKey()` to
-  use native KMS `GenerateDataKey` API. Options: `keyId`, `region`,
-  `credentials`.
+  use native KMS `GenerateDataKey` API. Options: `keyId`, `region`, `endpoint`
+  (for VPC endpoints or local testing with fakecloud), `credentials`.
 - **GcpKmsProvider** — uses base defaults. Options: `keyName`,
   `credentialsJson`.
 - **AzureKeyVaultProvider** — uses base defaults. Options: `vaultUrl`,

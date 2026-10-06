@@ -13,6 +13,7 @@ interface KmsClient {
 export interface AwsKmsProviderOptions {
   readonly keyId: string;
   readonly region?: string;
+  readonly endpoint?: string;
   readonly credentials?: {
     readonly accessKeyId: string;
     readonly secretAccessKey: string;
@@ -24,12 +25,14 @@ export class AwsKmsProvider extends BaseKmsProvider<KmsClient> {
   readonly name = "aws-kms";
   private readonly keyId: string;
   private readonly region?: string;
+  private readonly endpoint?: string;
   private readonly credentials?: AwsKmsProviderOptions["credentials"];
 
   constructor(options: AwsKmsProviderOptions) {
     super();
     this.keyId = options.keyId;
     this.region = options.region;
+    this.endpoint = options.endpoint;
     this.credentials = options.credentials;
   }
 
@@ -43,6 +46,10 @@ export class AwsKmsProvider extends BaseKmsProvider<KmsClient> {
 
     if (this.credentials) {
       config.credentials = this.credentials;
+    }
+
+    if (this.endpoint) {
+      config.endpoint = this.endpoint;
     }
 
     return new KMSClient(config) as KmsClient;
