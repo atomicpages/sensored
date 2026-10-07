@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, mock } from "bun:test";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 import { GcpKmsProvider } from "../src/providers/gcp-kms";
 
 const KEY_NAME =
@@ -21,20 +21,23 @@ function createMockClient() {
   return { encrypt: encryptCall, decrypt: decryptCall };
 }
 
+function registerMock(client: ReturnType<typeof createMockClient>) {
+  return mock.module("@google-cloud/kms", () => {
+    class KeyManagementServiceClient {
+      encrypt = client.encrypt;
+      decrypt = client.decrypt;
+    }
+
+    return { KeyManagementServiceClient };
+  });
+}
+
 describe("GcpKmsProvider", () => {
   let client: ReturnType<typeof createMockClient>;
 
-  beforeAll(() => {
+  beforeEach(async () => {
     client = createMockClient();
-
-    mock.module("@google-cloud/kms", () => {
-      class KeyManagementServiceClient {
-        encrypt = client.encrypt;
-        decrypt = client.decrypt;
-      }
-
-      return { KeyManagementServiceClient };
-    });
+    await registerMock(client);
   });
 
   it("round-trips plaintext through encrypt and decrypt", async () => {
@@ -50,8 +53,6 @@ describe("GcpKmsProvider", () => {
   });
 
   it("passes the keyName to encrypt", async () => {
-    client.encrypt.mockClear();
-
     const provider = new GcpKmsProvider({ keyName: KEY_NAME });
     await provider.encrypt("test");
 
@@ -60,8 +61,6 @@ describe("GcpKmsProvider", () => {
   });
 
   it("passes the keyName to decrypt", async () => {
-    client.decrypt.mockClear();
-
     const provider = new GcpKmsProvider({ keyName: KEY_NAME });
     const ciphertext = await provider.encrypt("test");
     await provider.decrypt(ciphertext);
@@ -80,15 +79,7 @@ describe("GcpKmsProvider", () => {
   it("wraps empty-ciphertext errors as VAULT_ENCRYPT_FAILED", async () => {
     const emptyClient = createMockClient();
     emptyClient.encrypt.mockImplementation(async () => [{ ciphertext: null }]);
-
-    mock.module("@google-cloud/kms", () => {
-      class KeyManagementServiceClient {
-        encrypt = emptyClient.encrypt;
-        decrypt = emptyClient.decrypt;
-      }
-
-      return { KeyManagementServiceClient };
-    });
+    await registerMock(emptyClient);
 
     const provider = new GcpKmsProvider({ keyName: KEY_NAME });
 
@@ -100,15 +91,7 @@ describe("GcpKmsProvider", () => {
   it("wraps empty-plaintext errors as VAULT_DECRYPT_FAILED", async () => {
     const emptyClient = createMockClient();
     emptyClient.decrypt.mockImplementation(async () => [{ plaintext: null }]);
-
-    mock.module("@google-cloud/kms", () => {
-      class KeyManagementServiceClient {
-        encrypt = emptyClient.encrypt;
-        decrypt = emptyClient.decrypt;
-      }
-
-      return { KeyManagementServiceClient };
-    });
+    await registerMock(emptyClient);
 
     const provider = new GcpKmsProvider({ keyName: KEY_NAME });
     const ciphertext = await provider.encrypt("test");
@@ -119,17 +102,6 @@ describe("GcpKmsProvider", () => {
   });
 
   it("generateDataKey returns 32-byte DEK and encrypted DEK", async () => {
-    const roundTripClient = createMockClient();
-
-    mock.module("@google-cloud/kms", () => {
-      class KeyManagementServiceClient {
-        encrypt = roundTripClient.encrypt;
-        decrypt = roundTripClient.decrypt;
-      }
-
-      return { KeyManagementServiceClient };
-    });
-
     const provider = new GcpKmsProvider({ keyName: KEY_NAME });
     const { plaintext, encrypted } = await provider.generateDataKey();
 

@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, mock } from "bun:test";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 import { WorkOsEkmProvider } from "../src/providers/workos-ekm";
 
 const API_KEY = "test-api-key";
@@ -22,19 +22,22 @@ function createMockClient() {
   };
 }
 
+function registerMock(client: ReturnType<typeof createMockClient>) {
+  return mock.module("@workos-inc/node", () => {
+    class WorkOS {
+      vault = client.vault;
+    }
+
+    return { WorkOS };
+  });
+}
+
 describe("WorkOsEkmProvider", () => {
   let client: ReturnType<typeof createMockClient>;
 
-  beforeAll(() => {
+  beforeEach(async () => {
     client = createMockClient();
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        vault = client.vault;
-      }
-
-      return { WorkOS };
-    });
+    await registerMock(client);
   });
 
   it("round-trips plaintext through encrypt and decrypt", async () => {
@@ -55,8 +58,6 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("passes ekmId and keyId in encrypt context", async () => {
-    client.vault.encrypt.mockClear();
-
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
       ekmId: EKM_ID,
@@ -73,8 +74,6 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("base64-encodes plaintext before sending to WorkOS", async () => {
-    client.vault.encrypt.mockClear();
-
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
       ekmId: EKM_ID,
@@ -95,14 +94,7 @@ describe("WorkOsEkmProvider", () => {
     failingClient.vault.encrypt.mockImplementation(async () => {
       throw new Error("encrypt failed");
     });
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        vault = failingClient.vault;
-      }
-
-      return { WorkOS };
-    });
+    await registerMock(failingClient);
 
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
@@ -120,14 +112,7 @@ describe("WorkOsEkmProvider", () => {
     failingClient.vault.decrypt.mockImplementation(async () => {
       throw new Error("decrypt failed");
     });
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        vault = failingClient.vault;
-      }
-
-      return { WorkOS };
-    });
+    await registerMock(failingClient);
 
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
@@ -141,16 +126,6 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("generateDataKey returns 32-byte DEK and encrypted DEK", async () => {
-    const roundTripClient = createMockClient();
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        vault = roundTripClient.vault;
-      }
-
-      return { WorkOS };
-    });
-
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
       ekmId: EKM_ID,

@@ -4,9 +4,6 @@
   "description": "Cloud KMS provider integrations for sensored vault encryption",
   "license": "SEE LICENSE IN LICENSE.md",
   "author": "Dennis Thompson",
-  "engines": {
-    "node": ">=20"
-  },
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
@@ -29,55 +26,11 @@
   "scripts": {
     "build": "tsdown",
     "lint": "biome check . --diagnostic-level error",
-    "test": "bun test",
+    "test": "bun test --randomize",
     "typecheck": "tsc --noEmit --incremental"
   },
   "dependencies": {
     "sensored": "workspace:*"
-  },
-  "peerDependencies": {
-    "@aws-sdk/client-kms": "^3.0.0",
-    "@azure/abort-controller": "^2.0.0",
-    "@azure/keyvault-keys": "^4.8.0",
-    "@azure/identity": "^4.0.0",
-    "@google-cloud/kms": "^4.0.0",
-    "node-vault": "^0.12.0",
-    "@workos-inc/node": "^7.0.0",
-    "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/sdk-trace-base": "^2.0.0",
-    "@opentelemetry/sdk-logs": "^0.223.0"
-  },
-  "peerDependenciesMeta": {
-    "@aws-sdk/client-kms": {
-      "optional": true
-    },
-    "@azure/abort-controller": {
-      "optional": true
-    },
-    "@azure/keyvault-keys": {
-      "optional": true
-    },
-    "@azure/identity": {
-      "optional": true
-    },
-    "@google-cloud/kms": {
-      "optional": true
-    },
-    "node-vault": {
-      "optional": true
-    },
-    "@workos-inc/node": {
-      "optional": true
-    },
-    "@opentelemetry/api": {
-      "optional": true
-    },
-    "@opentelemetry/sdk-trace-base": {
-      "optional": true
-    },
-    "@opentelemetry/sdk-logs": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@aws-sdk/client-kms": "^3.0.0",
@@ -96,6 +49,53 @@
     "node-vault": "^0.12.0",
     "tsdown": "^0.23.0",
     "typescript": "^7"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-kms": "^3.0.0",
+    "@azure/abort-controller": "^2.0.0",
+    "@azure/identity": "^4.0.0",
+    "@azure/keyvault-keys": "^4.8.0",
+    "@google-cloud/kms": "^4.0.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-logs": "^0.223.0",
+    "@opentelemetry/sdk-trace-base": "^2.0.0",
+    "@workos-inc/node": "^7.0.0",
+    "node-vault": "^0.12.0"
+  },
+  "peerDependenciesMeta": {
+    "@aws-sdk/client-kms": {
+      "optional": true
+    },
+    "@azure/abort-controller": {
+      "optional": true
+    },
+    "@azure/identity": {
+      "optional": true
+    },
+    "@azure/keyvault-keys": {
+      "optional": true
+    },
+    "@google-cloud/kms": {
+      "optional": true
+    },
+    "@opentelemetry/api": {
+      "optional": true
+    },
+    "@opentelemetry/sdk-logs": {
+      "optional": true
+    },
+    "@opentelemetry/sdk-trace-base": {
+      "optional": true
+    },
+    "@workos-inc/node": {
+      "optional": true
+    },
+    "node-vault": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
   },
   "publishConfig": {
     "access": "restricted"
