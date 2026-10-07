@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
-    "@biomejs/biome": "2.5.14",
+    "@biomejs/biome": "2.5.15",
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@commitlint/cli": "^21.2.3",
@@ -38,7 +38,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "mitata": "^1.0.34",
-    "prettier": "3.9.8",
+    "prettier": "3.9.9",
     "publint": "^0.3.25",
     "tsdown": "^0.23.0",
     "vitepress": "^2.0.0-alpha.20",
