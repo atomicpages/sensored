@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { CompositeAuditSink } from "@sensored/enterprise/audit/composite";
-import { OtelAuditSink } from "@sensored/enterprise/audit/otel";
-import { OtelMetricsSink } from "@sensored/enterprise/audit/otel-metrics";
 import { createRedactor } from "sensored";
+import { CompositeAuditSink } from "../src/audit/composite-sink";
+import { OtelMetricsSink } from "../src/audit/otel-metrics-sink";
+import { OtelAuditSink } from "../src/audit/otel-sink";
 
 interface CapturedLogRecord {
   readonly severityNumber: number;
