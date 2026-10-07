@@ -101,28 +101,33 @@ optional peer dep used only for trace correlation in `OtelAuditSink`.
 
 `langfuse/mask-adapter.ts` exports `createLangfuseMaskFunction(config)` —
 accepts a `RedactorConfig` from sensored, creates a redactor, and returns a
-`(input: string) => string` function suitable for LangFuse's `maskInput`
-option. The redactor is created once and reused across calls.
+`(input: { data: unknown }) => string` function suitable for LangFuse's
+`maskInput` option. String data is redacted directly; non-string data is
+recursively redacted via `redactValue` then `JSON.stringify`-d. The redactor
+is created once and reused across calls.
 
 ### OpenTelemetry redaction processors
 
 `otel/redaction-utils.ts` exports `RedactionConfig` (wraps `RedactorConfig`
 with optional `includeAttributes` / `excludeAttributes` filters), plus
-`shouldRedactAttribute()`, `redactStringAttributes()`, and
-`cloneWithOverrides()` helpers used by both processors.
-`cloneWithOverrides()` creates a shallow clone of an object with prototype
-preservation via `Object.create(Object.getPrototypeOf(obj))`, applying
-override properties on top. Exported from `redaction-utils.ts` but NOT from
-the enterprise barrel — internal helper.
+`shouldRedactAttribute()`, `redactAttributes()`, and
+`cloneWithOverrides()` helpers used by both processors. `redactAttributes`
+redacts string values via `redactor.redact()` and non-string values via
+`redactValue` (recursive traversal). `cloneWithOverrides()` creates a shallow
+clone of an object with prototype preservation via
+`Object.create(Object.getPrototypeOf(obj))`, applying override properties on
+top. Exported from `redaction-utils.ts` but NOT from the enterprise barrel —
+internal helper.
 
 `otel/span-processor.ts` exports `SensoredSpanProcessor` — a delegating
-`SpanProcessor` that redacts span name and string attributes on `onEnd`
-before forwarding to the wrapped processor. `onStart` passes through
-unchanged.
+`SpanProcessor` that redacts span name, attributes, event names, event
+attributes, status message, and link attributes on `onEnd` before forwarding
+to the wrapped processor. `onStart` passes through unchanged.
 
 `otel/log-processor.ts` exports `SensoredLogRecordProcessor` — a delegating
-`LogRecordProcessor` that redacts string body and string attributes on
-`onEmit` before forwarding to the wrapped processor.
+`LogRecordProcessor` that redacts log body (string and structured) and
+attributes on `onEmit` before forwarding to the wrapped processor. Non-string
+bodies are recursively redacted via `redactValue`.
 
 Both processors create a redactor once at construction time and reuse it.
 All `@opentelemetry/*` packages are optional peer deps.

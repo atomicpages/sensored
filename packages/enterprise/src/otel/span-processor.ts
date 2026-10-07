@@ -10,8 +10,21 @@ import { createRedactor, type Redactor } from "sensored";
 import {
   cloneWithOverrides,
   type RedactionConfig,
-  redactStringAttributes,
+  redactAttributes,
 } from "./redaction-utils";
+
+interface SpanEvent {
+  readonly name?: string;
+  readonly attributes?: Record<string, unknown>;
+}
+
+interface SpanStatus {
+  readonly message?: string;
+}
+
+interface SpanLink {
+  readonly attributes?: Record<string, unknown>;
+}
 
 export class SensoredSpanProcessor implements SpanProcessor {
   private readonly delegate: SpanProcessor;
@@ -33,16 +46,78 @@ export class SensoredSpanProcessor implements SpanProcessor {
     const redactedNameStr =
       typeof redactedName === "string" ? redactedName : redactedName.text;
 
-    const redactedAttributes = redactStringAttributes(
+    const redactedAttributes = redactAttributes(
       span.attributes as Record<string, unknown>,
       this.config,
       this.redactor,
     );
 
-    const redactedSpan = cloneWithOverrides(span, {
+    const overrides: Record<string, unknown> = {
       name: redactedNameStr,
       attributes: redactedAttributes,
-    });
+    };
+
+    const events = span.events as readonly SpanEvent[] | undefined;
+
+    if (events !== undefined && events.length > 0) {
+      overrides.events = events.map((event) => {
+        const redactedEventName =
+          typeof event.name === "string"
+            ? this.redactor.redact(event.name)
+            : event.name;
+
+        const eventNameStr =
+          typeof redactedEventName === "string"
+            ? redactedEventName
+            : (redactedEventName?.text ?? event.name);
+
+        const redactedEventAttributes =
+          event.attributes !== undefined
+            ? redactAttributes(
+                event.attributes as Record<string, unknown>,
+                this.config,
+                this.redactor,
+              )
+            : event.attributes;
+
+        return {
+          ...event,
+          name: eventNameStr,
+          attributes: redactedEventAttributes,
+        };
+      });
+    }
+
+    const status = span.status as SpanStatus | undefined;
+
+    if (status !== undefined && typeof status.message === "string") {
+      const redactedMessage = this.redactor.redact(status.message);
+      const messageStr =
+        typeof redactedMessage === "string"
+          ? redactedMessage
+          : redactedMessage.text;
+
+      overrides.status = { ...status, message: messageStr };
+    }
+
+    const links = span.links as readonly SpanLink[] | undefined;
+
+    if (links !== undefined && links.length > 0) {
+      overrides.links = links.map((link) => {
+        const redactedLinkAttributes =
+          link.attributes !== undefined
+            ? redactAttributes(
+                link.attributes as Record<string, unknown>,
+                this.config,
+                this.redactor,
+              )
+            : link.attributes;
+
+        return { ...link, attributes: redactedLinkAttributes };
+      });
+    }
+
+    const redactedSpan = cloneWithOverrides(span, overrides);
 
     this.delegate.onEnd(redactedSpan);
   }

@@ -169,6 +169,120 @@ describe("SensoredSpanProcessor", () => {
     expect(redactedSpan.attributes.phone).toBe("+1-555-123-4567");
   });
 
+  it("redacts span event names and attributes on onEnd", () => {
+    const mock = new MockSpanProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredSpanProcessor(
+      mock as unknown as MockSpanProcessor,
+      config,
+    );
+
+    const span: MockSpan = {
+      name: "test",
+      attributes: {},
+      events: [
+        {
+          name: "exception admin@example.com",
+          attributes: { email: "user@example.com" },
+        },
+      ],
+    };
+
+    processor.onEnd(span as unknown as MockSpan);
+
+    const redactedSpan = mock.onEndCalls[0].span as MockSpan;
+    const events = redactedSpan.events as Array<{
+      name: string;
+      attributes: Record<string, unknown>;
+    }>;
+
+    expect(events[0].name).not.toContain("admin@example.com");
+    expect(events[0].attributes.email).not.toContain("user@example.com");
+  });
+
+  it("redacts span status message on onEnd", () => {
+    const mock = new MockSpanProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredSpanProcessor(
+      mock as unknown as MockSpanProcessor,
+      config,
+    );
+
+    const span: MockSpan = {
+      name: "test",
+      attributes: {},
+      status: { message: "error contacting admin@example.com" },
+    };
+
+    processor.onEnd(span as unknown as MockSpan);
+
+    const redactedSpan = mock.onEndCalls[0].span as MockSpan;
+    const status = redactedSpan.status as { message: string };
+
+    expect(status.message).not.toContain("admin@example.com");
+  });
+
+  it("redacts span link attributes on onEnd", () => {
+    const mock = new MockSpanProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredSpanProcessor(
+      mock as unknown as MockSpanProcessor,
+      config,
+    );
+
+    const span: MockSpan = {
+      name: "test",
+      attributes: {},
+      links: [{ attributes: { email: "user@example.com" } }],
+    };
+
+    processor.onEnd(span as unknown as MockSpan);
+
+    const redactedSpan = mock.onEndCalls[0].span as MockSpan;
+    const links = redactedSpan.links as Array<{
+      attributes: Record<string, unknown>;
+    }>;
+
+    expect(links[0].attributes.email).not.toContain("user@example.com");
+  });
+
+  it("does not mutate original span events, status, or links", () => {
+    const mock = new MockSpanProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredSpanProcessor(
+      mock as unknown as MockSpanProcessor,
+      config,
+    );
+
+    const span: MockSpan = {
+      name: "test",
+      attributes: {},
+      events: [
+        {
+          name: "admin@example.com",
+          attributes: { email: "user@example.com" },
+        },
+      ],
+      status: { message: "admin@example.com" },
+      links: [{ attributes: { email: "user@example.com" } }],
+    };
+
+    processor.onEnd(span as unknown as MockSpan);
+
+    const events = span.events as Array<{ name: string }>;
+    const status = span.status as { message: string };
+    const links = span.links as Array<{ attributes: Record<string, unknown> }>;
+
+    expect(events[0].name).toBe("admin@example.com");
+    expect(events[0].attributes.email).toBe("user@example.com");
+    expect(status.message).toBe("admin@example.com");
+    expect(links[0].attributes.email).toBe("user@example.com");
+  });
+
   it("delegates forceFlush", async () => {
     const mock = new MockSpanProcessor();
     const config: RedactionConfig = { redactorConfig: testRedactorConfig };

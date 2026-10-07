@@ -22,7 +22,7 @@ export { createLangfuseMaskFunction } from "./langfuse/mask-adapter";
 export { SensoredLogRecordProcessor } from "./otel/log-processor";
 export type { RedactionConfig } from "./otel/redaction-utils";
 export {
-  redactStringAttributes,
+  redactAttributes,
   shouldRedactAttribute,
 } from "./otel/redaction-utils";
 export { SensoredSpanProcessor } from "./otel/span-processor";

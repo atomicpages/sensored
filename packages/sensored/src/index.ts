@@ -367,7 +367,7 @@ export function createRedactor(config: RedactorConfig) {
       const result = process(text, true);
 
       if (auditSink && result.groups.length > 0) {
-        emitAuditEvents(result.groups, auditSink, { detectOnly });
+        emitAuditEvents(result.groups, auditSink, { detectOnly: true });
       }
 
       return result;

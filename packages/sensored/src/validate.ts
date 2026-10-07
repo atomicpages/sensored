@@ -524,6 +524,15 @@ export function validateConfigShape(
   if (config.detectorOptions !== undefined) {
     validateDetectorOptions(config.detectorOptions);
   }
+
+  if (config.auditSink !== undefined) {
+    if (
+      !isRecord(config.auditSink) ||
+      typeof config.auditSink.write !== "function"
+    ) {
+      invalid("auditSink");
+    }
+  }
 }
 
 export function validateLimits(

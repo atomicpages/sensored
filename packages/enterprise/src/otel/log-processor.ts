@@ -4,12 +4,12 @@ import type {
   ReadWriteLogRecord,
 } from "@opentelemetry/sdk-logs";
 
-import { createRedactor, type Redactor } from "sensored";
+import { createRedactor, type Redactor, redactValue } from "sensored";
 
 import {
   cloneWithOverrides,
   type RedactionConfig,
-  redactStringAttributes,
+  redactAttributes,
 } from "./redaction-utils";
 
 export class SensoredLogRecordProcessor implements LogRecordProcessor {
@@ -29,9 +29,11 @@ export class SensoredLogRecordProcessor implements LogRecordProcessor {
     if (typeof logRecord.body === "string") {
       const result = this.redactor.redact(logRecord.body);
       redactedBody = typeof result === "string" ? result : result.text;
+    } else if (logRecord.body !== undefined && logRecord.body !== null) {
+      redactedBody = redactValue(logRecord.body, this.redactor);
     }
 
-    const redactedAttributes = redactStringAttributes(
+    const redactedAttributes = redactAttributes(
       logRecord.attributes as Record<string, unknown>,
       this.config,
       this.redactor,

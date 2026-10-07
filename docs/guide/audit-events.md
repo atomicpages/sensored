@@ -58,8 +58,8 @@ interface AuditEvent {
 ```ts
 interface AuditSink {
   write(event: AuditEvent): void;
-  flush?(): void;
-  close?(): void;
+  flush?(): Promise<void>;
+  close?(): Promise<void>;
 }
 ```
 
@@ -77,12 +77,14 @@ Audit sinks work with streaming redaction too. Pass `auditSink` in
 `StreamOptions`:
 
 ```ts
-import { stream } from "sensored";
+import { createRedactor } from "sensored";
 
-for await (const chunk of stream(text, {
+const redactor = createRedactor({
   rules: { email: { action: "redact" } },
   auditSink: consoleSink,
-})) {
+});
+
+for await (const chunk of redactor.stream(textAsStream())) {
   process.stdout.write(chunk);
 }
 ```

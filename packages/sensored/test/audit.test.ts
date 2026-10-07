@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { type AuditEvent, type AuditSink, createRedactor } from "../src";
+import {
+  type AuditEvent,
+  type AuditSink,
+  createRedactor,
+  SensoredError,
+} from "../src";
 
 function createMemorySink(): {
   sink: AuditSink;
@@ -192,6 +197,20 @@ describe("audit event emission", () => {
 
       const result = redactor.inspect("Contact alice@example.com");
       expect(result.groups).toHaveLength(1);
+    });
+
+    test("inspect emits [DETECT_ONLY] replacement", () => {
+      const { sink, events } = createMemorySink();
+
+      const redactor = createRedactor({
+        rules: { email: { action: "redact" } },
+        auditSink: sink,
+      });
+
+      redactor.inspect("Contact alice@example.com");
+
+      expect(events).toHaveLength(1);
+      expect(events[0]?.replacement).toBe("[DETECT_ONLY]");
     });
   });
 
@@ -403,6 +422,26 @@ describe("audit event emission", () => {
 
       expect(() => redactor.redact("alice@example.com")).not.toThrow();
       expect(events).toHaveLength(1);
+    });
+  });
+
+  describe("auditSink validation", () => {
+    test("auditSink without write method throws INVALID_CONFIG", () => {
+      expect(() =>
+        createRedactor({
+          rules: { email: { action: "redact" } },
+          auditSink: { flush() {} } as unknown as AuditSink,
+        }),
+      ).toThrow(SensoredError);
+    });
+
+    test("auditSink that is not an object throws INVALID_CONFIG", () => {
+      expect(() =>
+        createRedactor({
+          rules: { email: { action: "redact" } },
+          auditSink: "not a sink" as unknown as AuditSink,
+        }),
+      ).toThrow(SensoredError);
     });
   });
 });

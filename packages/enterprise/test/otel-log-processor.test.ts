@@ -112,6 +112,74 @@ describe("SensoredLogRecordProcessor", () => {
     expect(redacted.body).toBe(42);
   });
 
+  it("redacts structured (object) body recursively", () => {
+    const mock = new MockLogRecordProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredLogRecordProcessor(
+      mock as unknown as MockLogRecordProcessor,
+      config,
+    );
+
+    const logRecord: MockLogRecord = {
+      body: { email: "user@example.com", nested: { phone: "+1-555-123-4567" } },
+      attributes: {},
+    };
+
+    processor.onEmit(logRecord as unknown as MockLogRecord);
+
+    const redacted = mock.onEmitCalls[0].logRecord as MockLogRecord;
+    const body = redacted.body as Record<string, unknown>;
+    const nested = body.nested as Record<string, unknown>;
+
+    expect(body.email).not.toContain("user@example.com");
+    expect(nested.phone).not.toContain("+1-555-123-4567");
+  });
+
+  it("redacts array body recursively", () => {
+    const mock = new MockLogRecordProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredLogRecordProcessor(
+      mock as unknown as MockLogRecordProcessor,
+      config,
+    );
+
+    const logRecord: MockLogRecord = {
+      body: ["contact admin@example.com", "no PII here"],
+      attributes: {},
+    };
+
+    processor.onEmit(logRecord as unknown as MockLogRecord);
+
+    const redacted = mock.onEmitCalls[0].logRecord as MockLogRecord;
+    const body = redacted.body as unknown[];
+
+    expect(body[0]).not.toContain("admin@example.com");
+    expect(body[1]).toBe("no PII here");
+  });
+
+  it("does not mutate original structured body", () => {
+    const mock = new MockLogRecordProcessor();
+    const config: RedactionConfig = { redactorConfig: testRedactorConfig };
+
+    const processor = new SensoredLogRecordProcessor(
+      mock as unknown as MockLogRecordProcessor,
+      config,
+    );
+
+    const logRecord: MockLogRecord = {
+      body: { email: "user@example.com" },
+      attributes: {},
+    };
+
+    processor.onEmit(logRecord as unknown as MockLogRecord);
+
+    const body = logRecord.body as Record<string, unknown>;
+
+    expect(body.email).toBe("user@example.com");
+  });
+
   it("passes undefined body through unchanged", () => {
     const mock = new MockLogRecordProcessor();
     const config: RedactionConfig = { redactorConfig: testRedactorConfig };

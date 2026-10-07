@@ -1,4 +1,4 @@
-import type { Redactor, RedactorConfig } from "sensored";
+import { type Redactor, type RedactorConfig, redactValue } from "sensored";
 
 export interface RedactionConfig {
   readonly redactorConfig: RedactorConfig;
@@ -21,7 +21,7 @@ export function shouldRedactAttribute(
   return true;
 }
 
-export function redactStringAttributes(
+export function redactAttributes(
   attributes: Record<string, unknown>,
   config: RedactionConfig,
   redactor: Redactor,
@@ -31,11 +31,16 @@ export function redactStringAttributes(
   for (const key of Object.keys(attributes)) {
     const value = attributes[key];
 
-    if (typeof value === "string" && shouldRedactAttribute(key, config)) {
+    if (!shouldRedactAttribute(key, config)) {
+      result[key] = value;
+      continue;
+    }
+
+    if (typeof value === "string") {
       const redacted = redactor.redact(value);
       result[key] = typeof redacted === "string" ? redacted : redacted.text;
     } else {
-      result[key] = value;
+      result[key] = redactValue(value, redactor);
     }
   }
 
@@ -46,7 +51,7 @@ export function redactStringAttributes(
  * Shallow-clone an object while overriding specific properties.
  * Preserves the prototype chain for duck-typed OTEL span/log records.
  *
- * Not exported — internal helper for the OTEL processors.
+ * Exported from this module but not from the enterprise barrel — internal helper.
  */
 export function cloneWithOverrides<T extends object>(
   obj: T,

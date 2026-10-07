@@ -69,4 +69,40 @@ describe("createLangfuseMaskFunction", () => {
 
     expect(result).toBe(input);
   });
+
+  it("returns a string when data is an object", () => {
+    const mask = createLangfuseMaskFunction(config);
+    const result = mask({ data: { email: "alice@example.com" } });
+
+    expect(typeof result).toBe("string");
+  });
+
+  it("redacts PII in object data and returns JSON string", () => {
+    const mask = createLangfuseMaskFunction(config);
+    const result = mask({ data: { email: "alice@example.com" } });
+
+    expect(result).not.toContain("alice@example.com");
+    expect(result).toContain("[EMAIL]");
+  });
+
+  it("redacts PII in array data and returns JSON string", () => {
+    const mask = createLangfuseMaskFunction(config);
+    const result = mask({ data: ["alice@example.com", "bob@test.org"] });
+
+    expect(result).not.toContain("alice@example.com");
+    expect(result).not.toContain("bob@test.org");
+    expect(result).toContain("[EMAIL]");
+  });
+
+  it("redacts PII in nested object data", () => {
+    const mask = createLangfuseMaskFunction(config);
+    const result = mask({
+      data: { user: { email: "alice@example.com", phone: "+1-555-123-4567" } },
+    });
+
+    expect(result).not.toContain("alice@example.com");
+    expect(result).not.toContain("+1-555-123-4567");
+    expect(result).toContain("[EMAIL]");
+    expect(result).toContain("[PHONE]");
+  });
 });

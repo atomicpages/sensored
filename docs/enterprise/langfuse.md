@@ -71,5 +71,5 @@ const trace = langfuse.trace({
   name: "user-chat",
   input: "My email is alice@example.com, call me at 555-123-4567",
 });
-// LangFuse stores: "My email is [REDACTED], call me at [REDACTED]"
+// LangFuse stores: "My email is [EMAIL], call me at [PHONE]"
 ```

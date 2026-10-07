@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { createRedactor, type RedactorConfig } from "sensored";
 import {
   type RedactionConfig,
-  redactStringAttributes,
+  redactAttributes,
   shouldRedactAttribute,
 } from "../src/otel/redaction-utils";
 
@@ -57,7 +57,7 @@ describe("shouldRedactAttribute", () => {
   });
 });
 
-describe("redactStringAttributes", () => {
+describe("redactAttributes", () => {
   it("redacts all string attributes by default", () => {
     const redactor = createRedactor(testConfig);
     const attrs = {
@@ -67,7 +67,7 @@ describe("redactStringAttributes", () => {
       active: true,
     };
 
-    const result = redactStringAttributes(attrs, redactionConfig, redactor);
+    const result = redactAttributes(attrs, redactionConfig, redactor);
 
     expect(result.email).not.toContain("john@example.com");
     expect(result.name).toBe("John Doe");
@@ -88,7 +88,7 @@ describe("redactStringAttributes", () => {
       name: "John Doe",
     };
 
-    const result = redactStringAttributes(attrs, config, redactor);
+    const result = redactAttributes(attrs, config, redactor);
 
     expect(result.email).not.toContain("john@example.com");
     expect(result.phone).toBe("+1-555-123-4567");
@@ -107,7 +107,7 @@ describe("redactStringAttributes", () => {
       name: "John Doe",
     };
 
-    const result = redactStringAttributes(attrs, config, redactor);
+    const result = redactAttributes(attrs, config, redactor);
 
     expect(result.email).not.toContain("john@example.com");
     expect(result.name).toBe("John Doe");
@@ -122,7 +122,7 @@ describe("redactStringAttributes", () => {
       nested: { key: "value" },
     };
 
-    const result = redactStringAttributes(attrs, redactionConfig, redactor);
+    const result = redactAttributes(attrs, redactionConfig, redactor);
 
     expect(result.count).toBe(42);
     expect(result.active).toBe(true);
@@ -134,7 +134,7 @@ describe("redactStringAttributes", () => {
     const redactor = createRedactor(testConfig);
     const attrs = { email: "john@example.com" };
 
-    const result = redactStringAttributes(attrs, redactionConfig, redactor);
+    const result = redactAttributes(attrs, redactionConfig, redactor);
 
     expect(attrs.email).toBe("john@example.com");
     expect(result.email).not.toBe(attrs.email);
@@ -142,7 +142,7 @@ describe("redactStringAttributes", () => {
 
   it("handles empty attributes", () => {
     const redactor = createRedactor(testConfig);
-    const result = redactStringAttributes({}, redactionConfig, redactor);
+    const result = redactAttributes({}, redactionConfig, redactor);
 
     expect(result).toEqual({});
   });

@@ -5,24 +5,27 @@ Sensored provides OpenTelemetry processors that redact PII from traces and logs
 sensitive data from leaking into Datadog, New Relic, Dynatrace, Honeycomb, or
 any other OTEL-compatible backend.
 
-> **Scope:** The processors redact PII found in **string span names**, **string
-> span attributes**, **string log bodies**, and **string log attributes**.
-> Non-string fields (events, links, status messages, resources, arrays, nested
-> objects, numeric/boolean attributes) are **not** scanned and may retain PII.
+> **Scope:** The processors redact PII found in span names, span attributes,
+> span events (names and attributes), span status messages, span link
+> attributes, log bodies (string and structured), and log attributes.
+> String values are redacted directly; non-string values (arrays, maps, nested
+> objects) are recursively traversed via `redactValue`. Numeric and boolean
+> primitives pass through unchanged.
 
 ## How it works
 
 The processors wrap your existing export pipeline. They intercept spans and
-log records just before export, redact any PII found in string attributes,
-span names, and log bodies, then forward the cleaned record to the delegate
-processor.
+log records just before export, redact any PII found in span names,
+attributes, events, status messages, links, and log bodies, then forward the
+cleaned record to the delegate processor.
 
 ```
 Your app → OTEL SDK → SensoredSpanProcessor → BatchSpanProcessor → OTLP Export
 ```
 
-PII is redacted before forwarding — the original span/log string fields are
-never sent to the backend. Non-string fields pass through unchanged.
+PII is redacted before forwarding — the original span/log fields are never
+sent to the backend. Non-string primitive values (numbers, booleans) pass
+through unchanged; complex values (arrays, objects) are recursively redacted.
 
 ## Installation
 
@@ -46,7 +49,10 @@ attributes and span names on `onEnd`:
 
 ```ts
 import { SensoredSpanProcessor } from "@sensored/enterprise/otel/span-processor";
-import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { BatchSpanProcessor, NodeTracerProvider } from "@opentelemetry/sdk-trace-base";
+import { Resource } from "@opentelemetry/resources";
+import { trace } from "@opentelemetry/api";
+import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 const spanProcessor = new SensoredSpanProcessor(
   new BatchSpanProcessor(otlpExporter),
@@ -61,7 +67,13 @@ const spanProcessor = new SensoredSpanProcessor(
   },
 );
 
-provider.addSpanProcessor(spanProcessor);
+const tracerProvider = new NodeTracerProvider({
+  spanProcessors: [spanProcessor],
+  resource: new Resource({
+    [ATTR_SERVICE_NAME]: "my-service",
+  }),
+});
+trace.setGlobalTracerProvider(tracerProvider);
 ```
 
 ### Attribute filtering
@@ -82,18 +94,22 @@ const spanProcessor = new SensoredSpanProcessor(
 ```
 
 - **`includeAttributes`** — Only redact these attribute keys (takes precedence).
-- **`excludeAttributes`** — Redact all string attributes except these keys.
+- **`excludeAttributes`** — Redact all attributes except these keys.
 
-Non-string attributes (numbers, booleans, arrays) pass through unchanged.
+Non-string primitive attributes (numbers, booleans) pass through unchanged.
+Arrays, maps, and nested objects are recursively traversed via `redactValue`.
 
 ## Log record processor
 
 `SensoredLogRecordProcessor` wraps any `LogRecordProcessor` and redacts PII
-from log bodies and string attributes on `onEmit`:
+from log bodies (string and structured) and attributes on `onEmit`:
 
 ```ts
 import { SensoredLogRecordProcessor } from "@sensored/enterprise/otel/log-processor";
-import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
+import { BatchLogRecordProcessor, LoggerProvider } from "@opentelemetry/sdk-logs";
+import { Resource } from "@opentelemetry/resources";
+import { logs } from "@opentelemetry/api";
+import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
 
 const logProcessor = new SensoredLogRecordProcessor(
   new BatchLogRecordProcessor(otlpLogExporter),
@@ -107,7 +123,13 @@ const logProcessor = new SensoredLogRecordProcessor(
   },
 );
 
-loggerProvider.addLogRecordProcessor(logProcessor);
+const loggerProvider = new LoggerProvider({
+  logRecordProcessors: [logProcessor],
+  resource: new Resource({
+    [ATTR_SERVICE_NAME]: "my-service",
+  }),
+});
+logs.setGlobalLoggerProvider(loggerProvider);
 ```
 
 ## RedactionConfig
