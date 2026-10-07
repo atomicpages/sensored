@@ -30,6 +30,8 @@ export class SensoredSpanProcessor implements SpanProcessor {
 
   onEnd(span: ReadableSpan): void {
     const redactedName = this.redactor.redact(span.name);
+    const redactedNameStr =
+      typeof redactedName === "string" ? redactedName : redactedName.text;
 
     const redactedAttributes = redactStringAttributes(
       span.attributes as Record<string, unknown>,
@@ -38,7 +40,7 @@ export class SensoredSpanProcessor implements SpanProcessor {
     );
 
     const redactedSpan = cloneWithOverrides(span, {
-      name: redactedName,
+      name: redactedNameStr,
       attributes: redactedAttributes,
     });
 

@@ -18,7 +18,7 @@ function createMockLoggerProvider() {
     records,
     getLogger() {
       return {
-        emitLogRecord(record: CapturedLogRecord) {
+        emit(record: CapturedLogRecord) {
           records.push(record);
         },
       };

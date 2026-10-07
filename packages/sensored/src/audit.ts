@@ -12,6 +12,12 @@ export type AuditAction = RuleSetting["action"];
  * IMPORTANT: This event must NEVER contain the original PII value.
  * Only metadata (ruleId, entityType, action, reasons, offsets, replacement)
  * is included so audit trails remain safe to ship to any backend.
+ *
+ * The `replacement` field shows the placeholder or safe indicator that
+ * replaced the PII — never the original value. For `mask` and
+ * `format-preserve` actions, only a safe label (`[MASKED]`,
+ * `[FORMAT_PRESERVED]`) is emitted because those renderings preserve
+ * partial PII. In detect-only mode, `[DETECT_ONLY]` is used.
  */
 export interface AuditEvent {
   readonly ruleId: string;
@@ -46,6 +52,36 @@ export interface EmitAuditEventsOptions {
   readonly offset?: number;
   /** Timestamp to use for all events. Defaults to `Date.now()`. */
   readonly timestamp?: number;
+  /** When true, replacement is emitted as `[DETECT_ONLY]` instead of the
+   *  original PII (which is what the engine produces in detect-only mode). */
+  readonly detectOnly?: boolean;
+}
+
+/**
+ * Sanitize the replacement for audit safety.
+ *
+ * `mask` and `format-preserve` renderings preserve partial PII characters,
+ * and detect-only mode forwards the original PII. Replace those with safe
+ * labels so the audit event never leaks sensitive data.
+ */
+function safeReplacement(
+  action: AuditAction,
+  replacement: string,
+  detectOnly: boolean,
+): string {
+  if (detectOnly) {
+    return "[DETECT_ONLY]";
+  }
+
+  if (action === "mask") {
+    return "[MASKED]";
+  }
+
+  if (action === "format-preserve") {
+    return "[FORMAT_PRESERVED]";
+  }
+
+  return replacement;
 }
 
 /**
@@ -60,20 +96,32 @@ export function emitAuditEvents(
 ): void {
   const timestamp = options?.timestamp ?? Date.now();
   const offset = options?.offset ?? 0;
+  const detectOnly = options?.detectOnly ?? false;
 
   for (const group of groups) {
+    const action = group.action ?? "redact";
+    const replacement = safeReplacement(action, group.replacement, detectOnly);
+
     for (const match of group.matches) {
       try {
-        sink.write({
+        const ret: unknown = sink.write({
           ruleId: match.ruleId,
           entityType: match.entityType,
-          action: group.action ?? "redact",
+          action,
           reasons: match.reasons,
           start: match.start + offset,
           end: match.end + offset,
-          replacement: group.replacement,
+          replacement,
           timestamp,
         });
+
+        if (
+          ret !== null &&
+          typeof ret === "object" &&
+          typeof (ret as { then: unknown }).then === "function"
+        ) {
+          (ret as Promise<unknown>).catch(() => undefined);
+        }
       } catch {
         // Audit logging must never break the redaction pipeline.
       }

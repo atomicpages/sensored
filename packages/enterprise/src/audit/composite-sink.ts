@@ -24,7 +24,9 @@ export class CompositeAuditSink implements AuditSink {
   async flush(): Promise<void> {
     await Promise.all(
       this.sinks.map((sink) =>
-        Promise.resolve(sink.flush?.()).catch(() => undefined),
+        Promise.resolve()
+          .then(() => sink.flush?.())
+          .catch(() => undefined),
       ),
     );
 
@@ -34,7 +36,9 @@ export class CompositeAuditSink implements AuditSink {
   async close(): Promise<void> {
     await Promise.all(
       this.sinks.map((sink) =>
-        Promise.resolve(sink.close?.()).catch(() => undefined),
+        Promise.resolve()
+          .then(() => sink.close?.())
+          .catch(() => undefined),
       ),
     );
 

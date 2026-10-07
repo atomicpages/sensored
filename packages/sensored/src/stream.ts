@@ -93,6 +93,7 @@ export function createStream(
           emitAuditEvents([group], auditSink, {
             offset: absoluteOffset,
             timestamp,
+            detectOnly,
           });
         }
 

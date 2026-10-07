@@ -242,7 +242,7 @@ export function createRedactor(config: RedactorConfig) {
       );
 
       if (auditSink && groups.length > 0) {
-        emitAuditEvents(groups, auditSink);
+        emitAuditEvents(groups, auditSink, { detectOnly });
       }
 
       return {
@@ -303,7 +303,7 @@ export function createRedactor(config: RedactorConfig) {
     );
 
     if (auditSink && groups.length > 0) {
-      emitAuditEvents(groups, auditSink);
+      emitAuditEvents(groups, auditSink, { detectOnly });
     }
 
     const detections: SemanticDetection[] = [];
@@ -351,7 +351,7 @@ export function createRedactor(config: RedactorConfig) {
       const result = process(text, false);
 
       if (auditSink && result.groups.length > 0) {
-        emitAuditEvents(result.groups, auditSink);
+        emitAuditEvents(result.groups, auditSink, { detectOnly });
       }
 
       if (restoreEnabled && result.map) {
@@ -367,7 +367,7 @@ export function createRedactor(config: RedactorConfig) {
       const result = process(text, true);
 
       if (auditSink && result.groups.length > 0) {
-        emitAuditEvents(result.groups, auditSink);
+        emitAuditEvents(result.groups, auditSink, { detectOnly });
       }
 
       return result;
@@ -387,7 +387,7 @@ export function createRedactor(config: RedactorConfig) {
         ...options,
         allowlist,
         detectOnly,
-        auditSink,
+        auditSink: options?.auditSink ?? auditSink,
       })(chunks);
     },
     restore(text: string, map: RestorationMap): string {

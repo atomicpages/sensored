@@ -1,7 +1,7 @@
 import type { AuditEvent, AuditSink } from "sensored";
 
 export interface LoggerLike {
-  emitLogRecord(record: {
+  emit(record: {
     readonly severityNumber: number;
     readonly severityText: string;
     readonly body: string;
@@ -70,7 +70,7 @@ export class OtelAuditSink implements AuditSink {
       }
     }
 
-    this.logger.emitLogRecord({
+    this.logger.emit({
       severityNumber: 9,
       severityText: "INFO",
       body: "sensored.audit",

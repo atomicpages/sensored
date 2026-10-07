@@ -18,7 +18,7 @@ describe("createLangfuseMaskFunction", () => {
 
   it("returns a string from the mask function", () => {
     const mask = createLangfuseMaskFunction(config);
-    const result = mask("Contact alice@example.com");
+    const result = mask({ data: "Contact alice@example.com" });
 
     expect(typeof result).toBe("string");
   });
@@ -26,7 +26,7 @@ describe("createLangfuseMaskFunction", () => {
   it("redacts email addresses", () => {
     const mask = createLangfuseMaskFunction(config);
     const input = "Contact alice@example.com for details";
-    const result = mask(input);
+    const result = mask({ data: input });
 
     expect(result).not.toContain("alice@example.com");
     expect(result).toContain("[EMAIL]");
@@ -35,7 +35,7 @@ describe("createLangfuseMaskFunction", () => {
   it("redacts phone numbers", () => {
     const mask = createLangfuseMaskFunction(config);
     const input = "Call +1 (555) 123-4567 now";
-    const result = mask(input);
+    const result = mask({ data: input });
 
     expect(result).not.toContain("+1 (555) 123-4567");
     expect(result).toContain("[PHONE]");
@@ -44,7 +44,7 @@ describe("createLangfuseMaskFunction", () => {
   it("redacts multiple PII types in the same input", () => {
     const mask = createLangfuseMaskFunction(config);
     const input = "Email alice@example.com or call +1 (555) 123-4567";
-    const result = mask(input);
+    const result = mask({ data: input });
 
     expect(result).not.toContain("alice@example.com");
     expect(result).not.toContain("+1 (555) 123-4567");
@@ -56,8 +56,8 @@ describe("createLangfuseMaskFunction", () => {
     const mask = createLangfuseMaskFunction(config);
     const input = "Contact alice@example.com or call +1 (555) 123-4567";
 
-    const first = mask(input);
-    const second = mask(input);
+    const first = mask({ data: input });
+    const second = mask({ data: input });
 
     expect(first).toBe(second);
   });
@@ -65,7 +65,7 @@ describe("createLangfuseMaskFunction", () => {
   it("leaves non-PII text unchanged", () => {
     const mask = createLangfuseMaskFunction(config);
     const input = "This is a plain message with no PII";
-    const result = mask(input);
+    const result = mask({ data: input });
 
     expect(result).toBe(input);
   });

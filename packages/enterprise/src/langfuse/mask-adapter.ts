@@ -3,10 +3,10 @@ import { createRedactor } from "sensored";
 
 export function createLangfuseMaskFunction(
   config: RedactorConfig,
-): (input: string) => string {
+): (input: { data: string }) => string {
   const redactor = createRedactor(config);
 
-  return (input: string): string => {
-    return redactor.redact(input);
+  return (input: { data: string }): string => {
+    return redactor.redact(input.data);
   };
 }

@@ -32,7 +32,8 @@ export function redactStringAttributes(
     const value = attributes[key];
 
     if (typeof value === "string" && shouldRedactAttribute(key, config)) {
-      result[key] = redactor.redact(value);
+      const redacted = redactor.redact(value);
+      result[key] = typeof redacted === "string" ? redacted : redacted.text;
     } else {
       result[key] = value;
     }

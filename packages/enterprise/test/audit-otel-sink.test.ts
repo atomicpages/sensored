@@ -21,9 +21,9 @@ function makeEvent(overrides: Partial<AuditEvent> = {}): AuditEvent {
 }
 
 class MockLogger implements LoggerLike {
-  records: Parameters<LoggerLike["emitLogRecord"]>[0][] = [];
+  records: Parameters<LoggerLike["emit"]>[0][] = [];
 
-  emitLogRecord(record: Parameters<LoggerLike["emitLogRecord"]>[0]): void {
+  emit(record: Parameters<LoggerLike["emit"]>[0]): void {
     this.records.push(record);
   }
 }

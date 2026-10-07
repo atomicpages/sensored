@@ -1,21 +1,28 @@
 # OpenTelemetry Redaction
 
-Sensored provides OpenTelemetry processors that scrub PII from traces and logs
+Sensored provides OpenTelemetry processors that redact PII from traces and logs
 **before** they are exported to your observability backend. This prevents
 sensitive data from leaking into Datadog, New Relic, Dynatrace, Honeycomb, or
 any other OTEL-compatible backend.
 
+> **Scope:** The processors redact PII found in **string span names**, **string
+> span attributes**, **string log bodies**, and **string log attributes**.
+> Non-string fields (events, links, status messages, resources, arrays, nested
+> objects, numeric/boolean attributes) are **not** scanned and may retain PII.
+
 ## How it works
 
 The processors wrap your existing export pipeline. They intercept spans and
-log records just before export, redact any PII found in string attributes and
-span/log names, then forward the cleaned record to the delegate processor.
+log records just before export, redact any PII found in string attributes,
+span names, and log bodies, then forward the cleaned record to the delegate
+processor.
 
 ```
 Your app → OTEL SDK → SensoredSpanProcessor → BatchSpanProcessor → OTLP Export
 ```
 
-Pii is redacted in-place — the original span/log is never sent to the backend.
+PII is redacted before forwarding — the original span/log string fields are
+never sent to the backend. Non-string fields pass through unchanged.
 
 ## Installation
 
