@@ -47,6 +47,7 @@ export default defineConfig({
       { text: "Playground", link: "/playground" },
       { text: "Guide", link: "/guide/getting-started" },
       { text: "Detectors", link: "/detectors/overview" },
+      { text: "Enterprise", link: "/enterprise/overview" },
       { text: "API", link: "/api/reference" },
       { text: "About", link: "/about/changelog" },
     ],
@@ -97,6 +98,7 @@ export default defineConfig({
               text: "LLM Prompt Redaction",
               link: "/guide/llm-prompt-redaction",
             },
+            { text: "Audit Events", link: "/guide/audit-events" },
           ],
         },
       ],
@@ -128,6 +130,27 @@ export default defineConfig({
         {
           text: "Reference",
           items: [{ text: "API Reference", link: "/api/reference" }],
+        },
+      ],
+      "/enterprise/": [
+        {
+          text: "Enterprise",
+          items: [
+            { text: "Overview", link: "/enterprise/overview" },
+            {
+              text: "Cloud KMS Providers",
+              link: "/enterprise/cloud-kms-providers",
+            },
+            {
+              text: "OTEL Redaction Processors",
+              link: "/enterprise/otel-redaction",
+            },
+            {
+              text: "OTEL Audit Sinks",
+              link: "/enterprise/otel-audit-sinks",
+            },
+            { text: "LangFuse", link: "/enterprise/langfuse" },
+          ],
         },
       ],
       "/about/": [

@@ -23,6 +23,7 @@ docs/
     social-preview.svg 1280×640 social preview image
   guide/               Human-facing guides (install, quick start, presets, etc.)
   detectors/           Per-domain detector reference pages
+  enterprise/          Enterprise package docs (cloud KMS, OTEL processors, audit sinks, LangFuse)
   api/                 API reference (types, functions, constants)
   about/               Changelog
 ```
@@ -50,6 +51,9 @@ light/dark/mono).
   gitignored tree contains private working documents, not site content.
 - The nav bar shows the logo only (`siteTitle: false`) with light/dark variants
   via `themeConfig.logo`.
+- Nav tabs: Playground, Guide, Detectors, Enterprise, API, About. The
+  Enterprise tab covers `@sensored/enterprise` (commercial EULA) docs
+  separately from the MIT-licensed core Guide.
 - Favicon is served from `docs/public/favicon.svg` via a `head` link tag in the
   config (note: the `href` includes the `base` prefix `/sensored/`).
 - Default VitePress theme with dark mode support.

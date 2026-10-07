@@ -35,14 +35,12 @@ describe("AzureKeyVaultProvider", () => {
 
     mock.module("@azure/keyvault-keys", () => {
       class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
         async getKey(_name: string) {
           return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
         }
       }
 
       class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
         encrypt = cryptoClient.encrypt;
         decrypt = cryptoClient.decrypt;
       }
@@ -99,14 +97,12 @@ describe("AzureKeyVaultProvider", () => {
 
     mock.module("@azure/keyvault-keys", () => {
       class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
         async getKey(_name: string) {
           return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
         }
       }
 
       class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
         encrypt = emptyClient.encrypt;
         decrypt = emptyClient.decrypt;
       }
@@ -130,14 +126,12 @@ describe("AzureKeyVaultProvider", () => {
 
     mock.module("@azure/keyvault-keys", () => {
       class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
         async getKey(_name: string) {
           return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
         }
       }
 
       class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
         encrypt = emptyClient.encrypt;
         decrypt = emptyClient.decrypt;
       }
@@ -162,14 +156,12 @@ describe("AzureKeyVaultProvider", () => {
 
     mock.module("@azure/keyvault-keys", () => {
       class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
         async getKey(_name: string) {
           return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
         }
       }
 
       class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
         encrypt = roundTripClient.encrypt;
         decrypt = roundTripClient.decrypt;
       }

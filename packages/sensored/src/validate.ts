@@ -437,6 +437,7 @@ const CONFIG_KEYS = [
   "semantic",
   "detectOnly",
   "detectorOptions",
+  "auditSink",
 ] as const;
 
 export function validateConfigShape(

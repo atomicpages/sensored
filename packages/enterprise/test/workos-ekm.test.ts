@@ -6,7 +6,7 @@ const EKM_ID = "ekm_123";
 const KEY_ID = "key_456";
 
 function createMockClient() {
-  const encryptCall = mock(async (data: string, context: unknown) => {
+  const encryptCall = mock(async (data: string, _context: unknown) => {
     return `ekm:${data}`;
   });
 
@@ -30,7 +30,6 @@ describe("WorkOsEkmProvider", () => {
 
     mock.module("@workos-inc/node", () => {
       class WorkOS {
-        constructor(_apiKey: string) {}
         vault = client.vault;
       }
 
@@ -99,7 +98,6 @@ describe("WorkOsEkmProvider", () => {
 
     mock.module("@workos-inc/node", () => {
       class WorkOS {
-        constructor(_apiKey: string) {}
         vault = failingClient.vault;
       }
 
@@ -125,7 +123,6 @@ describe("WorkOsEkmProvider", () => {
 
     mock.module("@workos-inc/node", () => {
       class WorkOS {
-        constructor(_apiKey: string) {}
         vault = failingClient.vault;
       }
 
@@ -148,7 +145,6 @@ describe("WorkOsEkmProvider", () => {
 
     mock.module("@workos-inc/node", () => {
       class WorkOS {
-        constructor(_apiKey: string) {}
         vault = roundTripClient.vault;
       }
 

@@ -1,3 +1,4 @@
+import { emitAuditEvents } from "./audit";
 import { builtInDetectors } from "./detectors/registry";
 import {
   collectMatches,
@@ -27,6 +28,11 @@ import type {
   StreamOptions,
 } from "./types";
 
+export type {
+  AuditAction,
+  AuditEvent,
+  AuditSink,
+} from "./audit";
 export { Detector } from "./detectors/base";
 export { preloadPersonNameDetector } from "./detectors/person/person-name";
 export { employeeIdExample } from "./employee-id";
@@ -124,6 +130,7 @@ export function createRedactor(config: RedactorConfig) {
   } = resolvePolicy(config);
   const limit = config.limits?.maxInputLength ?? MAX_INPUT_LENGTH;
   const restoreEnabled = config.restore ?? false;
+  const auditSink = config.auditSink;
 
   let cachedProvider: SemanticProvider | undefined;
 
@@ -154,10 +161,12 @@ export function createRedactor(config: RedactorConfig) {
       throw new SensoredError("INPUT_LIMIT");
     }
 
+    const effectiveReport = report || auditSink !== undefined;
+
     return processText(
       text,
       rules,
-      report,
+      effectiveReport,
       restoreEnabled,
       allowlist,
       detectOnly,
@@ -222,15 +231,19 @@ export function createRedactor(config: RedactorConfig) {
       restoreEnabled && !detectOnly ? createRestorationContext() : undefined;
 
     if (candidates.length === 0) {
-      const { segments } = renderMatches(
+      const { segments, groups } = renderMatches(
         text,
         allMatches,
         text.length,
-        false,
+        auditSink !== undefined,
         0,
         restoration,
         detectOnly,
       );
+
+      if (auditSink && groups.length > 0) {
+        emitAuditEvents(groups, auditSink);
+      }
 
       return {
         text: segments.map((s) => s.text).join(""),
@@ -279,15 +292,19 @@ export function createRedactor(config: RedactorConfig) {
       confirmedIndices.has(i),
     );
 
-    const { segments } = renderMatches(
+    const { segments, groups } = renderMatches(
       text,
       confirmedMatches,
       text.length,
-      false,
+      auditSink !== undefined,
       0,
       restoration,
       detectOnly,
     );
+
+    if (auditSink && groups.length > 0) {
+      emitAuditEvents(groups, auditSink);
+    }
 
     const detections: SemanticDetection[] = [];
 
@@ -333,6 +350,10 @@ export function createRedactor(config: RedactorConfig) {
     redact(text: string): string | RedactResult {
       const result = process(text, false);
 
+      if (auditSink && result.groups.length > 0) {
+        emitAuditEvents(result.groups, auditSink);
+      }
+
       if (restoreEnabled && result.map) {
         return { text: result.text, map: result.map };
       }
@@ -343,7 +364,13 @@ export function createRedactor(config: RedactorConfig) {
       return processAsync(text);
     },
     inspect(text: string): Inspection {
-      return process(text, true);
+      const result = process(text, true);
+
+      if (auditSink && result.groups.length > 0) {
+        emitAuditEvents(result.groups, auditSink);
+      }
+
+      return result;
     },
     stream(
       chunks: AsyncIterable<string>,
@@ -360,6 +387,7 @@ export function createRedactor(config: RedactorConfig) {
         ...options,
         allowlist,
         detectOnly,
+        auditSink,
       })(chunks);
     },
     restore(text: string, map: RestorationMap): string {

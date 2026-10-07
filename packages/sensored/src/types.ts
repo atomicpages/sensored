@@ -1,7 +1,8 @@
+import type { AuditAction, AuditSink } from "./audit";
 import type { Detector } from "./detectors/base";
 import type { SemanticQuestion } from "./semantic/types";
 
-export type { Detector };
+export type { AuditAction, AuditSink, Detector };
 
 /** All offsets refer to the original string, in UTF-16 code units. */
 export interface Detection {
@@ -20,6 +21,7 @@ export interface InspectionGroup {
   readonly start: number;
   readonly end: number;
   readonly replacement: string;
+  readonly action?: AuditAction;
   readonly matches: readonly InspectedMatch[];
 }
 
@@ -68,6 +70,7 @@ export interface RedactorConfig {
   readonly semantic?: SemanticConfig;
   readonly detectOnly?: boolean;
   readonly detectorOptions?: DetectorOptions;
+  readonly auditSink?: AuditSink;
 }
 
 export interface DetectorDefinition {
@@ -152,6 +155,7 @@ export interface StreamOptions {
   readonly signal?: AbortSignal;
   readonly report?: boolean;
   readonly restore?: boolean;
+  readonly auditSink?: AuditSink;
 }
 
 export type StreamEvent =

@@ -10,6 +10,12 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.mjs",
+    "./audit/composite": "./dist/audit/composite-sink.mjs",
+    "./audit/otel-metrics": "./dist/audit/otel-metrics-sink.mjs",
+    "./audit/otel": "./dist/audit/otel-sink.mjs",
+    "./langfuse/mask": "./dist/langfuse/mask-adapter.mjs",
+    "./otel/log-processor": "./dist/otel/log-processor.mjs",
+    "./otel/span-processor": "./dist/otel/span-processor.mjs",
     "./kms/aws": "./dist/providers/aws-kms.mjs",
     "./kms/azure": "./dist/providers/azure-key-vault.mjs",
     "./kms/gcp": "./dist/providers/gcp-kms.mjs",
@@ -36,7 +42,10 @@
     "@azure/identity": "^4.0.0",
     "@google-cloud/kms": "^4.0.0",
     "node-vault": "^0.12.0",
-    "@workos-inc/node": "^7.0.0"
+    "@workos-inc/node": "^7.0.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-trace-base": "^2.0.0",
+    "@opentelemetry/sdk-logs": "^0.223.0"
   },
   "peerDependenciesMeta": {
     "@aws-sdk/client-kms": {
@@ -59,6 +68,15 @@
     },
     "@workos-inc/node": {
       "optional": true
+    },
+    "@opentelemetry/api": {
+      "optional": true
+    },
+    "@opentelemetry/sdk-trace-base": {
+      "optional": true
+    },
+    "@opentelemetry/sdk-logs": {
+      "optional": true
     }
   },
   "devDependencies": {
@@ -68,6 +86,10 @@
     "@azure/keyvault-keys": "^4.8.0",
     "@biomejs/biome": "2.5.14",
     "@google-cloud/kms": "^4.0.0",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/api-logs": "^0.223.0",
+    "@opentelemetry/sdk-logs": "^0.223.0",
+    "@opentelemetry/sdk-trace-base": "^2.12.0",
     "@types/bun": "1.4.2",
     "@workos-inc/node": "^7.0.0",
     "fakecloud": "^0.48.1",

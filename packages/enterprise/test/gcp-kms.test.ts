@@ -29,7 +29,6 @@ describe("GcpKmsProvider", () => {
 
     mock.module("@google-cloud/kms", () => {
       class KeyManagementServiceClient {
-        constructor(_opts?: unknown) {}
         encrypt = client.encrypt;
         decrypt = client.decrypt;
       }
@@ -84,7 +83,6 @@ describe("GcpKmsProvider", () => {
 
     mock.module("@google-cloud/kms", () => {
       class KeyManagementServiceClient {
-        constructor(_opts?: unknown) {}
         encrypt = emptyClient.encrypt;
         decrypt = emptyClient.decrypt;
       }
@@ -105,7 +103,6 @@ describe("GcpKmsProvider", () => {
 
     mock.module("@google-cloud/kms", () => {
       class KeyManagementServiceClient {
-        constructor(_opts?: unknown) {}
         encrypt = emptyClient.encrypt;
         decrypt = emptyClient.decrypt;
       }
@@ -126,7 +123,6 @@ describe("GcpKmsProvider", () => {
 
     mock.module("@google-cloud/kms", () => {
       class KeyManagementServiceClient {
-        constructor(_opts?: unknown) {}
         encrypt = roundTripClient.encrypt;
         decrypt = roundTripClient.decrypt;
       }

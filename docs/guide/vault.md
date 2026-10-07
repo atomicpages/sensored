@@ -236,17 +236,9 @@ try {
 
 ## Enterprise providers
 
-Cloud KMS providers are available in `@sensored/enterprise`:
-
-```ts
-import { AwsKmsProvider } from "@sensored/enterprise";
-
-const provider = new AwsKmsProvider({
-  keyId: "arn:aws:kms:us-east-1:123456789012:key/abc-def",
-  // Optional: override default AWS SDK credentials
-  region: "us-east-1",
-});
-```
+Cloud KMS providers are available in `@sensored/enterprise`. See the
+[Cloud KMS Providers](../enterprise/cloud-kms-providers) guide for setup and
+configuration details.
 
 Supported providers:
 

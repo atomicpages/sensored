@@ -1,5 +1,4 @@
 import { beforeAll, describe, expect, it, mock } from "bun:test";
-import { VaultError } from "sensored/vault";
 import { HashiCorpVaultProvider } from "../src/providers/hashicorp-vault";
 
 const VAULT_URL = "http://localhost:8200";
@@ -40,7 +39,7 @@ describe("HashiCorpVaultProvider", () => {
     client = createMockClient();
 
     mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
+      const factory = (_opts: Record<string, unknown>) => {
         return { write: client.write };
       };
 
@@ -119,7 +118,7 @@ describe("HashiCorpVaultProvider", () => {
     emptyClient.write.mockImplementation(async () => ({ data: {} }));
 
     mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
+      const factory = (_opts: Record<string, unknown>) => {
         return { write: emptyClient.write };
       };
 
@@ -142,7 +141,7 @@ describe("HashiCorpVaultProvider", () => {
     emptyClient.write.mockImplementation(async () => ({ data: {} }));
 
     mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
+      const factory = (_opts: Record<string, unknown>) => {
         return { write: emptyClient.write };
       };
 
@@ -164,7 +163,7 @@ describe("HashiCorpVaultProvider", () => {
     const roundTripClient = createMockClient();
 
     mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
+      const factory = (_opts: Record<string, unknown>) => {
         return { write: roundTripClient.write };
       };
 
