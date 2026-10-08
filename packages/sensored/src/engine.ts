@@ -1,6 +1,7 @@
-import { resolveReplacement } from "./render";
+import { resolveReplacement, resolveWinningAction } from "./render";
 import type {
   ActiveRule,
+  AuditAction,
   Detection,
   Inspection,
   InspectionGroup,
@@ -217,9 +218,24 @@ function renderSafePortion(
 
     const { contributors, start, end } = group;
 
-    const replacement = detectOnly
-      ? text.slice(start, end)
-      : resolveReplacement(text, contributors, start, end, restoration);
+    let replacement: string;
+    let action: AuditAction | undefined;
+
+    if (detectOnly) {
+      replacement = text.slice(start, end);
+      const { action: winningAction } = resolveWinningAction(contributors);
+      action = winningAction;
+    } else {
+      const resolved = resolveReplacement(
+        text,
+        contributors,
+        start,
+        end,
+        restoration,
+      );
+      replacement = resolved.replacement;
+      action = resolved.action;
+    }
 
     if (start > cursor) {
       segments.push({ text: text.slice(cursor, start) });
@@ -230,6 +246,7 @@ function renderSafePortion(
         start,
         end,
         replacement,
+        action,
         matches: contributors.map(({ detection }) => ({
           ...detection,
           value: text.slice(detection.start, detection.end),

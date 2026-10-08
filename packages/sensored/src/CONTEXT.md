@@ -767,3 +767,24 @@ as `VaultError`. Provides `getClient()` (lazy init via `createClient()`),
 AWS KMS overrides `generateDataKey()` / `decryptDataKey()` to use the native
 `GenerateDataKey` API, with its own try/catch wrapping. Each provider defines
 a minimal client interface instead of `client: unknown`.
+
+## Audit events
+
+`audit.ts` defines the audit event emission interfaces: `AuditAction`
+(`RuleSetting["action"]` — no type duplication), `AuditEvent` (metadata-only,
+never contains original PII), `AuditSink` (sync `write()`, async `flush()` and
+`close()` returning `Promise<void>`), and `emitAuditEvents()` (extracted from
+`index.ts` to centralize emission logic). `RedactorConfig.auditSink` accepts an
+`AuditSink`; when configured, `report: true` is forced internally so inspection
+groups are always populated, and `emitAuditEvents()` is called after `redact()`,
+`inspect()` (with `detectOnly: true` so replacement is `[DETECT_ONLY]`),
+`redactAsync()`, and stream processing. One audit event is
+emitted per detection (not per group), carrying the group's winning action.
+Sink errors are swallowed so audit logging never breaks the redaction pipeline.
+`InspectionGroup.action` is set by the engine when `report: true`; it is
+optional on the interface (non-breaking for existing consumers). `StreamOptions`
+accepts `auditSink` and the stream's `emitSegments()` adjusts match offsets to
+absolute positions before writing events. `validate.ts` allows `auditSink`
+in `CONFIG_KEYS` and validates its shape (`isRecord` + `typeof write === "function"`).
+`emitAuditEvents` is exported from `audit.ts` but NOT
+re-exported from the package barrel (`index.ts`) — internal use only.

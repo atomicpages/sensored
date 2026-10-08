@@ -8,6 +8,12 @@ export default defineConfig({
     "src/providers/azure-key-vault.ts",
     "src/providers/hashicorp-vault.ts",
     "src/providers/workos-ekm.ts",
+    "src/audit/otel-sink.ts",
+    "src/audit/otel-metrics-sink.ts",
+    "src/audit/composite-sink.ts",
+    "src/langfuse/mask-adapter.ts",
+    "src/otel/span-processor.ts",
+    "src/otel/log-processor.ts",
   ],
   format: "esm",
   dts: true,
@@ -19,6 +25,12 @@ export default defineConfig({
         "./providers/azure-key-vault": "./kms/azure",
         "./providers/hashicorp-vault": "./kms/hashicorp",
         "./providers/workos-ekm": "./kms/workos",
+        "./audit/otel-sink": "./audit/otel",
+        "./audit/otel-metrics-sink": "./audit/otel-metrics",
+        "./audit/composite-sink": "./audit/composite",
+        "./langfuse/mask-adapter": "./langfuse/mask",
+        "./otel/span-processor": "./otel/span-processor",
+        "./otel/log-processor": "./otel/log-processor",
       };
 
       const clean: Record<string, string> = {};

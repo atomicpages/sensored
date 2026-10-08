@@ -1,5 +1,4 @@
-import { beforeAll, describe, expect, it, mock } from "bun:test";
-import { VaultError } from "sensored/vault";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 import { HashiCorpVaultProvider } from "../src/providers/hashicorp-vault";
 
 const VAULT_URL = "http://localhost:8200";
@@ -33,19 +32,22 @@ function createMockClient() {
   return { write: writeCall };
 }
 
+function registerMock(client: ReturnType<typeof createMockClient>) {
+  return mock.module("node-vault", () => {
+    const factory = (_opts: Record<string, unknown>) => {
+      return { write: client.write };
+    };
+
+    return { default: factory };
+  });
+}
+
 describe("HashiCorpVaultProvider", () => {
   let client: ReturnType<typeof createMockClient>;
 
-  beforeAll(() => {
+  beforeEach(async () => {
     client = createMockClient();
-
-    mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
-        return { write: client.write };
-      };
-
-      return { default: factory };
-    });
+    await registerMock(client);
   });
 
   it("round-trips plaintext through encrypt and decrypt", async () => {
@@ -66,8 +68,6 @@ describe("HashiCorpVaultProvider", () => {
   });
 
   it("uses default mountPath 'transit'", async () => {
-    client.write.mockClear();
-
     const provider = new HashiCorpVaultProvider({
       vaultUrl: VAULT_URL,
       token: TOKEN,
@@ -80,8 +80,6 @@ describe("HashiCorpVaultProvider", () => {
   });
 
   it("uses custom mountPath when provided", async () => {
-    client.write.mockClear();
-
     const provider = new HashiCorpVaultProvider({
       vaultUrl: VAULT_URL,
       token: TOKEN,
@@ -97,8 +95,6 @@ describe("HashiCorpVaultProvider", () => {
   });
 
   it("base64-encodes plaintext before sending to Vault", async () => {
-    client.write.mockClear();
-
     const provider = new HashiCorpVaultProvider({
       vaultUrl: VAULT_URL,
       token: TOKEN,
@@ -117,14 +113,7 @@ describe("HashiCorpVaultProvider", () => {
   it("wraps empty-ciphertext errors as VAULT_ENCRYPT_FAILED", async () => {
     const emptyClient = createMockClient();
     emptyClient.write.mockImplementation(async () => ({ data: {} }));
-
-    mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
-        return { write: emptyClient.write };
-      };
-
-      return { default: factory };
-    });
+    await registerMock(emptyClient);
 
     const provider = new HashiCorpVaultProvider({
       vaultUrl: VAULT_URL,
@@ -140,14 +129,7 @@ describe("HashiCorpVaultProvider", () => {
   it("wraps empty-plaintext errors as VAULT_DECRYPT_FAILED", async () => {
     const emptyClient = createMockClient();
     emptyClient.write.mockImplementation(async () => ({ data: {} }));
-
-    mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
-        return { write: emptyClient.write };
-      };
-
-      return { default: factory };
-    });
+    await registerMock(emptyClient);
 
     const provider = new HashiCorpVaultProvider({
       vaultUrl: VAULT_URL,
@@ -161,16 +143,6 @@ describe("HashiCorpVaultProvider", () => {
   });
 
   it("generateDataKey returns 32-byte DEK and encrypted DEK", async () => {
-    const roundTripClient = createMockClient();
-
-    mock.module("node-vault", () => {
-      const factory = (opts: Record<string, unknown>) => {
-        return { write: roundTripClient.write };
-      };
-
-      return { default: factory };
-    });
-
     const provider = new HashiCorpVaultProvider({
       vaultUrl: VAULT_URL,
       token: TOKEN,

@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, mock } from "bun:test";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
 import { AzureKeyVaultProvider } from "../src/providers/azure-key-vault";
 
 const VAULT_URL = "https://test-vault.vault.azure.net";
@@ -21,34 +21,38 @@ function createMockCryptoClient() {
   return { encrypt: encryptCall, decrypt: decryptCall };
 }
 
+function registerKeyVaultMock(
+  cryptoClient: ReturnType<typeof createMockCryptoClient>,
+) {
+  return mock.module("@azure/keyvault-keys", () => {
+    class KeyClient {
+      async getKey(_name: string) {
+        return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
+      }
+    }
+
+    class CryptographyClient {
+      encrypt = cryptoClient.encrypt;
+      decrypt = cryptoClient.decrypt;
+    }
+
+    return { KeyClient, CryptographyClient };
+  });
+}
+
 describe("AzureKeyVaultProvider", () => {
   let cryptoClient: ReturnType<typeof createMockCryptoClient>;
 
-  beforeAll(() => {
+  beforeEach(async () => {
     cryptoClient = createMockCryptoClient();
 
-    mock.module("@azure/identity", () => {
+    await mock.module("@azure/identity", () => {
       class DefaultAzureCredential {}
 
       return { DefaultAzureCredential };
     });
 
-    mock.module("@azure/keyvault-keys", () => {
-      class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
-        async getKey(_name: string) {
-          return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
-        }
-      }
-
-      class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
-        encrypt = cryptoClient.encrypt;
-        decrypt = cryptoClient.decrypt;
-      }
-
-      return { KeyClient, CryptographyClient };
-    });
+    await registerKeyVaultMock(cryptoClient);
   });
 
   it("round-trips plaintext through encrypt and decrypt", async () => {
@@ -68,8 +72,6 @@ describe("AzureKeyVaultProvider", () => {
   });
 
   it("uses RSA-OAEP-256 algorithm", async () => {
-    cryptoClient.encrypt.mockClear();
-
     const provider = new AzureKeyVaultProvider({
       vaultUrl: VAULT_URL,
       keyName: KEY_NAME,
@@ -96,23 +98,7 @@ describe("AzureKeyVaultProvider", () => {
   it("wraps empty-result errors as VAULT_ENCRYPT_FAILED", async () => {
     const emptyClient = createMockCryptoClient();
     emptyClient.encrypt.mockImplementation(async () => ({ result: null }));
-
-    mock.module("@azure/keyvault-keys", () => {
-      class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
-        async getKey(_name: string) {
-          return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
-        }
-      }
-
-      class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
-        encrypt = emptyClient.encrypt;
-        decrypt = emptyClient.decrypt;
-      }
-
-      return { KeyClient, CryptographyClient };
-    });
+    await registerKeyVaultMock(emptyClient);
 
     const provider = new AzureKeyVaultProvider({
       vaultUrl: VAULT_URL,
@@ -127,23 +113,7 @@ describe("AzureKeyVaultProvider", () => {
   it("wraps empty-result errors as VAULT_DECRYPT_FAILED", async () => {
     const emptyClient = createMockCryptoClient();
     emptyClient.decrypt.mockImplementation(async () => ({ result: null }));
-
-    mock.module("@azure/keyvault-keys", () => {
-      class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
-        async getKey(_name: string) {
-          return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
-        }
-      }
-
-      class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
-        encrypt = emptyClient.encrypt;
-        decrypt = emptyClient.decrypt;
-      }
-
-      return { KeyClient, CryptographyClient };
-    });
+    await registerKeyVaultMock(emptyClient);
 
     const provider = new AzureKeyVaultProvider({
       vaultUrl: VAULT_URL,
@@ -158,25 +128,6 @@ describe("AzureKeyVaultProvider", () => {
   });
 
   it("generateDataKey returns 32-byte DEK and encrypted DEK", async () => {
-    const roundTripClient = createMockCryptoClient();
-
-    mock.module("@azure/keyvault-keys", () => {
-      class KeyClient {
-        constructor(_url: string, _cred: unknown) {}
-        async getKey(_name: string) {
-          return { id: `${VAULT_URL}/keys/${KEY_NAME}` };
-        }
-      }
-
-      class CryptographyClient {
-        constructor(_key: unknown, _cred: unknown) {}
-        encrypt = roundTripClient.encrypt;
-        decrypt = roundTripClient.decrypt;
-      }
-
-      return { KeyClient, CryptographyClient };
-    });
-
     const provider = new AzureKeyVaultProvider({
       vaultUrl: VAULT_URL,
       keyName: KEY_NAME,

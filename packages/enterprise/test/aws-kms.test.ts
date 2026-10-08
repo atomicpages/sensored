@@ -11,11 +11,11 @@ const describeOrSkip = INTEGRATION ? describe : describe.skip;
 
 describeOrSkip("AwsKmsProvider (integration with fakecloud)", () => {
   let provider: AwsKmsProvider;
-  let fc: FakeCloud;
+  let _fc: FakeCloud;
   let keyArn: string;
 
   beforeAll(async () => {
-    fc = new FakeCloud(FAKECLOUD_URL);
+    _fc = new FakeCloud(FAKECLOUD_URL);
 
     const kmsClient = new KMSClient({
       region: REGION,
@@ -30,7 +30,7 @@ describeOrSkip("AwsKmsProvider (integration with fakecloud)", () => {
       new CreateKeyCommand({ description: "redactme-test-key" }),
     );
 
-    keyArn = result.KeyMetadata!.Arn!;
+    keyArn = result.KeyMetadata?.Arn ?? "";
 
     provider = new AwsKmsProvider({
       keyId: keyArn,

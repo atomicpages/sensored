@@ -1,3 +1,4 @@
+import { emitAuditEvents } from "./audit";
 import {
   createRestorationContext,
   detectAndRender,
@@ -7,6 +8,7 @@ import { SensoredError } from "./errors";
 import { graphemeBoundaries, graphemeBoundaryAt } from "./grapheme";
 import type {
   ActiveRule,
+  AuditSink,
   InspectionGroup,
   RestorationMap,
   StreamEvent,
@@ -21,6 +23,7 @@ export function createStream(
     allowlist?: Set<string>;
     semantic?: unknown;
     detectOnly?: boolean;
+    auditSink?: AuditSink;
   },
 ): (chunks: AsyncIterable<string>) => AsyncIterable<StreamEvent> {
   for (const rule of rules) {
@@ -29,7 +32,8 @@ export function createStream(
     }
   }
 
-  const report = options?.report ?? false;
+  const auditSink = options?.auditSink;
+  const report = (options?.report ?? false) || auditSink !== undefined;
   const signal = options?.signal;
   const restoreEnabled = options?.restore ?? false;
   const detectOnly = options?.detectOnly ?? false;
@@ -79,9 +83,19 @@ export function createStream(
     segments: { text: string; group?: InspectionGroup }[],
     absoluteOffset: number,
   ): Generator<StreamEvent> {
+    const timestamp = Date.now();
+
     for (const segment of segments) {
       if (segment.group !== undefined) {
         const group = segment.group;
+
+        if (auditSink) {
+          emitAuditEvents([group], auditSink, {
+            offset: absoluteOffset,
+            timestamp,
+            detectOnly,
+          });
+        }
 
         if (detectOnly) {
           yield { type: "text", text: segment.text };
@@ -93,6 +107,7 @@ export function createStream(
             start: group.start + absoluteOffset,
             end: group.end + absoluteOffset,
             replacement: group.replacement,
+            action: group.action,
             matches: group.matches.map((m) => ({
               ...m,
               start: m.start + absoluteOffset,

@@ -437,6 +437,7 @@ const CONFIG_KEYS = [
   "semantic",
   "detectOnly",
   "detectorOptions",
+  "auditSink",
 ] as const;
 
 export function validateConfigShape(
@@ -522,6 +523,15 @@ export function validateConfigShape(
 
   if (config.detectorOptions !== undefined) {
     validateDetectorOptions(config.detectorOptions);
+  }
+
+  if (config.auditSink !== undefined) {
+    if (
+      !isRecord(config.auditSink) ||
+      typeof config.auditSink.write !== "function"
+    ) {
+      invalid("auditSink");
+    }
   }
 }
 

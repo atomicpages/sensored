@@ -8,7 +8,7 @@ import { renderTokenReplace } from "./token-replace";
 // Action precedence resolution
 // ---------------------------------------------------------------------------
 
-type ActionType =
+export type ActionType =
   | "remove"
   | "redact"
   | "format-preserve"
@@ -27,7 +27,7 @@ interface WinningAction {
  * For redact, only the highest-priority matches are returned. For mask,
  * all mask matches are returned (they union their hidden regions).
  */
-function resolveWinningAction(matches: AppliedMatch[]): WinningAction {
+export function resolveWinningAction(matches: AppliedMatch[]): WinningAction {
   const removeMatches = matches.filter(
     ({ rule }) => rule.setting.action === "remove",
   );
@@ -171,40 +171,51 @@ function resolveRedaction(matches: AppliedMatch[]): string {
  * Precedence: remove > redact > format-preserve > token-replace > mask.
  * Within redact, the highest explicit priority wins.
  */
+export interface ResolvedReplacement {
+  readonly replacement: string;
+  readonly action: ActionType;
+}
+
 export function resolveReplacement(
   text: string,
   matches: AppliedMatch[],
   start: number,
   end: number,
   restoration?: RestorationContext,
-): string {
+): ResolvedReplacement {
   if (restoration) {
-    return resolveRestorationPlaceholder(
-      text,
-      matches,
-      start,
-      end,
-      restoration,
-    );
+    return {
+      replacement: resolveRestorationPlaceholder(
+        text,
+        matches,
+        start,
+        end,
+        restoration,
+      ),
+      action: "redact",
+    };
   }
 
   const { action, matches: winners } = resolveWinningAction(matches);
 
   if (action === "remove") {
-    return resolveRemove();
+    return { replacement: resolveRemove(), action };
   }
 
   if (action === "redact") {
-    return resolveRedaction(winners);
+    return { replacement: resolveRedaction(winners), action };
   }
 
   if (action === "format-preserve") {
-    return renderFormatPreserve(text, start, end);
+    return { replacement: renderFormatPreserve(text, start, end), action };
   }
 
   if (action === "token-replace") {
-    return renderTokenReplace(text, winners, start, end);
+    return {
+      replacement: renderTokenReplace(text, winners, start, end),
+      action,
+    };
   }
 
-  return renderMask(text, winners, start, end);
+  return { replacement: renderMask(text, winners, start, end), action };
 }
