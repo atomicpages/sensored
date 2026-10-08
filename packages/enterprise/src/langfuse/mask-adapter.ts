@@ -1,13 +1,23 @@
-import { createRedactor, type RedactorConfig, redactValue } from "sensored";
+import {
+  createRedactor,
+  type Redactor,
+  type RedactorConfig,
+  type RedactResult,
+  redactValue,
+} from "sensored";
+
+function makeRedactor(config: RedactorConfig): Redactor {
+  return createRedactor(config);
+}
 
 export function createLangfuseMaskFunction(
   config: RedactorConfig,
 ): (input: { data: unknown }) => string {
-  const redactor = createRedactor(config);
+  const redactor = makeRedactor(config);
 
   return (input: { data: unknown }): string => {
     if (typeof input.data === "string") {
-      const result = redactor.redact(input.data);
+      const result: string | RedactResult = redactor.redact(input.data);
       return typeof result === "string" ? result : result.text;
     }
 
