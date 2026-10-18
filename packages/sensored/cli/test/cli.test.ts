@@ -74,7 +74,7 @@ describe("CLI integration", () => {
       );
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain("[EMAIL]");
-      expect(result.stdout).toContain("[REDACTED]");
+      expect(result.stdout).toContain("[US_SSN]");
     });
 
     it("outputs JSON with --json", () => {
