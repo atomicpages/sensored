@@ -51,3 +51,4 @@ docs/.vitepress/cache
 keys
 .agents/handoff
 conformance/golden/detectors/
+crates/target/
