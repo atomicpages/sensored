@@ -775,8 +775,27 @@
       },
       "input": "联系jane.doe@example.com谢谢",
       "expected": {
-        "text": "联系jane.doe@example.com谢谢",
-        "groups": []
+        "text": "联系[EMAIL]谢谢",
+        "groups": [
+          {
+            "start": 2,
+            "end": 22,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 2,
+                "end": 22,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -793,8 +812,27 @@
       },
       "input": "联系jane.doe@example.com谢谢",
       "expected": {
-        "text": "联系jane.doe@example.com谢谢",
-        "groups": []
+        "text": "联系********************谢谢",
+        "groups": [
+          {
+            "start": 2,
+            "end": 22,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 2,
+                "end": 22,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -1405,12 +1443,12 @@
       },
       "input": "https://example.com/?api_key=café😀42&y=1",
       "expected": {
-        "text": "https://example.com/?api_key=***é😀XX&y=1",
+        "text": "https://example.com/?api_key=****😀XX&y=1",
         "groups": [
           {
             "start": 29,
             "end": 37,
-            "replacement": "***é😀XX",
+            "replacement": "****😀XX",
             "matches": [
               {
                 "start": 29,

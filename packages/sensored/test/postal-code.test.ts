@@ -7,6 +7,18 @@ const redactor = createRedactor({
 
 describe("postal_code complete-string processing", () => {
   test.each([
+    ["Card 4111 1111 1111 1111", "Card 4111 1111 1111 1111"],
+    ["Card 4111-1111-1111-1111", "Card 4111-1111-1111-1111"],
+    ["SSN 123-45-6789", "SSN 123-45-6789"],
+    ["Call 555.123.4567", "Call 555.123.4567"],
+    ["Order 2024 12345 shipped", "Order 2024 12345 shipped"],
+    ["Berlin, 10115 and 2000.", "Berlin, [POSTAL_CODE] and [POSTAL_CODE]."],
+    ["ZIP: 12345 - thanks", "ZIP: [POSTAL_CODE] - thanks"],
+  ])("does not split longer numbers: %s", (input, expected) => {
+    expect(redactor.redact(input)).toBe(expected);
+  });
+
+  test.each([
     ["12345", "[POSTAL_CODE]"],
     ["ZIP: 12345", "ZIP: [POSTAL_CODE]"],
     ["12345-6789", "[POSTAL_CODE]"],
@@ -45,8 +57,8 @@ describe("postal_code complete-string processing", () => {
     ["ZIP:12345", "ZIP:[POSTAL_CODE]"],
     ["12345-6789.", "[POSTAL_CODE]."],
     ["ZIP 12345 ZIP 67890", "ZIP [POSTAL_CODE] ZIP [POSTAL_CODE]"],
-    ["1234-5678", "[POSTAL_CODE]-[POSTAL_CODE]"],
-    ["1234 5678 9012", "[POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE]"],
+    ["1234-5678", "1234-5678"],
+    ["1234 5678 9012", "1234 5678 9012"],
   ])("%s", (input, expected) => {
     expect(redactor.redact(input)).toBe(expected);
     expect(redactor.inspect(input).text).toBe(expected);
@@ -222,9 +234,9 @@ describe("postal_code complete-string processing", () => {
   });
 
   test("multiple postal codes in sequence", () => {
-    const result = redactor.redact("12345 67890 11111 22222");
+    const result = redactor.redact("12345, 67890, 11111, 22222");
     expect(result).toBe(
-      "[POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE]",
+      "[POSTAL_CODE], [POSTAL_CODE], [POSTAL_CODE], [POSTAL_CODE]",
     );
   });
 

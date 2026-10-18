@@ -119,11 +119,11 @@ export const PLAYGROUND_SAMPLE = PLAYGROUND_TEMPLATES.pii;
 
 export const PLAYGROUND_SAMPLE_OUTPUT = `Customer: [PERSON_NAME].
 Email: [EMAIL]
-Phone: [REDACTED]
-Card: [REDACTED]
+Phone: [PHONE]
+Card: [PAYMENT_CARD]
 IP: 203.0.113.42
 Authorization: Bearer ghp_1234567890abcdefghijklmnopqrstuvwxyz
-SSN: [REDACTED]`;
+SSN: [US_SSN]`;
 
 export function createPlaygroundState(
   handoff?: PlaygroundHandoff,

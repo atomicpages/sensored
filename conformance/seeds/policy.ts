@@ -23,6 +23,22 @@ export const policySeeds: readonly PolicySeed[] = [
     config: { presets: ["hipaa", "pci-dss", "finance"], rules: {} },
   },
   {
+    id: "conflict/resolved-by-explicit-rule",
+    config: {
+      presets: ["pci-dss", "team"],
+      customPresets: { team: { payment_card: { action: "mask" } } },
+      rules: { payment_card: { action: "remove" } },
+    },
+  },
+  {
+    id: "conflict/resolved-by-explicit-off",
+    config: {
+      presets: ["pci-dss", "team"],
+      customPresets: { team: { payment_card: { action: "mask" } } },
+      rules: { payment_card: "off" },
+    },
+  },
+  {
     id: "combined/duplicate-preset",
     config: { presets: ["pci-dss", "pci-dss"], rules: {} },
   },

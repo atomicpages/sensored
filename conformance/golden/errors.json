@@ -839,6 +839,36 @@
       }
     },
     {
+      "id": "invalid-config/detectOnly/string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectOnly": "yes"
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectOnly"
+      }
+    },
+    {
+      "id": "invalid-config/detectOnly/number",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectOnly": 1
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectOnly"
+      }
+    },
+    {
       "id": "invalid-config/detectOnly/with-restore",
       "config": {
         "rules": {
@@ -1078,31 +1108,6 @@
           }
         },
         "rules": {}
-      },
-      "expected": {
-        "code": "POLICY_CONFLICT",
-        "path": "presets"
-      }
-    },
-    {
-      "id": "policy-conflict/explicit-override-does-not-resolve",
-      "config": {
-        "presets": [
-          "pci-dss",
-          "team"
-        ],
-        "customPresets": {
-          "team": {
-            "payment_card": {
-              "action": "mask"
-            }
-          }
-        },
-        "rules": {
-          "payment_card": {
-            "action": "remove"
-          }
-        }
       },
       "expected": {
         "code": "POLICY_CONFLICT",

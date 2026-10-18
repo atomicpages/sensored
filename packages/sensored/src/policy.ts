@@ -83,9 +83,14 @@ function parsePresetRef(ref: string): {
 // Preset expansion
 // ---------------------------------------------------------------------------
 
+/**
+ * Merge one preset's rules. Conflicting actions throw, unless the config sets
+ * that rule explicitly: the explicit rule wins anyway, so the conflict is moot.
+ */
 function mergePresetRules(
   merged: Record<string, RuleSetting>,
   presetRules: Readonly<Record<string, RuleSetting | "off">>,
+  explicit: ReadonlySet<string>,
 ): void {
   for (const [ruleId, ruleValue] of Object.entries(presetRules)) {
     if (ruleValue === "off") {
@@ -94,7 +99,11 @@ function mergePresetRules(
 
     const existing = merged[ruleId];
 
-    if (existing !== undefined && existing.action !== ruleValue.action) {
+    if (
+      existing !== undefined &&
+      existing.action !== ruleValue.action &&
+      !explicit.has(ruleId)
+    ) {
       throw new SensoredError("POLICY_CONFLICT", "presets");
     }
 
@@ -107,6 +116,7 @@ function resolvePresets(
   customPresets:
     | Readonly<Record<string, Readonly<Record<string, RuleSetting | "off">>>>
     | undefined,
+  explicit: ReadonlySet<string>,
 ): Record<string, RuleSetting> {
   const merged: Record<string, RuleSetting> = {};
 
@@ -123,7 +133,7 @@ function resolvePresets(
         });
       }
 
-      mergePresetRules(merged, customPreset);
+      mergePresetRules(merged, customPreset, explicit);
       continue;
     }
 
@@ -137,7 +147,7 @@ function resolvePresets(
 
     if (version === undefined) {
       for (const delta of versions) {
-        mergePresetRules(merged, delta);
+        mergePresetRules(merged, delta, explicit);
       }
     } else {
       const index = version - 1;
@@ -159,7 +169,7 @@ function resolvePresets(
           });
         }
 
-        mergePresetRules(merged, delta);
+        mergePresetRules(merged, delta, explicit);
       }
     }
   }
@@ -223,7 +233,11 @@ export function resolvePolicy(config: unknown): {
   if (config.presets !== undefined) {
     Object.assign(
       presetRules,
-      resolvePresets(config.presets, config.customPresets),
+      resolvePresets(
+        config.presets,
+        config.customPresets,
+        new Set(Object.keys(config.rules)),
+      ),
     );
   }
 

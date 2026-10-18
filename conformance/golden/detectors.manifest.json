@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "corpusFingerprint": "ac997713f3d9d92f3b0e1e72db94285dae65dbf98d335fb2445cfa17ba8120c7",
+  "corpusFingerprint": "0825364a74c4d669034c87b5f4cad8ababd7c8974d9beaf98270ba24f02d9a18",
   "files": {
     "address.json": {
       "sha256": "7d5e19e1d769a1e90a178df13e7e036b2710696fae1ded5f2f9752127cd43ac1",
@@ -423,8 +423,8 @@
       "cases": 320
     },
     "postal_code.json": {
-      "sha256": "97c489f986931e34bbdef1e4aaab9a44a969fcb7ea875bebc255e09a6c3f7e5c",
-      "cases": 2270
+      "sha256": "ca928f69de9c80e3a4696ca5e82c3d9d84dc1703d540ff266b960572d9f53650",
+      "cases": 1068
     },
     "private_key.json": {
       "sha256": "59ca6e3bff2b8ed93e7db36e580331bb374f15a27eeb980793f433d66d96ba4b",

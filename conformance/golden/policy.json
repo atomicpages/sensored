@@ -2299,6 +2299,87 @@
       }
     },
     {
+      "id": "conflict/resolved-by-explicit-rule",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "payment_card": {
+              "action": "mask"
+            }
+          }
+        },
+        "rules": {
+          "payment_card": {
+            "action": "remove"
+          }
+        }
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "remove"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "conflict/resolved-by-explicit-off",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "payment_card": {
+              "action": "mask"
+            }
+          }
+        },
+        "rules": {
+          "payment_card": "off"
+        }
+      },
+      "expected": {
+        "policy": {
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
       "id": "combined/duplicate-preset",
       "config": {
         "presets": [

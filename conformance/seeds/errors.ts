@@ -120,6 +120,8 @@ export const errorSeeds: readonly ErrorSeed[] = [
   withField("detectors", "object", {}),
   withField("detectors", "json-definition", [{}]),
   withField("semantic", "empty", {}),
+  withField("detectOnly", "string", "yes"),
+  withField("detectOnly", "number", 1),
   {
     id: "invalid-config/detectOnly/with-restore",
     config: { rules: EMAIL_RULE, detectOnly: true, restore: true },
@@ -202,14 +204,6 @@ export const errorSeeds: readonly ErrorSeed[] = [
       presets: ["pci-dss", "team"],
       customPresets: { team: { payment_card: { action: "mask" } } },
       rules: {},
-    },
-  },
-  {
-    id: "policy-conflict/explicit-override-does-not-resolve",
-    config: {
-      presets: ["pci-dss", "team"],
-      customPresets: { team: { payment_card: { action: "mask" } } },
-      rules: { payment_card: { action: "remove" } },
     },
   },
 

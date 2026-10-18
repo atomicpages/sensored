@@ -558,7 +558,8 @@ a singleton.
 `engine.ts` discovers original spans, forms transitive overlap groups, resolves
 remove > redact > format-preserve > token-replace > mask precedence, and renders
 output plus opt-in reports. `renderFormatPreserve()` transforms digits to `X`
-and letters to `*` while keeping separators and structure. `renderTokenReplace()`
+and letters to `*` (Unicode `\p{Nd}` / `\p{L}`, one symbol per grapheme
+cluster) while keeping separators and structure. `renderTokenReplace()`
 generates deterministic fake data per entity type using `fnv1a32()` hashing;
 optional custom token mappings override defaults. `DEFAULT_TOKEN_GENERATORS`
 provides idempotent fake values for all 155 entity types (designed to not match
@@ -573,10 +574,12 @@ Idempotency is enforced via placeholder filtering: `findPlaceholderSpans` scans
 for `[UPPERCASE]` and `[UPPERCASE_N]` patterns (including `[REDACTED]`) using
 `REDACT_SPAN_PATTERN`, and `filterPlaceholderMatches` drops any detection
 overlapping those spans so re-redacting already-redacted text is a no-op.
-`detectAndRender` delegates to `collectMatches` for match collection and
-filtering. The public seam between engine and stream is `detectAndRender`:
-it collects matches from all rules, filters
-placeholder overlaps, and renders the safe portion up to a flush point.
+`detectAndRender` and `collectMatches` share match detection and filtering.
+The public seam between engine and stream is `detectAndRender`: it collects
+matches from all rules, moves the flush point back so it never cuts through
+any detected span or existing placeholder (including allowlisted ones, whose
+tail would otherwise be re-detected as a new match), filters placeholder
+overlaps and the allowlist, and renders the safe portion up to that point.
 `processText` delegates to `detectAndRender` for complete-string use;
 `stream.ts` calls `detectAndRender` per flush. Internal helpers (`AppliedMatch`,
 `findPlaceholderSpans`, `filterPlaceholderMatches`, `filterAllowlisted`,
@@ -636,10 +639,11 @@ WeakSet for circular reference safety. Used by logging adapters (pino, winston)
 and LLM adapters (openai, anthropic) to redact structured data.
 `stream-restore.ts` exports `StreamRestorer` — restores placeholders in
 streaming responses where a placeholder may be split across chunk boundaries.
-`push(chunk)` returns restorable text, holding back partial placeholders up to
-`MAX_PARTIAL_LENGTH`. `flush()` emits any remaining held text. Uses `restore()`
-from `restore.ts` and pattern constants from `placeholders.ts`. Used by the
-openai and anthropic streaming adapters.
+`push(chunk)` returns restorable text, holding back the tail from the last `[`
+only while it is a proper prefix of a placeholder in the map (so a lone `[` and
+long custom entity types are handled; unrelated brackets pass straight
+through). `flush()` emits any remaining held text. Uses `restore()` from
+`restore.ts`. Used by the openai and anthropic streaming adapters.
 `restore.ts` exports the `restore(text, map)` function that reverses redacted
 text back to its original form using a `RestorationMap` (placeholder → original
 value). Uses `PLACEHOLDER_PATTERN` from `placeholders.ts`. When `config.restore`
@@ -651,9 +655,8 @@ overloads so callers with `restore: true` get a `RedactResult` return type while
 callers without it get `string`, preserving backward compatibility.
 `placeholders.ts` exports the shared `PLACEHOLDER_PATTERN` (matches numbered
 placeholders like `[EMAIL_1]`), `PLACEHOLDER_TEST` (non-global variant for safe
-`.test()` usage), and `PARTIAL_PATTERN` (matches incomplete placeholders split
-across chunk boundaries). Imported by `restore.ts`, `stream-restore.ts`, and
-`adapters/shared.ts` so placeholder format lives in one module.
+`.test()` usage). Imported by `restore.ts` and `adapters/shared.ts` so
+placeholder format lives in one module.
 `symbols.ts` exports `SESSION_BRAND` (`Symbol.for("sensored.session")`),
 shared by `session.ts` and `adapters/shared.ts` to avoid duplication.
 `session.ts` exports `createSession(config, existingMap?)` and the `Session`

@@ -504,6 +504,13 @@ export function validateConfigShape(
     invalid("restore");
   }
 
+  if (
+    config.detectOnly !== undefined &&
+    typeof config.detectOnly !== "boolean"
+  ) {
+    invalid("detectOnly");
+  }
+
   if (config.allowlist !== undefined) {
     if (!Array.isArray(config.allowlist)) {
       invalid("allowlist");

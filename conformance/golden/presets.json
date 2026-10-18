@@ -11,7 +11,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [REDACTED]) paid with card [REDACTED].\nSSN: [REDACTED]. IBAN [REDACTED]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
         "groups": [
           {
             "start": 12,
@@ -51,7 +51,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -62,16 +62,6 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
               }
             ]
           },
@@ -80,16 +70,6 @@
             "end": 97,
             "replacement": "[REDACTED]",
             "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 78,
                 "end": 92,
@@ -111,43 +91,13 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
           {
             "start": 104,
             "end": 115,
-            "replacement": "[REDACTED]",
+            "replacement": "[US_SSN]",
             "matches": [
               {
                 "start": 104,
@@ -159,23 +109,13 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           },
           {
             "start": 122,
             "end": 149,
-            "replacement": "[REDACTED]",
+            "replacement": "[IBAN]",
             "matches": [
               {
                 "start": 122,
@@ -187,36 +127,6 @@
                   "iban.format"
                 ],
                 "value": "GB82 WEST 1234 5698 7654 32"
-              },
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              },
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              },
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },
@@ -250,7 +160,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [REDACTED]) paid with card [POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE].\nSSN: 123-45-[POSTAL_CODE]. IBAN [REDACTED]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
         "groups": [
           {
             "start": 12,
@@ -290,7 +200,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -301,108 +211,13 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
-              }
-            ]
-          },
-          {
-            "start": 78,
-            "end": 82,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              }
-            ]
-          },
-          {
-            "start": 83,
-            "end": 87,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              }
-            ]
-          },
-          {
-            "start": 88,
-            "end": 92,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              }
-            ]
-          },
-          {
-            "start": 93,
-            "end": 97,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              }
-            ]
-          },
-          {
-            "start": 111,
-            "end": 115,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           },
           {
             "start": 122,
             "end": 149,
-            "replacement": "[REDACTED]",
+            "replacement": "[IBAN]",
             "matches": [
               {
                 "start": 122,
@@ -414,36 +229,6 @@
                   "iban.format"
                 ],
                 "value": "GB82 WEST 1234 5698 7654 32"
-              },
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              },
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              },
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },
@@ -477,7 +262,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [REDACTED]) paid with card [REDACTED].\nSSN: [REDACTED]. IBAN GB82 WEST [POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE] 32. NPI [US_NPI].\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [PAYMENT_CARD].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI [US_NPI].\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
         "groups": [
           {
             "start": 12,
@@ -517,7 +302,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -528,34 +313,14 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
               }
             ]
           },
           {
             "start": 78,
             "end": 97,
-            "replacement": "[REDACTED]",
+            "replacement": "[PAYMENT_CARD]",
             "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 78,
                 "end": 97,
@@ -566,43 +331,13 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
           {
             "start": 104,
             "end": 115,
-            "replacement": "[REDACTED]",
+            "replacement": "[US_SSN]",
             "matches": [
               {
                 "start": 104,
@@ -614,67 +349,6 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
-              }
-            ]
-          },
-          {
-            "start": 132,
-            "end": 136,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              }
-            ]
-          },
-          {
-            "start": 137,
-            "end": 141,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              }
-            ]
-          },
-          {
-            "start": 142,
-            "end": 146,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },
@@ -726,7 +400,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [REDACTED]) paid with card [REDACTED].\nSSN: [REDACTED]. IBAN GB82 WEST [POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE] 32. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
         "groups": [
           {
             "start": 12,
@@ -766,7 +440,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -777,16 +451,6 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
               }
             ]
           },
@@ -795,16 +459,6 @@
             "end": 97,
             "replacement": "[REDACTED]",
             "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 78,
                 "end": 92,
@@ -826,43 +480,13 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
           {
             "start": 104,
             "end": 115,
-            "replacement": "[REDACTED]",
+            "replacement": "[US_SSN]",
             "matches": [
               {
                 "start": 104,
@@ -874,67 +498,6 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
-              }
-            ]
-          },
-          {
-            "start": 132,
-            "end": 136,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              }
-            ]
-          },
-          {
-            "start": 137,
-            "end": 141,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              }
-            ]
-          },
-          {
-            "start": 142,
-            "end": 146,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },
@@ -1019,7 +582,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [REDACTED]) paid with card [REDACTED].\nSSN: [REDACTED]. IBAN GB82 WEST [POSTAL_CODE] [POSTAL_CODE] [POSTAL_CODE] 32. NPI [US_NPI].\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [PAYMENT_CARD].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI [US_NPI].\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
         "groups": [
           {
             "start": 12,
@@ -1059,7 +622,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -1070,34 +633,14 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
               }
             ]
           },
           {
             "start": 78,
             "end": 97,
-            "replacement": "[REDACTED]",
+            "replacement": "[PAYMENT_CARD]",
             "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 78,
                 "end": 97,
@@ -1108,43 +651,13 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
           {
             "start": 104,
             "end": 115,
-            "replacement": "[REDACTED]",
+            "replacement": "[US_SSN]",
             "matches": [
               {
                 "start": 104,
@@ -1156,67 +669,6 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
-              }
-            ]
-          },
-          {
-            "start": 132,
-            "end": 136,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              }
-            ]
-          },
-          {
-            "start": 137,
-            "end": 141,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              }
-            ]
-          },
-          {
-            "start": 142,
-            "end": 146,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },
@@ -1747,7 +1199,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [REDACTED]) paid with card [REDACTED].\nSSN: [REDACTED]. IBAN [REDACTED]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
         "groups": [
           {
             "start": 12,
@@ -1787,7 +1239,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -1798,16 +1250,6 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
               }
             ]
           },
@@ -1816,16 +1258,6 @@
             "end": 97,
             "replacement": "[REDACTED]",
             "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 78,
                 "end": 92,
@@ -1847,43 +1279,13 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
           {
             "start": 104,
             "end": 115,
-            "replacement": "[REDACTED]",
+            "replacement": "[US_SSN]",
             "matches": [
               {
                 "start": 104,
@@ -1895,23 +1297,13 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           },
           {
             "start": 122,
             "end": 149,
-            "replacement": "[REDACTED]",
+            "replacement": "[IBAN]",
             "matches": [
               {
                 "start": 122,
@@ -1923,36 +1315,6 @@
                   "iban.format"
                 ],
                 "value": "GB82 WEST 1234 5698 7654 32"
-              },
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              },
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              },
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },
@@ -2139,7 +1501,7 @@
       },
       "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
       "expected": {
-        "text": "Patient Dr. [PERSON_NAME] (********************, [REDACTED]) paid with card [REDACTED].\nSSN: [REDACTED]. IBAN [REDACTED]. NPI 1234567893.\nServer 192.0.2.10 / [REDACTED], MAC [MAC_ADDRESS].\nAuthorization: Basic [HTTP_AUTH_HEADER]\nCallback [REDACTED]",
+        "text": "Patient Dr. [PERSON_NAME] (********************, [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [REDACTED], MAC [MAC_ADDRESS].\nAuthorization: Basic [HTTP_AUTH_HEADER]\nCallback [REDACTED]",
         "groups": [
           {
             "start": 12,
@@ -2179,7 +1541,7 @@
           {
             "start": 46,
             "end": 61,
-            "replacement": "[REDACTED]",
+            "replacement": "[PHONE]",
             "matches": [
               {
                 "start": 46,
@@ -2190,16 +1552,6 @@
                   "phone.format"
                 ],
                 "value": "+1 555 010 0199"
-              },
-              {
-                "start": 57,
-                "end": 61,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "0199"
               }
             ]
           },
@@ -2208,16 +1560,6 @@
             "end": 97,
             "replacement": "[REDACTED]",
             "matches": [
-              {
-                "start": 78,
-                "end": 82,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 78,
                 "end": 92,
@@ -2239,43 +1581,13 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 83,
-                "end": 87,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 88,
-                "end": 92,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 93,
-                "end": 97,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
           {
             "start": 104,
             "end": 115,
-            "replacement": "[REDACTED]",
+            "replacement": "[US_SSN]",
             "matches": [
               {
                 "start": 104,
@@ -2287,23 +1599,13 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 111,
-                "end": 115,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           },
           {
             "start": 122,
             "end": 149,
-            "replacement": "[REDACTED]",
+            "replacement": "[IBAN]",
             "matches": [
               {
                 "start": 122,
@@ -2315,36 +1617,6 @@
                   "iban.format"
                 ],
                 "value": "GB82 WEST 1234 5698 7654 32"
-              },
-              {
-                "start": 132,
-                "end": 136,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1234"
-              },
-              {
-                "start": 137,
-                "end": 141,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "5698"
-              },
-              {
-                "start": 142,
-                "end": 146,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "7654"
               }
             ]
           },

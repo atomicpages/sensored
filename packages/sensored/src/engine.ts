@@ -287,14 +287,59 @@ export function collectMatches(
   rules: readonly ActiveRule[],
   allowlist: Set<string> = new Set(),
 ): AppliedMatch[] {
-  const matches = rules.flatMap((rule) =>
+  return filterMatches(text, detectMatches(text, rules), allowlist);
+}
+
+function detectMatches(
+  text: string,
+  rules: readonly ActiveRule[],
+): AppliedMatch[] {
+  return rules.flatMap((rule) =>
     rule.detector.detect(text).map((detection) => ({ detection, rule })),
   );
+}
 
-  const placeholders = findPlaceholderSpans(text);
+function filterMatches(
+  text: string,
+  matches: AppliedMatch[],
+  allowlist: Set<string>,
+  placeholders: readonly {
+    start: number;
+    end: number;
+  }[] = findPlaceholderSpans(text),
+): AppliedMatch[] {
   const filtered = filterPlaceholderMatches(matches, placeholders);
 
   return filterAllowlisted(filtered, allowlist, text);
+}
+
+/**
+ * Move `flushPoint` back so it never cuts through a span, repeating until no
+ * span crosses it.
+ *
+ * Streaming must hold back filtered spans (allowlisted values, existing
+ * placeholders) as well as rendered ones: a cut through them lets the next
+ * flush detect their tail as a new, different match.
+ */
+function holdBackFlush(
+  flushPoint: number,
+  spans: readonly { start: number; end: number }[],
+): number {
+  let held = flushPoint;
+  let moved = true;
+
+  while (moved) {
+    moved = false;
+
+    for (const span of spans) {
+      if (span.start < held && span.end > held) {
+        held = span.start;
+        moved = true;
+      }
+    }
+  }
+
+  return held;
 }
 
 /**
@@ -347,12 +392,18 @@ export function detectAndRender(
   groups: InspectionGroup[];
   consumed: number;
 } {
-  const allowlisted = collectMatches(text, rules, allowlist);
+  const detected = detectMatches(text, rules);
+  const placeholders = findPlaceholderSpans(text);
+
+  const safeFlush = holdBackFlush(flushPoint, [
+    ...detected.map(({ detection }) => detection),
+    ...placeholders,
+  ]);
 
   return renderSafePortion(
     text,
-    allowlisted,
-    flushPoint,
+    filterMatches(text, detected, allowlist, placeholders),
+    safeFlush,
     report,
     startCursor,
     restoration,

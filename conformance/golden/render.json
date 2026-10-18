@@ -1198,16 +1198,6 @@
             "matches": [
               {
                 "start": 5,
-                "end": 9,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
-              {
-                "start": 5,
                 "end": 19,
                 "ruleId": "jp_my_number",
                 "entityType": "jp_my_number",
@@ -1227,36 +1217,6 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 10,
-                "end": 14,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 15,
-                "end": 19,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 20,
-                "end": 24,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           }
@@ -1277,23 +1237,13 @@
       },
       "input": "Card 4111 1111 1111 1111 on file.",
       "expected": {
-        "text": "Card [REDACTED] [POSTAL_CODE] on file.",
+        "text": "Card [JP_MY_NUMBER] 1111 on file.",
         "groups": [
           {
             "start": 5,
             "end": 19,
-            "replacement": "[REDACTED]",
+            "replacement": "[JP_MY_NUMBER]",
             "matches": [
-              {
-                "start": 5,
-                "end": 9,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
               {
                 "start": 5,
                 "end": 19,
@@ -1304,43 +1254,6 @@
                   "jp_my_number.format"
                 ],
                 "value": "4111 1111 1111"
-              },
-              {
-                "start": 10,
-                "end": 14,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 15,
-                "end": 19,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              }
-            ]
-          },
-          {
-            "start": 20,
-            "end": 24,
-            "replacement": "[POSTAL_CODE]",
-            "matches": [
-              {
-                "start": 20,
-                "end": 24,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           }
@@ -1378,16 +1291,6 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 12,
-                "end": 16,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           }

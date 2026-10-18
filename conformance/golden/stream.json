@@ -785,16 +785,6 @@
             "matches": [
               {
                 "start": 5,
-                "end": 9,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
-              {
-                "start": 5,
                 "end": 19,
                 "ruleId": "jp_my_number",
                 "entityType": "jp_my_number",
@@ -814,36 +804,6 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 10,
-                "end": 14,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 15,
-                "end": 19,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 20,
-                "end": 24,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
@@ -854,16 +814,6 @@
             "matches": [
               {
                 "start": 46,
-                "end": 50,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
-              {
-                "start": 46,
                 "end": 60,
                 "ruleId": "jp_my_number",
                 "entityType": "jp_my_number",
@@ -883,36 +833,6 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 51,
-                "end": 55,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 56,
-                "end": 60,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 61,
-                "end": 65,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
@@ -983,16 +903,6 @@
             "matches": [
               {
                 "start": 5,
-                "end": 9,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
-              {
-                "start": 5,
                 "end": 19,
                 "ruleId": "jp_my_number",
                 "entityType": "jp_my_number",
@@ -1012,36 +922,6 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 10,
-                "end": 14,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 15,
-                "end": 19,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 20,
-                "end": 24,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
@@ -1052,16 +932,6 @@
             "matches": [
               {
                 "start": 46,
-                "end": 50,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4111"
-              },
-              {
-                "start": 46,
                 "end": 60,
                 "ruleId": "jp_my_number",
                 "entityType": "jp_my_number",
@@ -1081,36 +951,6 @@
                   "payment_card.format"
                 ],
                 "value": "4111 1111 1111 1111"
-              },
-              {
-                "start": 51,
-                "end": 55,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 56,
-                "end": 60,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
-              },
-              {
-                "start": 61,
-                "end": 65,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "1111"
               }
             ]
           },
@@ -1192,16 +1032,6 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 38,
-                "end": 42,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           },
@@ -1220,16 +1050,6 @@
                   "us_ssn.context"
                 ],
                 "value": "123-45-6789"
-              },
-              {
-                "start": 90,
-                "end": 94,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
               }
             ]
           }
@@ -1254,43 +1074,8 @@
       },
       "input": "Applicant record follows. Number 123-45-6789 is the SSN on record; reference 987-65-4321 has no label at all here.",
       "expected": {
-        "text": "Applicant record follows. Number 123-45- is the SSN on record; reference 987-65- has no label at all here.",
-        "detections": [
-          {
-            "start": 40,
-            "end": 44,
-            "replacement": "****",
-            "matches": [
-              {
-                "start": 40,
-                "end": 44,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "6789"
-              }
-            ]
-          },
-          {
-            "start": 84,
-            "end": 88,
-            "replacement": "****",
-            "matches": [
-              {
-                "start": 84,
-                "end": 88,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
-                "reasons": [
-                  "postal_code.format"
-                ],
-                "value": "4321"
-              }
-            ]
-          }
-        ]
+        "text": "Applicant record follows. Number 123-45-6789 is the SSN on record; reference 987-65-4321 has no label at all here.",
+        "detections": []
       }
     },
     {
@@ -1311,22 +1096,135 @@
       },
       "input": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789 and then yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy SSN",
       "expected": {
-        "text": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45- and then yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy SSN",
+        "text": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789 and then yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy SSN",
+        "detections": []
+      }
+    },
+    {
+      "id": "allowlist/exact-match",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          "198.51.100.7"
+        ]
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts  and 198.51.100.7 talk to  via ; gateway , backup , last seen  again.",
         "detections": [
           {
-            "start": 52,
-            "end": 56,
-            "replacement": "****",
+            "start": 6,
+            "end": 16,
+            "replacement": "[IPV4]",
             "matches": [
               {
-                "start": 52,
-                "end": 56,
-                "ruleId": "postal_code",
-                "entityType": "postal_code",
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
                 "reasons": [
-                  "postal_code.format"
+                  "ipv4.format"
                 ],
-                "value": "6789"
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "replacement": "[IPV6]",
+            "matches": [
+              {
+                "start": 42,
+                "end": 53,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 58,
+            "end": 75,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 58,
+                "end": 75,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
               }
             ]
           }

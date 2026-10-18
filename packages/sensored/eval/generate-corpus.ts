@@ -1525,6 +1525,13 @@ function hasCrossFP(bareDigits: string): boolean {
   return false;
 }
 
+function neighbourGroup(text: string, side: "before" | "after"): string {
+  const match =
+    side === "before" ? /[a-z\d]+$/i.exec(text) : /^[a-z\d]+/i.exec(text);
+
+  return match?.[0] ?? "";
+}
+
 function postalCodeSpans(text: string): Tuple[] {
   const spans: Tuple[] = [];
   const pattern = /\d{5}(?:-\d{4})?|[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}|[A-Z]\d[A-Z] ?\d[A-Z]\d|\d{4}/gi;
@@ -1538,6 +1545,15 @@ function postalCodeSpans(text: string): Tuple[] {
     }
 
     if (end < text.length && /[\p{L}\p{M}\p{N}_]/u.test(text[end]!)) {
+      continue;
+    }
+
+    // A digit-only group joined by a separator to another digit-only group
+    // (`4111 1111`, `45-6789`) is part of a longer number, not a postal code.
+    const before = /[ .-]$/.test(text.slice(0, start)) && /^\d+$/.test(neighbourGroup(text.slice(0, start - 1), "before"));
+    const after = /^[ .-]/.test(text.slice(end)) && /^\d+$/.test(neighbourGroup(text.slice(end + 1), "after"));
+
+    if (/^[\d-]+$/.test(match[0]) && (before || after)) {
       continue;
     }
 

@@ -159,6 +159,26 @@ describe("format-preserve: restoration", () => {
   });
 });
 
+describe("format-preserve: non-ASCII", () => {
+  const redactor = createRedactor({
+    rules: { name_tag: { action: "format-preserve" } },
+    detectors: [
+      {
+        id: "name_tag",
+        entityType: "name_tag",
+        replacement: "[NAME_TAG]",
+        pattern: /tag:\S+/gu,
+      },
+    ],
+  });
+
+  it("hides non-ASCII letters and digits, one symbol per grapheme", () => {
+    expect(redactor.redact("tag:café😀42")).toBe("***:****😀XX");
+    expect(redactor.redact("tag:José")).toBe("***:****");
+    expect(redactor.redact("tag:联系٣")).toBe("***:**X");
+  });
+});
+
 describe("format-preserve: validation", () => {
   it("rejects unknown keys on format-preserve setting", () => {
     expect(() =>
