@@ -5,7 +5,7 @@ hero:
   name: sensored
   text: Streaming-first PII redaction for TypeScript
   tagline:
-    Detect and redact sensitive data with 131 built-in detectors, AI-powered
+    Detect and redact sensitive data with 155 built-in detectors, AI-powered
     semantic confirmation, and full streaming support.
   image:
     src: /logo-light.svg
@@ -23,17 +23,17 @@ features:
     details:
       Process continuous text streams with boundary buffering, context windows,
       and safe flush points. No need to buffer entire inputs in memory.
-  - title: 131 Built-in Detectors
+  - title: 155 Built-in Detectors
     details:
       Email, phone, payment cards, national IDs, passports, person names, cloud
       keys, JWT tokens, private keys, healthcare identifiers, HR data, legal
       references, crypto addresses, tracking numbers, and more across 13
       domains.
-  - title: Zero Runtime Dependencies
+  - title: Rust Engine
     details:
-      The core library has no runtime dependencies. Person name detection uses a
-      lightweight bloom filter (person_name_lite). Optional rule-based NER
-      (person_name) for higher recall.
+      A Rust core runs natively on 7 platforms and as Wasm everywhere else,
+      3.7-21x faster than v1 with all detectors on. The API stays synchronous
+      and identical.
   - title: Reversible Redaction
     details:
       Enable restoration mode to get numbered placeholders and a restoration

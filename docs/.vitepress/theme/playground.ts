@@ -231,20 +231,12 @@ export function generatePlaygroundCode(
 ): string {
   const rules = buildPlaygroundRules(activeDetectorIds, state, priorities);
 
-  const imports = state.nerEnabled
-    ? 'import { createRedactor, preloadPersonNameDetector } from "sensored";'
-    : 'import { createRedactor } from "sensored";';
-
-  const preload = state.nerEnabled
-    ? "\n\nawait preloadPersonNameDetector();"
-    : "";
-
   const allowlist =
     state.allowlist.length > 0
       ? `,\n  allowlist: ${JSON.stringify(state.allowlist)}`
       : "";
 
-  return `${imports}${preload}
+  return `import { createRedactor } from "sensored";
 
 const redactor = createRedactor({
   presets: [${JSON.stringify(state.preset)}],

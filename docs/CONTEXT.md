@@ -59,11 +59,14 @@ light/dark/mono).
 - Each built-in preset has matching sample input. Preset changes replace the
   sample until the user edits or clears the input; user-modified and handed-off
   input is preserved.
-- `config.ts` aliases `@sensored-core` to `packages/sensored/src/reference.ts`
-  (the TS reference engine, until the Wasm browser entry lands). The component imports
-  that alias dynamically near viewport entry, keeping the redactor out of the
-  initial page chunk. The optional `compromise` NER dependency loads only after
-  the full playground enables `person_name`.
+- `config.ts` aliases `@sensored-core` to
+  `packages/sensored/src/index.wasm-url.ts`, the browser entry: the Rust core
+  as Wasm, loaded with top-level await (hence `build.target: "esnext"`). The
+  `docs:dev` and `docs:build` scripts run `build:wasm` first, so the docs build
+  needs the Rust toolchain (the Docs workflow sets it up). The component
+  imports that alias dynamically near viewport entry, keeping the redactor and
+  the `.wasm` out of the initial page chunk. Enabling `person_name` needs no
+  loading.
 - The full playground dynamically imports `@speed-highlight/core` only when its
   generated TypeScript panel opens. Reactive updates replace code through
   `textContent` before highlighting; do not switch this path to `v-html` because

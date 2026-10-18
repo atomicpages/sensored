@@ -19,8 +19,8 @@
     "typecheck": "bun run --filter sensored typecheck",
     "typecheck:build": "bun run --filter sensored typecheck:build",
     "typecheck:test": "bun run --filter sensored typecheck:test",
-    "docs:build": "vitepress build docs",
-    "docs:dev": "vitepress dev docs",
+    "docs:build": "bun run --filter sensored build:wasm && vitepress build docs",
+    "docs:dev": "bun run --filter sensored build:wasm && vitepress dev docs",
     "docs:preview": "vitepress preview docs",
     "prepare": "husky",
     "audit": "bun audit --ignore GHSA-vfj7-8cjw-p6xm --ignore GHSA-ch52-4w7c-c8xp --ignore GHSA-pxg6-pf52-xh8x --ignore GHSA-4mjr-xmp4-gh2g --ignore GHSA-q8mj-m7cp-5q26 --ignore GHSA-w7fw-mjwx-w883 --ignore GHSA-w5hq-g745-h8pq"

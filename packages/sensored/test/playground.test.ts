@@ -152,7 +152,8 @@ describe("playground state", () => {
     };
     const code = generatePlaygroundCode(["email", "person_name_lite"], state);
 
-    expect(code).toContain("preloadPersonNameDetector");
+    expect(code).not.toContain("preloadPersonNameDetector");
+    expect(code).toContain('"person_name": {');
     expect(code).toContain('presets: ["pii"]');
     expect(code).toContain('"person_name_lite": "off"');
     expect(code).toContain('"public@example.com"');
