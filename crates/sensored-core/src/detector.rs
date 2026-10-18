@@ -183,18 +183,24 @@ pub type Validate = fn(&str) -> Option<&'static [&'static str]>;
 /// Pattern, adjacency check, optional validate, then a required context label
 /// nearby. Mirrors the TS `ContextDetector`.
 ///
+/// Detectors are built by a function and registered as `Arc`s:
+///
 /// ```ignore
-/// static RS_JMBG: ContextDetector = ContextDetector {
-///     id: "rs_jmbg",
-///     entity_type: "rs_jmbg",
-///     replacement: "[RS_JMBG]",
-///     pattern: LazyLock::new(|| Regex::new(r"[0-9]{13}").expect("valid pattern")),
-///     context: LazyLock::new(|| ContextMatcher::new(RS_JMBG_LABELS, 35, 20)),
-///     labels: &["JMBG", "Serbian"],
-///     window: (35, 20),
-///     validate: Some(rs_jmbg_valid),
-///     stream: StreamMeta::new(13, 35, 20),
-/// };
+/// pub(super) fn detector() -> ContextDetector {
+///     ContextDetector {
+///         id: "rs_jmbg",
+///         entity_type: "rs_jmbg",
+///         replacement: "[RS_JMBG]",
+///         pattern: LazyLock::new(|| Regex::new(r"[0-9]{13}").expect("valid pattern")),
+///         context: LazyLock::new(|| ContextMatcher::new(RS_JMBG_LABELS, 35, 20)),
+///         labels: &["JMBG", "Serbian"],
+///         window: (35, 20),
+///         validate: Some(rs_jmbg_valid),
+///         stream: StreamMeta::new(13, 35, 20),
+///     }
+/// }
+///
+/// registry.insert(Arc::new(rs_jmbg::detector()));
 /// ```
 pub struct ContextDetector {
     pub id: &'static str,
