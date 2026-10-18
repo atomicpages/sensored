@@ -2,14 +2,14 @@
 
 use std::sync::LazyLock;
 
-use super::{has_digit, regex};
+use super::{has_ascii_digit, regex};
 use crate::detector::{ContextDetector, ContextMatcher, StreamMeta};
 
 const LABELS: &str = r"(?:Case|Docket|Court|Subpoena|Summons|Judgment|Order|Decree|Bankruptcy|BK|Probate|Estate|Legal|Lawsuit)(?:[- \t]{1,8}No\.?)?";
 const WINDOW: (usize, usize) = (40, 20);
 
 fn validate(candidate: &str) -> Option<&'static [&'static str]> {
-    if !has_digit(candidate) {
+    if !has_ascii_digit(candidate) {
         return None;
     }
 

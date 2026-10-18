@@ -4,9 +4,7 @@
 
 use std::sync::Arc;
 
-use regex::Regex;
-
-use super::Registry;
+use super::{Registry, regex};
 
 mod ar_cuit;
 mod ar_dni;
@@ -160,14 +158,6 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(za_id::detector()));
 }
 
-/// Compiles a static detector pattern.
-///
-/// # Panics
-/// If `pattern` does not compile; patterns are static detector data.
-fn regex(pattern: &str) -> Regex {
-    Regex::new(pattern).expect("valid pattern")
-}
-
 /// The two ASCII digits at `at` as a number, as `Number.parseInt(s.slice(at,
 /// at + 2), 10)` reads them. Callers check the length; patterns guarantee digits.
 fn two_digits(bytes: &[u8], at: usize) -> u8 {
@@ -201,31 +191,9 @@ fn number(digits: &[u8]) -> u64 {
 
 #[cfg(test)]
 mod test_support {
+    pub use crate::detectors::test_support::*;
+
     use crate::detector::Detector;
-    use crate::types::Detection;
-
-    pub fn detect(detector: &dyn Detector, text: &str) -> Vec<Detection> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out
-    }
-
-    /// The matched substrings, in order.
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        detect(detector, text)
-            .iter()
-            .map(|d| &text[d.start..d.end])
-            .collect()
-    }
-
-    /// The byte spans, in order.
-    pub fn spans(detector: &dyn Detector, text: &str) -> Vec<(usize, usize)> {
-        detect(detector, text)
-            .iter()
-            .map(|d| (d.start, d.end))
-            .collect()
-    }
 
     /// The label-placement cases every `ContextDetector` test in TS repeats:
     /// `value` is found next to `label` and rejected without it.

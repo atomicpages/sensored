@@ -29,7 +29,11 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 - `detectors/`: the `Registry` and one module per family (`contact/`,
   `national_id/`, ...). Each family's `mod.rs` exposes `register`;
   `builtins()` wires every family in once and caches the result. A detector
-  port touches only its family's directory.
+  port touches only its family's directory. `detectors/mod.rs` also holds the
+  helpers families share: `regex()` (compile static patterns),
+  `has_ascii_digit()` (TS `/\d/.test`) and `#[cfg(test)] test_support`
+  (`detect`, `spans`, `values`); families import them with `use super::...`
+  and keep only family-specific helpers locally.
 - `policy.rs`: `resolve_policy`, ported check for check from `policy.ts`, so
   every error has the TS code and path. Children: `validate.rs` (config shape,
   rule settings, limits), `presets.rs` (built-in preset table, all `redact`;

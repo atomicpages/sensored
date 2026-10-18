@@ -4,9 +4,7 @@
 
 use std::sync::Arc;
 
-use regex::Regex;
-
-use super::Registry;
+use super::{Registry, has_ascii_digit, regex};
 
 mod hr_compensation;
 mod hr_identifier;
@@ -20,34 +18,5 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(hr_screening::detector()));
 }
 
-/// Compiles a static detector pattern.
-///
-/// # Panics
-/// If `pattern` does not compile; patterns are static detector data.
-fn regex(pattern: &str) -> Regex {
-    Regex::new(pattern).expect("valid pattern")
-}
-
-/// `/\d/.test(candidate)`.
-fn has_ascii_digit(candidate: &str) -> bool {
-    candidate.bytes().any(|byte| byte.is_ascii_digit())
-}
-
 #[cfg(test)]
-mod test_support {
-    use crate::detector::Detector;
-
-    pub fn spans(detector: &dyn Detector, text: &str) -> Vec<(usize, usize)> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out.iter().map(|d| (d.start, d.end)).collect()
-    }
-
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        spans(detector, text)
-            .into_iter()
-            .map(|(start, end)| &text[start..end])
-            .collect()
-    }
-}
+use super::test_support;

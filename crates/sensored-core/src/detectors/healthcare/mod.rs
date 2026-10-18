@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use regex::Regex;
 
-use super::Registry;
+use super::{Registry, regex};
 use crate::text::JS_SPACE_CLASS;
 
 mod clinical_trial_id;
@@ -31,14 +31,6 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(us_npi::detector()));
 }
 
-/// Compiles a static detector pattern.
-///
-/// # Panics
-/// If `pattern` does not compile; patterns are static detector data.
-fn regex(pattern: &str) -> Regex {
-    Regex::new(pattern).expect("valid pattern")
-}
-
 /// Compiles a TS `/.../gi` pattern (no `u` flag). The whole pattern runs in
 /// `(?i-u:...)`, so case folding, `\d` and `[A-Z]` stay ASCII as in JS (no
 /// Kelvin sign for `K`, no long s for `S`). JS `\s` is written `{s}` and
@@ -53,14 +45,4 @@ fn ts_ascii_ci(source: &str) -> Regex {
 }
 
 #[cfg(test)]
-mod test_support {
-    use crate::detector::Detector;
-
-    /// The matched substrings, in order.
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out.iter().map(|d| &text[d.start..d.end]).collect()
-    }
-}
+use super::test_support;

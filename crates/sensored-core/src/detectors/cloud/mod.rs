@@ -6,9 +6,7 @@
 
 use std::sync::Arc;
 
-use regex::Regex;
-
-use super::Registry;
+use super::{Registry, regex};
 
 mod aws_access_key;
 mod cloudflare_api_token;
@@ -26,25 +24,11 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(stripe_api_key::detector()));
 }
 
-/// Compiles a static detector pattern.
-///
-/// # Panics
-/// If `pattern` does not compile; patterns are static detector data.
-fn regex(pattern: &str) -> Regex {
-    Regex::new(pattern).expect("valid pattern")
-}
-
 #[cfg(test)]
 mod test_support {
     use crate::detector::Detector;
 
-    /// The matched substrings, in order.
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out.iter().map(|d| &text[d.start..d.end]).collect()
-    }
+    pub use crate::detectors::test_support::*;
 
     /// Every `rejected` input yields nothing; every `found` input yields
     /// exactly its expected value.

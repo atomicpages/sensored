@@ -4,9 +4,7 @@
 
 use std::sync::Arc;
 
-use regex::Regex;
-
-use super::Registry;
+use super::{Registry, has_ascii_digit, regex};
 
 mod legal_case;
 mod legal_license;
@@ -18,28 +16,5 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(legal_reference::detector()));
 }
 
-/// Compiles a static detector pattern.
-///
-/// # Panics
-/// If `pattern` does not compile; patterns are static detector data.
-fn regex(pattern: &str) -> Regex {
-    Regex::new(pattern).expect("valid pattern")
-}
-
-/// TS `/\d/.test(candidate)`: JS `\d` is ASCII.
-fn has_digit(candidate: &str) -> bool {
-    candidate.bytes().any(|b| b.is_ascii_digit())
-}
-
 #[cfg(test)]
-mod test_support {
-    use crate::detector::Detector;
-
-    /// The matched substrings, in order.
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out.iter().map(|d| &text[d.start..d.end]).collect()
-    }
-}
+use super::test_support;

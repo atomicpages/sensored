@@ -4,9 +4,7 @@
 
 use std::sync::Arc;
 
-use regex::Regex;
-
-use super::Registry;
+use super::{Registry, regex};
 use crate::types::Detection;
 
 mod anthropic_api_key;
@@ -70,14 +68,6 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(twilio_sid::detector()));
 }
 
-/// Compiles a static detector pattern.
-///
-/// # Panics
-/// If `pattern` does not compile; patterns are static detector data.
-fn regex(pattern: &str) -> Regex {
-    Regex::new(pattern).expect("valid pattern")
-}
-
 /// A detection whose rule id and entity type are both `id`.
 fn detection(id: &str, start: usize, end: usize, reasons: &[&str]) -> Detection {
     Detection {
@@ -100,14 +90,4 @@ fn js_non_space() -> String {
 }
 
 #[cfg(test)]
-mod test_support {
-    use crate::detector::Detector;
-
-    /// The matched substrings, in order.
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out.iter().map(|d| &text[d.start..d.end]).collect()
-    }
-}
+use super::test_support;

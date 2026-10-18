@@ -6,6 +6,7 @@
 use std::sync::{Arc, LazyLock};
 
 use indexmap::IndexMap;
+use regex::Regex;
 
 use crate::detector::Detector;
 
@@ -82,4 +83,50 @@ pub fn builtins() -> Registry {
     });
 
     BUILTINS.clone()
+}
+
+// ---------------------------------------------------------------------------
+// Helpers shared by the family modules
+// ---------------------------------------------------------------------------
+
+/// Compiles a static detector pattern.
+///
+/// # Panics
+/// If `pattern` does not compile; patterns are static detector data.
+pub(crate) fn regex(pattern: &str) -> Regex {
+    Regex::new(pattern).expect("valid pattern")
+}
+
+/// TS `/\d/.test(candidate)`: whether any ASCII digit is present.
+pub(crate) fn has_ascii_digit(candidate: &str) -> bool {
+    candidate.bytes().any(|byte| byte.is_ascii_digit())
+}
+
+#[cfg(test)]
+pub(crate) mod test_support {
+    use crate::detector::Detector;
+    use crate::types::Detection;
+
+    pub fn detect(detector: &dyn Detector, text: &str) -> Vec<Detection> {
+        let mut out = Vec::new();
+        detector.detect(text, &mut out);
+
+        out
+    }
+
+    /// The byte spans, in order.
+    pub fn spans(detector: &dyn Detector, text: &str) -> Vec<(usize, usize)> {
+        detect(detector, text)
+            .iter()
+            .map(|d| (d.start, d.end))
+            .collect()
+    }
+
+    /// The matched substrings, in order.
+    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
+        detect(detector, text)
+            .iter()
+            .map(|d| &text[d.start..d.end])
+            .collect()
+    }
 }

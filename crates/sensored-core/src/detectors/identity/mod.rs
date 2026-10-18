@@ -23,20 +23,4 @@ pub fn register(registry: &mut Registry) {
 }
 
 #[cfg(test)]
-pub(crate) mod test_support {
-    use crate::detector::Detector;
-
-    pub fn spans(detector: &dyn Detector, text: &str) -> Vec<(usize, usize)> {
-        let mut out = Vec::new();
-        detector.detect(text, &mut out);
-
-        out.iter().map(|d| (d.start, d.end)).collect()
-    }
-
-    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
-        spans(detector, text)
-            .into_iter()
-            .map(|(start, end)| &text[start..end])
-            .collect()
-    }
-}
+pub(crate) use super::test_support;
