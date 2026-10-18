@@ -27,8 +27,12 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
   `builtins()` wires the families in.
 - `policy.rs`: config validation and policy resolution (presets, overrides,
   external detector descriptors).
-- `render/`: `resolve_replacement` (redact, mask, format-preserve,
-  token-replace, remove, numbered restoration placeholders).
+- `render/`: `resolve_replacement` picks the winning action (remove > redact
+  > format-preserve > token-replace > mask; highest redact priority) in
+  `mod.rs`, which also issues numbered restoration placeholders. One private
+  submodule per action renders it; mask and format-preserve count grapheme
+  clusters, so byte offsets give the same output as TS's UTF-16 offsets.
+- `token_generators.rs`: static default token per entity type.
 - `hash.rs`: FNV-1a over UTF-16 code units, as TS hashes `charCodeAt`.
 - `restore.rs`, `stream_restore.rs`: placeholder restoration.
 

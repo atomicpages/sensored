@@ -17,6 +17,7 @@ pub mod restore;
 pub mod stream;
 pub mod stream_restore;
 pub mod text;
+pub mod token_generators;
 pub mod types;
 
 pub use errors::{ErrorCode, Result, SensoredError};
