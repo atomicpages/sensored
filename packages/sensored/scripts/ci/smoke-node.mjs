@@ -1,19 +1,18 @@
-import { createRedactor } from "../../dist/src/index.mjs";
+// Node 20+ and Bun. `SENSORED_ENGINE=wasm` checks the Wasm fallback; the
+// default is the napi addon.
+import { getBinding } from "../../dist/src/native/binding.mjs";
+import * as sensored from "../../dist/src/index.mjs";
+import { smoke } from "./smoke-checks.mjs";
 
-const r = createRedactor({
-  rules: {
-    email: { action: "redact" },
-    phone: { action: "redact" },
-  },
-});
+const out = await smoke(sensored);
 
-const out = r.redact("Contact alice@example.com or call 555-123-4567");
+// Wasm-bindgen classes carry `free`; napi classes don't.
+const engine =
+  typeof getBinding().Redactor.prototype.free === "function" ? "wasm" : "napi";
+const expected = process.env.SENSORED_ENGINE === "wasm" ? "wasm" : "napi";
 
-if (!out.includes("[EMAIL")) {
-  throw new Error("email not redacted");
+if (engine !== expected) {
+  throw new Error(`smoke: loaded ${engine}, expected ${expected}`);
 }
-if (!out.includes("[PHONE")) {
-  throw new Error("phone not redacted");
-}
 
-console.log("Node.js smoke: OK", out);
+console.log(`${typeof Bun === "undefined" ? "Node.js" : "Bun"} smoke (${engine}): OK`, out);

@@ -89,7 +89,11 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "20"
+      # napi needs the addon from the build job (phase 5 native matrix).
       - run: node packages/sensored/scripts/ci/smoke-node.mjs
+      - run: node packages/sensored/scripts/ci/smoke-node.mjs
+        env:
+          SENSORED_ENGINE: wasm
 
   deno:
     name: Deno
@@ -112,11 +116,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: dist
           path: packages/sensored/dist/
-      - run: bash packages/sensored/scripts/ci/smoke-edge.sh
+      - run: bun packages/sensored/scripts/ci/smoke-edge.ts
+
+  browser:
+    name: Browser
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: packages/sensored/dist/
+      - run: bunx playwright-core install --with-deps chromium
+        working-directory: packages/sensored
+      - run: bun packages/sensored/scripts/ci/smoke-browser.ts
 
   eval:
     name: Eval Gate

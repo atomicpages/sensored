@@ -35,7 +35,7 @@ conditions, with the same API and the same output.
 | Node.js 20+        | Yes       | Yes (smoke test)      |
 | Bun                | Yes       | Yes (full test suite) |
 | Deno               | Yes       | Yes (smoke test)      |
-| Browser            | Yes       | Yes (static analysis) |
+| Browser            | Yes       | Yes (headless Chromium smoke test) |
 | Cloudflare Workers | Yes       | Yes (static analysis) |
 | Vercel Edge        | Yes       | Yes (static analysis) |
 
@@ -94,11 +94,14 @@ runtime.
 
 ## CI verification
 
-The `runtime-smoke.yml` workflow runs on every push and pull request:
+The `ci.yml` workflow runs on every push and pull request. Each smoke test
+runs the same checks (`scripts/ci/smoke-checks.mjs`: redact, restore,
+inspect, stream and a custom JS detector) against the built `dist/`:
 
 1. **Build** — builds `dist/` with Bun
-2. **Node.js** — imports `dist/src/index.mjs` in Node.js 20 and verifies
-   redaction works
-3. **Deno** — imports `dist/src/index.mjs` in Deno and verifies redaction works
-4. **Edge/Browser** — scans `dist/src/` for `node:` imports to verify
-   browser/edge compatibility
+2. **Node.js** — `dist/src/index.mjs` in Node.js 20, on the napi addon and
+   with `SENSORED_ENGINE=wasm` on the Wasm fallback
+3. **Deno** — the Wasm entry `dist/src/index.wasm-url.mjs`
+4. **Browser** — the Wasm entry in headless Chromium (Playwright)
+5. **Edge** — follows the imports of the browser and edge entries and fails
+   on any `node:` module (Workers and Vercel Edge are not run)

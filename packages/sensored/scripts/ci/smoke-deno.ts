@@ -1,19 +1,5 @@
-import { createRedactor } from "../../dist/src/index.mjs";
+// Deno loads the Wasm entry (the package's `deno` export condition).
+import * as sensored from "../../dist/src/index.wasm-url.mjs";
+import { smoke } from "./smoke-checks.mjs";
 
-const r = createRedactor({
-  rules: {
-    email: { action: "redact" },
-    phone: { action: "redact" },
-  },
-});
-
-const out = r.redact("Contact alice@example.com or call 555-123-4567");
-
-if (!out.includes("[EMAIL")) {
-  throw new Error("email not redacted");
-}
-if (!out.includes("[PHONE")) {
-  throw new Error("phone not redacted");
-}
-
-console.log("Deno smoke: OK", out);
+console.log("Deno smoke (wasm): OK", await smoke(sensored));
