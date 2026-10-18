@@ -15,22 +15,34 @@ import type {
 
 const BUFFER_LIMIT = 65536;
 
-export function createStream(
-  rules: readonly ActiveRule[],
-  options?: StreamOptions & {
-    allowlist?: Set<string>;
-    semantic?: unknown;
-    detectOnly?: boolean;
-  },
-): (chunks: AsyncIterable<string>) => AsyncIterable<StreamEvent> {
+/** Synchronous streaming state machine: chunks in, events out. Internal. */
+export interface StreamCore {
+  push(chunk: string): StreamEvent[];
+  finish(): StreamEvent[];
+}
+
+export interface StreamCoreOptions {
+  readonly report?: boolean;
+  readonly restore?: boolean;
+  readonly allowlist?: Set<string>;
+  readonly detectOnly?: boolean;
+}
+
+function assertStreamable(rules: readonly ActiveRule[]): void {
   for (const rule of rules) {
     if (!rule.detector.stream) {
       throw new SensoredError("STREAM_UNSUPPORTED");
     }
   }
+}
+
+export function createStreamCore(
+  rules: readonly ActiveRule[],
+  options?: StreamCoreOptions,
+): StreamCore {
+  assertStreamable(rules);
 
   const report = options?.report ?? false;
-  const signal = options?.signal;
   const restoreEnabled = options?.restore ?? false;
   const detectOnly = options?.detectOnly ?? false;
   const allowlist = options?.allowlist ?? new Set<string>();
@@ -75,19 +87,20 @@ export function createStream(
     return adjustForGrapheme(buffer, flushPoint);
   }
 
-  function* emitSegments(
+  function emitSegments(
+    events: StreamEvent[],
     segments: { text: string; group?: InspectionGroup }[],
     absoluteOffset: number,
-  ): Generator<StreamEvent> {
+  ): void {
     for (const segment of segments) {
       if (segment.group !== undefined) {
         const group = segment.group;
 
         if (detectOnly) {
-          yield { type: "text", text: segment.text };
+          events.push({ type: "text", text: segment.text });
         }
 
-        yield {
+        events.push({
           type: "detection",
           group: {
             start: group.start + absoluteOffset,
@@ -99,9 +112,9 @@ export function createStream(
               end: m.end + absoluteOffset,
             })),
           },
-        };
+        });
       } else {
-        yield { type: "text", text: segment.text };
+        events.push({ type: "text", text: segment.text });
       }
     }
   }
@@ -111,61 +124,57 @@ export function createStream(
     ...rules.map((r) => r.detector.stream?.leftContext ?? 0),
   );
 
-  return async function* (
-    chunks: AsyncIterable<string>,
-  ): AsyncIterable<StreamEvent> {
-    let buffer = "";
-    let absoluteOffset = 0;
-    let consumedCursor = 0;
+  let buffer = "";
+  let absoluteOffset = 0;
+  let consumedCursor = 0;
 
-    try {
-      for await (const chunk of chunks) {
-        if (signal?.aborted) {
-          throw new SensoredError("CANCELLED");
-        }
+  return {
+    push(chunk: string): StreamEvent[] {
+      const events: StreamEvent[] = [];
 
-        buffer += chunk;
+      buffer += chunk;
 
-        if (buffer.length > BUFFER_LIMIT) {
-          throw new SensoredError("BUFFER_LIMIT");
-        }
-
-        const flushPoint = calculateFlushPoint(buffer);
-
-        if (flushPoint <= 0) {
-          continue;
-        }
-
-        const { segments, consumed } = detectAndRender(
-          buffer,
-          rules,
-          flushPoint,
-          report,
-          consumedCursor,
-          restoration,
-          allowlist,
-          detectOnly,
-        );
-
-        if (consumed <= consumedCursor) {
-          continue;
-        }
-
-        yield* emitSegments(segments, absoluteOffset);
-
-        consumedCursor = consumed;
-
-        if (consumedCursor > maxLeftContext) {
-          const trimPoint = consumedCursor - maxLeftContext;
-          buffer = buffer.slice(trimPoint);
-          absoluteOffset += trimPoint;
-          consumedCursor -= trimPoint;
-        }
+      if (buffer.length > BUFFER_LIMIT) {
+        throw new SensoredError("BUFFER_LIMIT");
       }
 
-      if (signal?.aborted) {
-        throw new SensoredError("CANCELLED");
+      const flushPoint = calculateFlushPoint(buffer);
+
+      if (flushPoint <= 0) {
+        return events;
       }
+
+      const { segments, consumed } = detectAndRender(
+        buffer,
+        rules,
+        flushPoint,
+        report,
+        consumedCursor,
+        restoration,
+        allowlist,
+        detectOnly,
+      );
+
+      if (consumed <= consumedCursor) {
+        return events;
+      }
+
+      emitSegments(events, segments, absoluteOffset);
+
+      consumedCursor = consumed;
+
+      if (consumedCursor > maxLeftContext) {
+        const trimPoint = consumedCursor - maxLeftContext;
+        buffer = buffer.slice(trimPoint);
+        absoluteOffset += trimPoint;
+        consumedCursor -= trimPoint;
+      }
+
+      return events;
+    },
+
+    finish(): StreamEvent[] {
+      const events: StreamEvent[] = [];
 
       if (buffer.length > 0) {
         const { segments } = detectAndRender(
@@ -179,8 +188,57 @@ export function createStream(
           detectOnly,
         );
 
-        yield* emitSegments(segments, absoluteOffset);
+        emitSegments(events, segments, absoluteOffset);
       }
+
+      if (restoration) {
+        events.push({
+          type: "complete",
+          map: Object.freeze(
+            Object.fromEntries(restoration.map.entries()),
+          ) as RestorationMap,
+        });
+      } else {
+        events.push({ type: "complete" });
+      }
+
+      return events;
+    },
+  };
+}
+
+export function createStream(
+  rules: readonly ActiveRule[],
+  options?: StreamOptions & {
+    allowlist?: Set<string>;
+    semantic?: unknown;
+    detectOnly?: boolean;
+  },
+): (chunks: AsyncIterable<string>) => AsyncIterable<StreamEvent> {
+  assertStreamable(rules);
+
+  const signal = options?.signal;
+
+  return async function* (
+    chunks: AsyncIterable<string>,
+  ): AsyncIterable<StreamEvent> {
+    const core = createStreamCore(rules, options);
+    let tail: StreamEvent[];
+
+    try {
+      for await (const chunk of chunks) {
+        if (signal?.aborted) {
+          throw new SensoredError("CANCELLED");
+        }
+
+        yield* core.push(chunk);
+      }
+
+      if (signal?.aborted) {
+        throw new SensoredError("CANCELLED");
+      }
+
+      tail = core.finish();
     } catch (error) {
       if (error instanceof SensoredError) {
         throw error;
@@ -189,15 +247,6 @@ export function createStream(
       throw new SensoredError("SOURCE_FAILURE");
     }
 
-    if (restoration) {
-      yield {
-        type: "complete",
-        map: Object.freeze(
-          Object.fromEntries(restoration.map.entries()),
-        ) as RestorationMap,
-      };
-    } else {
-      yield { type: "complete" };
-    }
+    yield* tail;
   };
 }

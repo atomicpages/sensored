@@ -614,13 +614,18 @@ application owns status mapping via an optional override; supplied 5xx statuses
 other than 500 throw. `SensoredError` carries an optional `info` record for
 structured metadata (e.g. available preset versions). Published modules use
 standard APIs, with no Bun imports.
-`stream.ts` implements the streaming engine: buffers chunks, calculates safe
-flush boundaries from detector stream metadata, adjusts for grapheme clusters,
-calls `detectAndRender` from `engine.ts` to collect matches and render resolved
-text, and emits stream events. Supports cancellation (AbortSignal), buffer
-limits (65 536 UTF-16 units), source error wrapping, and opt-in detection
-reporting with absolute offsets. Throws `STREAM_UNSUPPORTED` when any active rule
-lacks stream metadata.
+`stream.ts` implements the streaming engine in two layers. `createStreamCore`
+(internal, not exported from `index.ts`) is a synchronous state machine with
+`push(chunk): StreamEvent[]` and `finish(): StreamEvent[]`: it buffers chunks,
+calculates safe flush boundaries from detector stream metadata, adjusts for
+grapheme clusters, calls `detectAndRender` from `engine.ts` to collect matches
+and render resolved text, enforces the buffer limit (65 536 UTF-16 units) in
+`push`, and emits the tail flush plus the `complete` event in `finish`. It is
+the shape the Rust port mirrors. `createStream` is a thin async wrapper over it
+that owns cancellation (AbortSignal), maps non-`SensoredError` failures from the
+source or the core to `SOURCE_FAILURE`, and yields events. Supports opt-in
+detection reporting with absolute offsets. Both throw `STREAM_UNSUPPORTED` when
+any active rule lacks stream metadata.
 `traverse.ts` exports `redactValue<T>(input, redactor)` — recursively traverses
 objects, arrays, and symbol-keyed properties, calling `redactor.redact()` on
 every string value. Sensitive field names (password, secret, token,
