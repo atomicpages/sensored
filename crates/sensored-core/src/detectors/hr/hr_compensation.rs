@@ -10,7 +10,7 @@ use regex::Regex;
 
 use super::{has_ascii_digit, regex};
 use crate::detector::{
-    ContextHint, ContextMatcher, Detector, HintPosition, HintWindow, StreamMeta,
+    ContextHint, ContextMatcher, Detector, HintPosition, HintWindow, Input, StreamMeta,
     is_adjacent_forbidden, push_aligned,
 };
 use crate::text::JS_SPACE_CLASS;
@@ -89,8 +89,10 @@ impl Detector for HrCompensation {
         })
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
-        let context = CONTEXT.scan(text);
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
+        let context = CONTEXT.scan(input);
 
         // Both patterns need a label nearby.
         if !context.any_label() {

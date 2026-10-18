@@ -14,7 +14,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use super::{detection, js_non_space, js_space, regex};
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::types::Detection;
 
 const ID: &str = "http_auth_header";
@@ -111,7 +111,9 @@ impl Detector for HttpAuthHeaderDetector {
         Some(StreamMeta::new(1024, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for captures in self.pattern.captures_iter(text) {

@@ -100,8 +100,46 @@ pub trait Detector: Send + Sync {
         None
     }
 
-    /// Appends this detector's matches in `text` to `out`, with byte offsets.
-    fn detect(&self, text: &str, out: &mut Vec<Detection>);
+    /// Appends this detector's matches in `input` to `out`, with byte offsets.
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>);
+
+    /// `detect_in` on `text` alone, for callers running one detector.
+    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+        self.detect_in(&Input::new(text), out);
+    }
+}
+
+/// The text one call redacts, shared by every detector it runs. Derived views
+/// are computed once, on first use.
+pub struct Input<'t> {
+    text: &'t str,
+    ascii_lower: OnceCell<Option<String>>,
+}
+
+impl<'t> Input<'t> {
+    pub fn new(text: &'t str) -> Self {
+        Self {
+            text,
+            ascii_lower: OnceCell::new(),
+        }
+    }
+
+    pub fn text(&self) -> &'t str {
+        self.text
+    }
+
+    /// The text with ASCII letters lowercased (same byte offsets), so a
+    /// case-sensitive lowercase pattern matches it exactly as `(?i)` matches
+    /// the text. `None` when the text has K (U+212A) or ſ (U+017F): Unicode
+    /// case folding maps them to ASCII letters, ASCII lowercasing doesn't.
+    pub fn ascii_lower(&self) -> Option<&str> {
+        self.ascii_lower
+            .get_or_init(|| {
+                (!self.text.contains(['\u{212A}', '\u{17F}']))
+                    .then(|| self.text.to_ascii_lowercase())
+            })
+            .as_deref()
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -166,6 +204,10 @@ fn reasons(list: &[&str]) -> Vec<String> {
 pub struct ContextMatcher {
     /// The labels alone, for the pre-check in [`ContextScan`].
     label: Regex,
+    /// `label` for [`Input::ascii_lower`]: lowercase literals, case-sensitive,
+    /// so the regex keeps its literal prefilter. `None` when a class holds a
+    /// cased non-ASCII letter (see `lowercase_literals`).
+    lower_label: Option<Regex>,
     preceding: Regex,
     following: Regex,
     following_no_paren: Regex,
@@ -188,6 +230,7 @@ impl ContextMatcher {
 
         Self {
             label: compile(format!("(?i){labels}")),
+            lower_label: lowercase_literals(labels).map(compile),
             preceding: compile(format!(
                 r"(?i)(?:^|[^\p{{L}}\p{{M}}\p{{N}}_]){labels}[ \t]{{0,8}}[:#]?[ \t]{{0,8}}$"
             )),
@@ -215,14 +258,68 @@ impl ContextMatcher {
         self.has_preceding(text, start) || self.has_following(text, end)
     }
 
-    /// Context checks over many candidates in `text`, with a label pre-check.
-    pub fn scan<'m, 't>(&'m self, text: &'t str) -> ContextScan<'m, 't> {
+    /// Context checks over many candidates in `input`, with a label pre-check.
+    pub fn scan<'m, 'i, 't>(&'m self, input: &'i Input<'t>) -> ContextScan<'m, 'i, 't> {
         ContextScan {
             matcher: self,
-            text,
+            input,
             labels: OnceCell::new(),
         }
     }
+}
+
+/// `pattern` with its literal ASCII letters lowercased, for case-sensitive
+/// matching on ASCII-lowercased text. Escapes keep their letters (`\S`,
+/// `\p{Lu}`). A cased non-ASCII letter, which ASCII lowercasing leaves as is,
+/// becomes `(?i:c)`: its own Unicode case folding, as under `(?i)`. `None`
+/// when one sits inside a class, where a group cannot go.
+fn lowercase_literals(pattern: &str) -> Option<String> {
+    let mut out = String::with_capacity(pattern.len());
+    let mut chars = pattern.chars();
+    let mut in_class = false;
+
+    while let Some(ch) = chars.next() {
+        if ch == '\\' {
+            out.push(ch);
+
+            let escaped = chars.next()?;
+            out.push(escaped);
+
+            // `\p{...}`, `\x{...}`: copy the braces verbatim.
+            if matches!(escaped, 'p' | 'P' | 'x' | 'u') && chars.as_str().starts_with('{') {
+                for inner in chars.by_ref() {
+                    out.push(inner);
+
+                    if inner == '}' {
+                        break;
+                    }
+                }
+            }
+
+            continue;
+        }
+
+        match ch {
+            '[' => in_class = true,
+            ']' => in_class = false,
+            _ => {}
+        }
+
+        if !ch.is_ascii() && (ch.is_lowercase() || ch.is_uppercase()) {
+            if in_class {
+                return None;
+            }
+
+            out.push_str("(?i:");
+            out.push(ch);
+            out.push(')');
+            continue;
+        }
+
+        out.push(ch.to_ascii_lowercase());
+    }
+
+    Some(out)
 }
 
 /// A UTF-16 unit takes at most 3 UTF-8 bytes, so `n` units span at most
@@ -235,19 +332,19 @@ const MAX_BYTES_PER_UTF16_UNIT: usize = 3;
 /// a label inside a window is a label in the text (labels have no anchors),
 /// and leftmost-first matching reports every label position inside some
 /// reported occurrence.
-pub struct ContextScan<'m, 't> {
+pub struct ContextScan<'m, 'i, 't> {
     matcher: &'m ContextMatcher,
-    text: &'t str,
+    input: &'i Input<'t>,
     labels: OnceCell<Vec<(usize, usize)>>,
 }
 
-impl ContextScan<'_, '_> {
+impl ContextScan<'_, '_, '_> {
     pub fn has_preceding(&self, start: usize) -> bool {
-        self.label_before(start) && self.matcher.has_preceding(self.text, start)
+        self.label_before(start) && self.matcher.has_preceding(self.input.text(), start)
     }
 
     pub fn has_following(&self, end: usize) -> bool {
-        self.label_after(end) && self.matcher.has_following(self.text, end)
+        self.label_after(end) && self.matcher.has_following(self.input.text(), end)
     }
 
     pub fn has_context(&self, start: usize, end: usize) -> bool {
@@ -285,11 +382,13 @@ impl ContextScan<'_, '_> {
 
     fn labels(&self) -> &[(usize, usize)] {
         self.labels.get_or_init(|| {
-            self.matcher
-                .label
-                .find_iter(self.text)
-                .map(|found| (found.start(), found.end()))
-                .collect()
+            // Same leftmost-first occurrences either way; see `ascii_lower`.
+            let found = match (&self.matcher.lower_label, self.input.ascii_lower()) {
+                (Some(lower_label), Some(lower)) => lower_label.find_iter(lower),
+                _ => self.matcher.label.find_iter(self.input.text()),
+            };
+
+            found.map(|found| (found.start(), found.end())).collect()
         })
     }
 }
@@ -368,8 +467,10 @@ impl Detector for ContextDetector {
         })
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
-        let context = self.context.scan(text);
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
+        let context = self.context.scan(input);
 
         if !context.any_label() {
             return;
@@ -447,7 +548,9 @@ impl Detector for ChecksumDetector {
         Some(self.stream)
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for found in self.pattern.find_iter(text) {
@@ -509,7 +612,9 @@ impl Detector for KeywordDetector {
         Some(self.stream)
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for found in self.pattern.find_iter(text) {
@@ -589,12 +694,55 @@ impl Detector for ExternalDetector {
         self.context_hint.clone()
     }
 
-    fn detect(&self, _text: &str, _out: &mut Vec<Detection>) {}
+    fn detect_in(&self, _input: &Input<'_>, _out: &mut Vec<Detection>) {}
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn lowercase_literals_keeps_escapes_and_folds_non_ascii_letters() {
+        assert_eq!(
+            lowercase_literals(r"(?:SSN|Driver['’]s No\.|\S\p{Lu}\x{41})").as_deref(),
+            Some(r"(?:ssn|driver['’]s no\.|\S\p{Lu}\x{41})")
+        );
+        assert_eq!(
+            lowercase_literals("Паспорт").as_deref(),
+            Some("(?i:П)(?i:а)(?i:с)(?i:п)(?i:о)(?i:р)(?i:т)")
+        );
+        assert_eq!(lowercase_literals("N[ºÉ]"), None);
+    }
+
+    /// The fast label path finds exactly what `(?i)` finds.
+    #[test]
+    fn label_scan_matches_unicode_case_folding() {
+        let matcher = ContextMatcher::new("(?:Passport|Паспорт|Cédula|SK)", 10, 10);
+        let unicode = Regex::new("(?i)(?:Passport|Паспорт|Cédula|SK)").expect("pattern");
+
+        for text in [
+            "PASSPORT pASSport passport",
+            "ПАСПОРТ паспорт CÉDULA cédula",
+            "\u{212A}ilo s\u{212A} \u{17F}k",
+            "plain text with no labels",
+        ] {
+            let input = Input::new(text);
+            let scan = matcher.scan(&input);
+            let expected: Vec<(usize, usize)> = unicode
+                .find_iter(text)
+                .map(|m| (m.start(), m.end()))
+                .collect();
+
+            assert_eq!(scan.labels(), expected, "{text:?}");
+        }
+    }
+
+    #[test]
+    fn ascii_lower_skips_texts_with_folding_non_ascii() {
+        assert_eq!(Input::new("AbC é").ascii_lower(), Some("abc é"));
+        assert_eq!(Input::new("\u{212A}").ascii_lower(), None);
+        assert_eq!(Input::new("\u{17F}").ascii_lower(), None);
+    }
 
     static SAMPLE: ContextDetector = ContextDetector {
         id: "sample_id",

@@ -5,7 +5,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use super::detection;
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::types::Detection;
 
 const ID: &str = "postal_code";
@@ -46,7 +46,9 @@ impl Detector for PostalCodeDetector {
         })
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for found in PATTERN.find_iter(text) {

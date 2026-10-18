@@ -10,7 +10,7 @@ use regex::Regex;
 
 use super::{detection, js_space, regex};
 use crate::detector::{
-    ContextHint, Detector, HintPosition, HintWindow, StreamMeta, is_adjacent_forbidden,
+    ContextHint, Detector, HintPosition, HintWindow, Input, StreamMeta, is_adjacent_forbidden,
     push_aligned,
 };
 use crate::types::Detection;
@@ -86,7 +86,9 @@ impl Detector for GenericApiKeyDetector {
         })
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for captures in PATTERN.captures_iter(text) {

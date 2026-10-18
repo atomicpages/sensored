@@ -11,7 +11,7 @@ mod support;
 use std::sync::Arc;
 
 use sensored_core::Redactor;
-use sensored_core::detector::{Detector, StreamMeta};
+use sensored_core::detector::{Detector, Input, StreamMeta};
 use sensored_core::types::Detection;
 
 struct Oracle {
@@ -39,7 +39,7 @@ impl Detector for Oracle {
         self.stream
     }
 
-    fn detect(&self, _text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, _input: &Input<'_>, out: &mut Vec<Detection>) {
         out.extend(self.matches.iter().cloned());
     }
 }

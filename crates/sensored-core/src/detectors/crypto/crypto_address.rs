@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::types::Detection;
 
 const ID: &str = "crypto_address";
@@ -58,7 +58,9 @@ impl Detector for CryptoAddressDetector {
         Some(StreamMeta::new(95, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let candidates = PATTERN
             .find_iter(text)
             .filter(|found| !is_adjacent_forbidden(text, found.start(), found.end()))

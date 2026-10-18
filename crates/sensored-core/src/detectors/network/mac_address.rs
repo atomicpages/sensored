@@ -5,7 +5,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use super::{format_detection, regex};
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::types::Detection;
 
 const ID: &str = "mac_address";
@@ -33,7 +33,9 @@ impl Detector for MacAddressDetector {
     }
 
     /// Colon matches first, then hyphen matches, as TS loops the patterns.
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for (pattern, separator) in [(&COLON, b':'), (&HYPHEN, b'-')] {

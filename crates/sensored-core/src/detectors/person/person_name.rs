@@ -31,7 +31,7 @@ use super::bloom::{contains_folded, has_name, is_stopword};
 use super::lexicon::{
     ABBREVIATED_SUFFIXES, FUNCTION_WORDS, HONORIFICS, NON_NAME_WORDS, PARTICLES, SUFFIXES,
 };
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::text::is_js_space;
 use crate::types::Detection;
 
@@ -62,7 +62,9 @@ impl Detector for PersonName {
         Some(StreamMeta::new(40, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
         let mut words = Words::new(text).peekable();
 

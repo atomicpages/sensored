@@ -6,7 +6,7 @@ use regex::Regex;
 
 use super::detection;
 use crate::checksum::npi_luhn_valid;
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::types::Detection;
 
 const ID: &str = "phone";
@@ -45,7 +45,9 @@ impl Detector for PhoneDetector {
         Some(StreamMeta::new(MAX_MATCH, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for found in PATTERN.find_iter(text) {

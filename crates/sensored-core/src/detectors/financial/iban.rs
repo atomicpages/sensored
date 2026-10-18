@@ -9,7 +9,9 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use super::regex;
-use crate::detector::{Detector, StreamMeta, is_end_forbidden, is_start_forbidden, push_aligned};
+use crate::detector::{
+    Detector, Input, StreamMeta, is_end_forbidden, is_start_forbidden, push_aligned,
+};
 use crate::types::Detection;
 
 const ID: &str = "iban";
@@ -80,7 +82,9 @@ impl Detector for IbanDetector {
         Some(StreamMeta::new(38, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for found in PATTERN.find_iter(text) {

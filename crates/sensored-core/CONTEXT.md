@@ -18,11 +18,16 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 - `text.rs`: UTF-16 measurement and offset conversion.
 - `grapheme.rs`: grapheme boundaries via `unicode-segmentation`. Keeps the TS
   quirk that a position between two ASCII bytes is a boundary.
-- `detector.rs`: the `Detector` trait, `StreamMeta`, adjacency and grapheme
-  filters, `ContextMatcher` (with `ContextScan`: label occurrences are found
-  once per text, exact window regexes run only where a label overlaps the
-  window, and a text with no label skips the pattern scan; detectors with
-  required context should use it), and the table-driven `ContextDetector`,
+- `detector.rs`: the `Detector` trait (implement `detect_in(&Input, out)`;
+  `detect(text, out)` wraps it), `Input` (one call's text, shared by every
+  detector, with a lazy ASCII-lowercased copy), `StreamMeta`, adjacency and
+  grapheme filters, `ContextMatcher` (with `ContextScan`: label occurrences
+  are found once per text, exact window regexes run only where a label
+  overlaps the window, and a text with no label skips the pattern scan;
+  detectors with required context should use it). The label pre-check runs
+  lowercase literals on `Input::ascii_lower` instead of `(?i)`, which keeps
+  the regex crate's literal prefilter (15x faster on labels); results are
+  identical, and texts with K or ſ fall back to `(?i)`. and the table-driven `ContextDetector`,
   `ChecksumDetector` and `KeywordDetector`. `ExternalDetector` carries the
   metadata of a caller's JS detector; its matches arrive via collect/render.
 - `checksum.rs`: Luhn and NPI.

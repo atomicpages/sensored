@@ -5,8 +5,8 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use crate::detector::{
-    ContextHint, ContextMatcher, ContextScan, Detector, HintPosition, HintWindow, StreamMeta,
-    is_adjacent_forbidden, push_aligned,
+    ContextHint, ContextMatcher, ContextScan, Detector, HintPosition, HintWindow, Input,
+    StreamMeta, is_adjacent_forbidden, push_aligned,
 };
 use crate::text::window_after;
 use crate::types::Detection;
@@ -104,7 +104,7 @@ fn is_blocklisted(value: &str) -> bool {
 }
 
 fn has_context(
-    context: &ContextScan<'_, '_>,
+    context: &ContextScan<'_, '_, '_>,
     text: &str,
     value: &str,
     start: usize,
@@ -155,8 +155,10 @@ impl Detector for DigitalIdentity {
         })
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
-        let context = CONTEXT.scan(text);
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
+        let context = CONTEXT.scan(input);
 
         // Every branch needs a label nearby.
         if !context.any_label() {

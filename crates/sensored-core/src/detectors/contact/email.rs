@@ -12,7 +12,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use super::detection;
-use crate::detector::{Detector, StreamMeta, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, push_aligned};
 use crate::text::is_js_space;
 use crate::types::Detection;
 
@@ -85,7 +85,9 @@ impl Detector for EmailDetector {
         Some(StreamMeta::new(MAX_ADDRESS, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         if !text.contains('@') {
             return;
         }

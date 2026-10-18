@@ -11,6 +11,7 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
+use crate::detector::Input;
 use crate::render::resolve_replacement;
 use crate::types::{
     ActiveRule, AppliedMatch, Detection, InspectedMatch, Inspection, InspectionGroup,
@@ -54,9 +55,10 @@ struct Span {
 pub fn detect_matches<'r>(text: &str, rules: &'r [ActiveRule]) -> Vec<AppliedMatch<'r>> {
     let mut matches = Vec::new();
     let mut found = Vec::new();
+    let input = Input::new(text);
 
     for rule in rules {
-        rule.detector.detect(text, &mut found);
+        rule.detector.detect_in(&input, &mut found);
 
         matches.extend(
             found

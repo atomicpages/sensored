@@ -5,7 +5,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use super::{format_detection, regex};
-use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::detector::{Detector, Input, StreamMeta, is_adjacent_forbidden, push_aligned};
 use crate::text::JS_SPACE_CLASS;
 use crate::types::Detection;
 
@@ -37,7 +37,9 @@ impl Detector for UrlQueryKeyDetector {
         Some(StreamMeta::new(8192, 0, 0))
     }
 
-    fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+    fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        let text = input.text();
+
         let mut candidates = Vec::new();
 
         for captures in PATTERN.captures_iter(text) {
