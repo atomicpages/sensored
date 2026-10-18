@@ -4839,6 +4839,12 @@ function main(): void {
     );
 
     for (const d of detected) {
+      // Names are labelled by construction only: adopting person_name_lite's
+      // matches would turn its false positives ("Plate No") into gold labels.
+      if (d.ruleId === "person_name_lite") {
+        continue;
+      }
+
       const key = `${d.ruleId}:${d.start}:${d.end}`;
       if (!existing.has(key)) {
         c.expected.push(d);

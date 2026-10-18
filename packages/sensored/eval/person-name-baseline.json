@@ -3,32 +3,31 @@
   "label": "person_name_lite",
   "detectors": {
     "person_name": {
-      "tp": 236,
-      "fp": 219,
-      "fn": 708,
-      "precision": 0.5186813186813187,
-      "recall": 0.25,
-      "f1": 0.33738384560400286
+      "tp": 234,
+      "fp": 221,
+      "fn": 0,
+      "precision": 0.5142857142857142,
+      "recall": 1,
+      "f1": 0.6792452830188679
     },
     "person_name_lite": {
-      "tp": 941,
-      "fp": 0,
+      "tp": 231,
+      "fp": 710,
       "fn": 3,
-      "precision": 1,
-      "recall": 0.996822033898305,
-      "f1": 0.9984084880636606
+      "precision": 0.2454835281615303,
+      "recall": 0.9871794871794872,
+      "f1": 0.3931914893617022
     }
   },
   "rust_person_name": {
     "command": "cd crates && cargo run --release -p sensored-core --example person_name_eval -- ../packages/sensored/eval/corpus.json",
-    "note": "The official bar is not meaningful: ~710 of the 944 person_name_lite labels are person_name_lite false positives adopted into the corpus (Plate No, Ghana Card, Medical Record Number, street names), so only copying them can pass it. true_names scores the 234 generated names (name-pos-* and mixed-* labels not crossing a line break).",
     "official": {
       "tp": 234,
       "fp": 0,
-      "fn": 710,
+      "fn": 0,
       "precision": 1,
-      "recall": 0.2478813559322034,
-      "f1": 0.3972835314091681
+      "recall": 1,
+      "f1": 1
     },
     "true_names": {
       "tp": 234,

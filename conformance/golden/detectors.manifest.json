@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "corpusFingerprint": "121b23c3c3bdacd9fbd57d473dc9830e9275e8898bdb1a5dcf146aefa520c739",
+  "corpusFingerprint": "bba93f6462da6372d2e87c9a5a9dcd46dc560906d25ac7887222e3c9ecc14182",
   "files": {
     "address.json": {
       "sha256": "d6bfd65973f33c5f2306db083dc04be68ec679d35dcefc763fd9d4ba216c5f81",
@@ -403,8 +403,8 @@
       "cases": 320
     },
     "person_name_lite.json": {
-      "sha256": "906fdf83a535e24d8a9212894a2bd12fb0a973f059c75fe809e48c571b7a3d3a",
-      "cases": 1041
+      "sha256": "b51c05f7acfc3213451929c9aa88f595f0ccf56f23438d1dc7126cdb944af017",
+      "cases": 334
     },
     "ph_umid.json": {
       "sha256": "270d7da2ca65dcc46dd42624d68d6f7cd4449ad83452392b8bfdbc170c14a5be",
