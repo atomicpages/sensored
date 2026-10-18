@@ -61,6 +61,7 @@ export default defineConfig({
             { text: "Installation", link: "/guide/getting-started" },
             { text: "Quick Start", link: "/guide/quick-start" },
             { text: "Runtime Support", link: "/guide/runtime-support" },
+            { text: "Migrating to v2", link: "/guide/migrating-to-v2" },
           ],
         },
         {
@@ -86,6 +87,7 @@ export default defineConfig({
             { text: "Vault", link: "/guide/vault" },
             { text: "Flag Mode", link: "/guide/flag-mode" },
             { text: "Errors", link: "/guide/errors" },
+            { text: "Rust", link: "/guide/rust" },
           ],
         },
         {
