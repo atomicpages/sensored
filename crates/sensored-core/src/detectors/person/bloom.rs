@@ -15,12 +15,20 @@ const DJB2_SEED: u32 = 5381;
 
 /// Whether the lowercased `word` may be a name.
 ///
-/// `word` must be ASCII (the name pattern only yields `[A-Z][a-z]+`), so a
-/// byte is a UTF-16 unit and ASCII lowercasing equals JS `toLowerCase`.
+/// The filter holds lowercase ASCII names, so ASCII lowercasing equals JS
+/// `toLowerCase` here. Common Latin letters with diacritics are folded to
+/// ASCII first (`Müller` looks up `muller`); a word with any other non-ASCII
+/// character is not a name.
 pub fn has_name(word: &str) -> bool {
-    debug_assert!(word.is_ascii());
+    if !word.chars().all(|ch| fold(ch).is_some()) {
+        return false;
+    }
 
-    let (h1, h2) = hashes(word.bytes().map(|byte| byte.to_ascii_lowercase()));
+    let units = word
+        .chars()
+        .filter_map(fold)
+        .flat_map(|folded| folded.bytes());
+    let (h1, h2) = hashes(units);
     let m = u64::from(BLOOM_M);
 
     (0..u64::from(BLOOM_K)).all(|i| {
@@ -32,16 +40,64 @@ pub fn has_name(word: &str) -> bool {
     })
 }
 
-/// Whether the lowercased `word` is a stopword. `word` must be ASCII.
+/// Whether the lowercased `word` is a stopword.
 pub fn is_stopword(word: &str) -> bool {
-    STOPWORDS
-        .binary_search_by(|stopword| {
-            stopword
-                .bytes()
-                .cmp(word.bytes().map(|byte| byte.to_ascii_lowercase()))
-        })
-        .is_ok()
+    contains_folded(STOPWORDS, word)
 }
+
+/// Whether the sorted lowercase `list` holds `word`, ASCII-lowercased.
+pub fn contains_folded(list: &[&str], word: &str) -> bool {
+    list.binary_search_by(|entry| {
+        entry
+            .bytes()
+            .cmp(word.bytes().map(|byte| byte.to_ascii_lowercase()))
+    })
+    .is_ok()
+}
+
+/// One character, lowercased and folded to ASCII; `None` if it has no fold.
+fn fold(ch: char) -> Option<&'static str> {
+    if ch.is_ascii() {
+        let index = ch.to_ascii_lowercase() as usize;
+
+        return ASCII.get(index..=index);
+    }
+
+    let folded = match ch {
+        'à'..='å' | 'À'..='Å' | 'ā' | 'Ā' | 'ą' | 'Ą' => "a",
+        'æ' | 'Æ' => "ae",
+        'ç' | 'Ç' | 'ć' | 'Ć' | 'č' | 'Č' => "c",
+        'ď' | 'Ď' | 'đ' | 'Đ' => "d",
+        'è'..='ë' | 'È'..='Ë' | 'ē' | 'Ē' | 'ę' | 'Ę' | 'ě' | 'Ě' => "e",
+        'ğ' | 'Ğ' => "g",
+        'ì'..='ï' | 'Ì'..='Ï' | 'ī' | 'Ī' | 'ı' | 'İ' => "i",
+        'ł' | 'Ł' => "l",
+        'ñ' | 'Ñ' | 'ń' | 'Ń' | 'ň' | 'Ň' => "n",
+        'ò'..='ö' | 'Ò'..='Ö' | 'ø' | 'Ø' | 'ō' | 'Ō' | 'ő' | 'Ő' => "o",
+        'œ' | 'Œ' => "oe",
+        'ř' | 'Ř' => "r",
+        'ß' => "ss",
+        'ś' | 'Ś' | 'š' | 'Š' | 'ş' | 'Ş' => "s",
+        'ť' | 'Ť' | 'ţ' | 'Ţ' => "t",
+        'ù'..='ü' | 'Ù'..='Ü' | 'ū' | 'Ū' | 'ů' | 'Ů' | 'ű' | 'Ű' => "u",
+        'ý' | 'Ý' | 'ÿ' => "y",
+        'ź' | 'Ź' | 'ż' | 'Ż' | 'ž' | 'Ž' => "z",
+        _ => return None,
+    };
+
+    Some(folded)
+}
+
+/// Every ASCII character, so a folded ASCII character can be a `&'static str`.
+const ASCII: &str = concat!(
+    "\0\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0B\x0C\r\x0E\x0F",
+    "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F",
+    " !\"#$%&'()*+,-./0123456789:;<=>?",
+    "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_",
+    "`abcdefghijklmnopqrstuvwxyz{|}~\x7F",
+);
+
+const _: () = assert!(ASCII.len() == 128);
 
 /// `(fnv1a32, djb2)` over UTF-16 units given as bytes (ASCII only).
 fn hashes(units: impl Iterator<Item = u8>) -> (u32, u32) {
@@ -115,6 +171,14 @@ mod tests {
         assert_eq!(has_name("John"), has_name("john"));
         assert!(is_stopword("Monday"));
         assert!(!is_stopword("John"));
+    }
+
+    #[test]
+    fn folds_latin_diacritics() {
+        assert!(has_name("Müller"));
+        assert_eq!(has_name("José"), has_name("jose"));
+        assert_eq!(has_name("Søren"), has_name("soren"));
+        assert!(!has_name("Иван"));
     }
 
     #[test]

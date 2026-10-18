@@ -46,12 +46,22 @@ fn ported_detectors_match_ts_metadata() {
     }
 }
 
+/// Built-ins whose golden fixtures do not define their behaviour.
+///
+/// `person_name`: the fixtures come from the TS detector, which wraps
+/// `compromise`. The Rust detector is a new rule-based NER judged by quality
+/// on the eval corpus (`examples/person_name_eval.rs`), not by parity.
+const NOT_GOLDEN: [&str; 1] = ["person_name"];
+
 #[test]
 fn ported_detectors_match_golden_fixtures() {
     let mut failures = Vec::new();
     let mut checked = 0;
 
-    for id in selected() {
+    for id in selected()
+        .into_iter()
+        .filter(|id| !NOT_GOLDEN.contains(&id.as_str()))
+    {
         let cases: Vec<support::RenderCase> = support::golden(&format!("detectors/{id}.json"));
 
         for case in &cases {
