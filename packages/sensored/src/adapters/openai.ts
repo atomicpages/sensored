@@ -1,5 +1,4 @@
 import { createRedactor, restore } from "../index";
-import { resolvePolicy } from "../policy";
 import type { Session } from "../session";
 import { StreamRestorer } from "../stream-restore";
 import { redactValue } from "../traverse";
@@ -32,13 +31,8 @@ export function wrapOpenAI<T extends object>(
     adapter = configOrSession;
     detectOnly = false;
   } else {
-    const {
-      rules,
-      allowlist,
-      detectOnly: doFlag,
-    } = resolvePolicy(configOrSession);
-    adapter = createSharedRedactor(rules, allowlist);
-    detectOnly = doFlag;
+    adapter = createSharedRedactor(configOrSession);
+    detectOnly = configOrSession.detectOnly ?? false;
   }
 
   type CreateFn = (params: Record<string, unknown>) => Promise<unknown>;

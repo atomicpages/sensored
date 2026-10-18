@@ -1,10 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { resolvePolicy } from "../src/policy";
-import {
-  createStream,
-  createStreamCore,
-  type StreamCoreOptions,
-} from "../src/stream";
+import { createStream } from "../src/stream";
+import { createStreamCore, type StreamCoreOptions } from "../src/stream-core";
 import type { StreamEvent } from "../src/types";
 
 const { rules, allowlist } = resolvePolicy({
@@ -48,9 +45,9 @@ async function runStream(
 
   const events: StreamEvent[] = [];
 
-  for await (const event of createStream(rules, { allowlist, ...options })(
-    source,
-  )) {
+  for await (const event of createStream(() =>
+    createStreamCore(rules, { allowlist, ...options }),
+  )(source)) {
     events.push(event);
   }
 

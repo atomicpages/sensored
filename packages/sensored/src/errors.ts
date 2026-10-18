@@ -24,6 +24,10 @@ const details: Record<ErrorCode, string> = {
   CANCELLED: "The operation was cancelled.",
 };
 
+export function isErrorCode(value: unknown): value is ErrorCode {
+  return typeof value === "string" && Object.hasOwn(details, value);
+}
+
 const DEFAULT_STATUS: Record<ErrorCode, number> = {
   INVALID_CONFIG: 400,
   UNKNOWN_RULE: 400,

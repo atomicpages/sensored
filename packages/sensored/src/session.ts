@@ -1,6 +1,5 @@
 import { createSharedRedactor } from "./adapters/shared";
 import { SensoredError } from "./errors";
-import { resolvePolicy } from "./policy";
 import { restore } from "./restore";
 import { StreamRestorer } from "./stream-restore";
 import { SESSION_BRAND } from "./symbols";
@@ -31,9 +30,7 @@ export function createSession(
     throw new SensoredError("INVALID_CONFIG", "detectOnly");
   }
 
-  const { rules, allowlist } = resolvePolicy(config);
-
-  let shared = createSharedRedactor(rules, allowlist, {
+  let shared = createSharedRedactor(config, {
     dedup: true,
     initialMap: existingMap,
   });
@@ -60,7 +57,7 @@ export function createSession(
     },
 
     reset(): void {
-      shared = createSharedRedactor(rules, allowlist, {
+      shared = createSharedRedactor(config, {
         dedup: true,
         initialMap: existingMap,
       });

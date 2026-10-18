@@ -47,6 +47,12 @@ throughput (MiB/s, same 1 MiB input as throughput benchmark), restore p95
 (redacting then restoring a 4 KiB chat input), and dedup overhead (5 sequential
 redact calls with overlapping PII values to measure reverse-lookup cost).
 
+**Engine switch:** `benchmark.ts --engine ts|napi|wasm` (default `napi`).
+`engine.ts` holds the switch, shared with `eval/cli.ts`: `ts` is the TS
+reference (`src/reference.ts`), `napi`/`wasm` set the binding. Sessions always
+run on the binding (napi unless `wasm`). `results.json` records the engine.
+`engine-gate.ts` compares the TS reference with the napi addon directly.
+
 **Inputs:** `inputs.ts` holds the shared generators (chat/doc ASCII at three
 PII densities, Unicode mixes) used by `benchmark.ts` and `engine-gate.ts`.
 

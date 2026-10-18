@@ -2,49 +2,34 @@
 
 ## person_name
 
-Person name detection using compromise.js Named Entity Recognition. Requires the
-optional `compromise` peer dependency.
-
-```bash
-bun add compromise
-```
+Rule-based person name detection (Named Entity Recognition): honorifics and
+titles, capitalized-name runs with a sentence-start guard, surname suffixes and
+the `person_name_lite` name list. No extra dependency. Honorifics stay outside
+the match.
 
 ```ts
-import { createRedactor, preloadPersonNameDetector } from "sensored";
-
-await preloadPersonNameDetector();
+import { createRedactor } from "sensored";
 
 const redactor = createRedactor({
   rules: { person_name: { action: "redact" } },
 });
 
 redactor.redact("The meeting was chaired by Dr. Sarah Johnson.");
-// "The meeting was chaired by [PERSON_NAME_1]."
+// "The meeting was chaired by Dr. [PERSON_NAME]."
 ```
 
 - **ID**: `person_name`
 - **Entity type**: `person_name`
 - **Context required**: No
 - **Stream supported**: Yes (maxMatchLength: 40)
-- **Validation**: compromise.js NER
+- **Validation**: rule-based NER
 - **Detection reason**: `person_name.ner`
-
-::: warning Performance impact The `person_name` detector adds ~178 MiB RSS and
-reduces throughput by ~4 orders of magnitude (0.06 MiB/s vs 505 MiB/s without
-it). Only use this when you need maximum recall and can accept the performance
-trade-off. :::
 
 ### Not in any preset
 
-`person_name` is opt-in only. It's not included in any built-in preset. You must
-install `compromise`, preload the detector, and add an explicit rule to enable
-it. Preloading is deduplicated, so calling `preloadPersonNameDetector()` more
-than once does not reload the dependency.
-
-### Trailing punctuation
-
-This detector trims trailing punctuation (unless the last term is an
-abbreviation like "Jr.") and possessive `'s`.
+`person_name` is opt-in only. It's not included in any built-in preset; add an
+explicit rule to enable it. `preloadPersonNameDetector()` is kept for
+compatibility and resolves immediately.
 
 ## person_name_lite
 

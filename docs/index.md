@@ -32,8 +32,8 @@ features:
   - title: Zero Runtime Dependencies
     details:
       The core library has no runtime dependencies. Person name detection uses a
-      lightweight bloom filter (person_name_lite). Optional NER via
-      compromise.js (person_name) for higher recall.
+      lightweight bloom filter (person_name_lite). Optional rule-based NER
+      (person_name) for higher recall.
   - title: Reversible Redaction
     details:
       Enable restoration mode to get numbered placeholders and a restoration

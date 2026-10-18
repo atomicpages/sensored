@@ -8,7 +8,8 @@
  *
  * Usage: bun eval/person-name-baseline.ts eval/corpus.json eval/person-name-baseline.json
  */
-import { createRedactor, preloadPersonNameDetector } from "../src/index.ts";
+import { preloadPersonNameDetector } from "../src/detectors/person/person-name.ts";
+import { createRedactor } from "../src/reference.ts";
 import { type Corpus, evaluate, type Metrics, parseCorpus } from "./evaluator.ts";
 
 const LABEL = "person_name_lite";

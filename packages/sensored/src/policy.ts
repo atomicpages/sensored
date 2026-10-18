@@ -7,12 +7,7 @@ import {
 import { SensoredError } from "./errors";
 import { BUILTIN_PRESETS } from "./presets";
 import type { ActiveRule, RuleSetting, SemanticConfig } from "./types";
-import {
-  validateConfigShape,
-  validateDefinition,
-  validateLimits,
-  validateSetting,
-} from "./validate";
+import { validateConfig, validateSetting } from "./validate";
 
 // ---------------------------------------------------------------------------
 // Setting snapshots
@@ -193,17 +188,9 @@ export function resolvePolicy(config: unknown): {
   semantic: SemanticConfig | undefined;
   detectOnly: boolean;
 } {
-  validateConfigShape(config);
+  validateConfig(config);
 
   const detectOnly = config.detectOnly ?? false;
-
-  if (detectOnly && config.restore === true) {
-    throw new SensoredError("INVALID_CONFIG", "detectOnly");
-  }
-
-  if (config.limits !== undefined) {
-    validateLimits(config.limits);
-  }
 
   // Start with built-ins, then register custom detectors on top.
   const detectors = builtInDetectors();
@@ -216,20 +203,12 @@ export function resolvePolicy(config: unknown): {
     detectors.set("http_auth_header", new HttpAuthHeaderDetector(pattern));
   }
 
-  if (config.detectors !== undefined) {
-    if (!Array.isArray(config.detectors)) {
+  for (const definition of config.detectors ?? []) {
+    if (detectors.has(definition.id)) {
       throw new SensoredError("INVALID_CONFIG", "detectors");
     }
 
-    for (const definition of config.detectors) {
-      validateDefinition(definition);
-
-      if (detectors.has(definition.id)) {
-        throw new SensoredError("INVALID_CONFIG", "detectors");
-      }
-
-      detectors.set(definition.id, registerDetector(definition));
-    }
+    detectors.set(definition.id, registerDetector(definition));
   }
 
   // Expand presets into a merged rule map, then apply explicit overrides.

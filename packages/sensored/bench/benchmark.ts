@@ -1,13 +1,20 @@
 import { do_not_optimize, measure } from "mitata";
-import { createRedactor } from "../src/index.ts";
 import { createSession } from "../src/session.ts";
 import type { StreamEvent } from "../src/types.ts";
+import { takeEngine, useEngine } from "./engine.ts";
 import {
   CHAT_SIZE,
   DOC_SIZE,
   generateChatInput,
   generateUnicodeInput,
 } from "./inputs.ts";
+
+const { engine } = takeEngine(Bun.argv.slice(2));
+const createRedactor = useEngine(engine);
+
+console.log(
+  `Engine: ${engine} (sessions run on the ${engine === "wasm" ? "wasm" : "napi"} binding)`,
+);
 
 // person_name_lite uses lightweight regex + bloom filter (no compromise.js).
 // All pii detectors including person_name_lite are benchmarked.
@@ -83,6 +90,7 @@ interface TimingResult {
 }
 
 interface BenchReport {
+  engine: string;
   hardware: string;
   os: string;
   runtime: string;
@@ -509,6 +517,7 @@ for (const [target, met] of Object.entries(targetMet)) {
 // --- Write results ---
 
 const report: BenchReport = {
+  engine,
   hardware: "Apple M3 Pro, 36 GiB RAM",
   os: "macOS 26.6.2 build 25G83",
   runtime: "Bun 1.4.2",
