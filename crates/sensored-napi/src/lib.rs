@@ -21,3 +21,9 @@ pub use stream::Stream;
 pub fn restore(text: String, map: IndexMap<String, String>) -> String {
     sensored_core::restore::restore(&text, &map)
 }
+
+/// Every built-in `DetectorDescription`, in `listDetectors()` order, as JSON.
+#[napi]
+pub fn list_detectors_json() -> napi::Result<String> {
+    serde_json::to_string(&sensored_core::list_detectors()).map_err(napi::Error::from)
+}

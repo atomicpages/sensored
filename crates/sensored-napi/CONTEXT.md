@@ -27,7 +27,14 @@ ASCII text. Streams need no conversion: the core reports
   Inspection` filters, groups and renders core plus JS detections; `groups` is
   empty unless `report`. A rule id outside the enabled rules, an offset out
   of bounds or inside a surrogate pair, or `start >= end` throws
-  `DETECTOR_CONTRACT`.
+  `DETECTOR_CONTRACT`. `filter(text, detections): Detection[]` drops what
+  `render` would (matches inside existing placeholders, allowlisted values)
+  with the same checks, for callers that act on matches before rendering
+  (`redactAsync`'s semantic confirmation).
+- `describeJson(): string`: the enabled rules' `DetectorDescription`s in
+  policy order; `listDetectorsJson(): string`, a free function, every
+  built-in in `listDetectors()` order. JSON, like `policyJson`: both are cold
+  paths.
 - `stream(report, restore?): Stream` with `push(chunk)` and `finish()`, each
   returning `{ type: "text", text }`, `{ type: "detection", group }` or
   `{ type: "complete", map? }` events. `finish` consumes the stream: later

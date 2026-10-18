@@ -1,0 +1,3606 @@
+[
+  {
+    "id": "address",
+    "entityType": "address",
+    "replacement": "[ADDRESS]",
+    "stream": {
+      "maxMatchLength": 120,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Address",
+        "Street",
+        "Home Address",
+        "Mailing Address",
+        "Residence",
+        "Postal Address"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "email",
+    "entityType": "email",
+    "replacement": "[EMAIL]",
+    "stream": {
+      "maxMatchLength": 254,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "phone",
+    "entityType": "phone",
+    "replacement": "[PHONE]",
+    "stream": {
+      "maxMatchLength": 20,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "postal_code",
+    "entityType": "postal_code",
+    "replacement": "[POSTAL_CODE]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 7
+    }
+  },
+  {
+    "id": "crypto_address",
+    "entityType": "crypto_address",
+    "replacement": "[CRYPTO_ADDRESS]",
+    "stream": {
+      "maxMatchLength": 95,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "crypto_tx_hash",
+    "entityType": "crypto_tx_hash",
+    "replacement": "[CRYPTO_TX_HASH]",
+    "stream": {
+      "maxMatchLength": 64,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Transaction",
+        "Tx Hash",
+        "Transaction ID",
+        "Transaction Hash",
+        "Blockchain Transaction",
+        "TXID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "aws_access_key",
+    "entityType": "aws_access_key",
+    "replacement": "[AWS_ACCESS_KEY]",
+    "stream": {
+      "maxMatchLength": 20,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "google_api_key",
+    "entityType": "google_api_key",
+    "replacement": "[GOOGLE_API_KEY]",
+    "stream": {
+      "maxMatchLength": 39,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "slack_token",
+    "entityType": "slack_token",
+    "replacement": "[SLACK_TOKEN]",
+    "stream": {
+      "maxMatchLength": 128,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "stripe_api_key",
+    "entityType": "stripe_api_key",
+    "replacement": "[STRIPE_API_KEY]",
+    "stream": {
+      "maxMatchLength": 128,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "cloudflare_api_token",
+    "entityType": "cloudflare_api_token",
+    "replacement": "[CLOUDFLARE_API_TOKEN]",
+    "stream": {
+      "maxMatchLength": 100,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "digitalocean_token",
+    "entityType": "digitalocean_token",
+    "replacement": "[DIGITALOCEAN_TOKEN]",
+    "stream": {
+      "maxMatchLength": 71,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "card_data",
+    "entityType": "card_data",
+    "replacement": "[CARD_DATA]",
+    "stream": {
+      "maxMatchLength": 100,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Card",
+        "Payment",
+        "Credit",
+        "Debit",
+        "Visa",
+        "Mastercard",
+        "Amex",
+        "CVV",
+        "CVC",
+        "Expiry",
+        "Track",
+        "Magnetic",
+        "Stripe"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "eu_vat",
+    "entityType": "eu_vat",
+    "replacement": "[EU_VAT]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "financial_reference",
+    "entityType": "financial_reference",
+    "replacement": "[FINANCIAL_REFERENCE]",
+    "stream": {
+      "maxMatchLength": 30,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Transaction",
+        "TXN",
+        "Wire",
+        "Transfer",
+        "Remittance",
+        "Statement",
+        "Payment",
+        "Financial",
+        "Banking"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "iban",
+    "entityType": "iban",
+    "replacement": "[IBAN]",
+    "stream": {
+      "maxMatchLength": 38,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "investment_account",
+    "entityType": "investment_account",
+    "replacement": "[INVESTMENT_ACCOUNT]",
+    "stream": {
+      "maxMatchLength": 30,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "ISA",
+        "SIPP",
+        "Invest",
+        "Pension",
+        "401K",
+        "IRA",
+        "Account",
+        "Fund",
+        "Trading",
+        "Brokerage",
+        "Stock",
+        "Loan",
+        "Mortgage",
+        "Credit"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "payment_card",
+    "entityType": "payment_card",
+    "replacement": "[PAYMENT_CARD]",
+    "stream": {
+      "maxMatchLength": 37,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "payment_gateway_id",
+    "entityType": "payment_gateway_id",
+    "replacement": "[PAYMENT_GATEWAY_ID]",
+    "stream": {
+      "maxMatchLength": 50,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Stripe",
+        "Payment",
+        "Gateway",
+        "Token",
+        "Customer",
+        "Subscription",
+        "Merchant",
+        "Terminal",
+        "POS"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "swift_bic",
+    "entityType": "swift_bic",
+    "replacement": "[SWIFT_BIC]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "swift",
+        "bic",
+        "bank code"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "uk_bank_account",
+    "entityType": "uk_bank_account",
+    "replacement": "[UK_BANK_ACCOUNT]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "account no",
+        "account number",
+        "acct no",
+        "acct number",
+        "bank account"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "uk_sort_code",
+    "entityType": "uk_sort_code",
+    "replacement": "[UK_SORT_CODE]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "sort code",
+        "sort",
+        "branch code",
+        "bank code"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "us_routing",
+    "entityType": "us_routing",
+    "replacement": "[US_ROUTING]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "routing",
+        "routing no.",
+        "routing no",
+        "routing number",
+        "aba",
+        "rtn"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "clinical_trial_id",
+    "entityType": "clinical_trial_id",
+    "replacement": "[CLINICAL_TRIAL_ID]",
+    "stream": {
+      "maxMatchLength": 25,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Trial",
+        "Study",
+        "Protocol",
+        "Research",
+        "Clinical",
+        "Participant",
+        "Subject"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "genetic_info",
+    "entityType": "genetic_info",
+    "replacement": "[GENETIC_INFO]",
+    "stream": {
+      "maxMatchLength": 100,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Genetic",
+        "Gene",
+        "SNP",
+        "Marker",
+        "Genome",
+        "DNA",
+        "Variant",
+        "Allele",
+        "Sequence",
+        "Nucleotide"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "health_insurance_id",
+    "entityType": "health_insurance_id",
+    "replacement": "[HEALTH_INSURANCE_ID]",
+    "stream": {
+      "maxMatchLength": 30,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Insurance",
+        "Claim",
+        "Medical",
+        "Health",
+        "Policy",
+        "Plan",
+        "Beneficiary",
+        "Member"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "medical_code",
+    "entityType": "medical_code",
+    "replacement": "[MEDICAL_CODE]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Diagnosis",
+        "Condition",
+        "Disease",
+        "Disorder",
+        "ICD",
+        "Code",
+        "Procedure",
+        "CPT",
+        "Billing",
+        "Treatment",
+        "Service"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "medical_device_id",
+    "entityType": "medical_device_id",
+    "replacement": "[MEDICAL_DEVICE_ID]",
+    "stream": {
+      "maxMatchLength": 35,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Device",
+        "Implant",
+        "Pacemaker",
+        "Defibrillator",
+        "Serial",
+        "Medical"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "medical_record_number",
+    "entityType": "medical_record_number",
+    "replacement": "[MEDICAL_RECORD_NUMBER]",
+    "stream": {
+      "maxMatchLength": 18,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "mrn",
+        "medical record no.",
+        "medical record no",
+        "medical record number",
+        "record no.",
+        "record no",
+        "record number",
+        "patient id",
+        "chart no.",
+        "chart no",
+        "chart number"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "medical_reference",
+    "entityType": "medical_reference",
+    "replacement": "[MEDICAL_REFERENCE]",
+    "stream": {
+      "maxMatchLength": 30,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Lab",
+        "Test",
+        "Sample",
+        "Specimen",
+        "Pathology",
+        "Prescription",
+        "RX",
+        "Vaccine",
+        "Vaccination",
+        "Immunization"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "us_dea",
+    "entityType": "us_dea",
+    "replacement": "[US_DEA]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "dea",
+        "dea no.",
+        "dea no",
+        "dea number",
+        "prescriber"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "us_npi",
+    "entityType": "us_npi",
+    "replacement": "[US_NPI]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "hr_compensation",
+    "entityType": "hr_compensation",
+    "replacement": "[HR_COMPENSATION]",
+    "stream": {
+      "maxMatchLength": 30,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Salary",
+        "Compensation",
+        "Pay",
+        "Wage",
+        "Earning",
+        "Benefits Plan No",
+        "Insurance Plan ID",
+        "Health-Plan No",
+        "401K Account No",
+        "403B No",
+        "IRA No",
+        "Retirement Account No",
+        "Pension No"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "hr_identifier",
+    "entityType": "hr_identifier",
+    "replacement": "[HR_IDENTIFIER]",
+    "stream": {
+      "maxMatchLength": 25,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Employee ID",
+        "EMP-ID",
+        "Staff No",
+        "Personnel ID",
+        "Worker ID",
+        "Payroll No",
+        "PAY ID",
+        "Timesheet No",
+        "Timecard ID",
+        "Time-Entry No"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "hr_recruitment",
+    "entityType": "hr_recruitment",
+    "replacement": "[HR_RECRUITMENT]",
+    "stream": {
+      "maxMatchLength": 25,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Application ID",
+        "Candidate ID",
+        "Applicant No",
+        "Application Ref",
+        "Resume ID",
+        "CV No",
+        "Curriculum Vitae No",
+        "Performance ID",
+        "Review ID",
+        "Appraisal No",
+        "Evaluation ID",
+        "Training ID",
+        "Certification ID",
+        "Cert No",
+        "Recruiter Ref",
+        "Agency ID",
+        "Application",
+        "Candidate",
+        "Applicant",
+        "Resume",
+        "CV",
+        "Curriculum Vitae",
+        "Performance",
+        "Review",
+        "Appraisal",
+        "Evaluation",
+        "Training",
+        "Certification",
+        "Cert",
+        "Recruiter",
+        "Agency"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "hr_screening",
+    "entityType": "hr_screening",
+    "replacement": "[HR_SCREENING]",
+    "stream": {
+      "maxMatchLength": 25,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Background Check ID",
+        "BGC ID",
+        "Screening ID",
+        "Drug Test ID",
+        "Urinalysis ID",
+        "Disciplinary Action No",
+        "Incident No",
+        "Warning No",
+        "Violation No",
+        "Background Check",
+        "BGC",
+        "Screening",
+        "Drug Test",
+        "Urinalysis",
+        "Disciplinary",
+        "Incident",
+        "Warning",
+        "Violation"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "digital_identity",
+    "entityType": "digital_identity",
+    "replacement": "[DIGITAL_IDENTITY]",
+    "stream": {
+      "maxMatchLength": 32,
+      "leftContext": 30,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Username",
+        "User ID",
+        "Handle",
+        "Screen Name",
+        "Gamertag",
+        "Discord ID",
+        "Steam ID",
+        "PSN ID",
+        "Xbox Gamertag"
+      ],
+      "position": "both",
+      "window": {
+        "before": 30,
+        "after": 20
+      },
+      "instructions": "Generic usernames require preceding context or parenthesized following context (e.g. \"john_doe (Username)\"). @-handles, Discord IDs, and Steam IDs accept any context position."
+    }
+  },
+  {
+    "id": "drivers_license",
+    "entityType": "drivers_license",
+    "replacement": "[DRIVERS_LICENSE]",
+    "stream": {
+      "maxMatchLength": 16,
+      "leftContext": 30,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Driver's License",
+        "Driving Licence",
+        "License No.",
+        "DL"
+      ],
+      "position": "both",
+      "window": {
+        "before": 30,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "imei",
+    "entityType": "imei",
+    "replacement": "[IMEI]",
+    "stream": {
+      "maxMatchLength": 16,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "imsi",
+    "entityType": "imsi",
+    "replacement": "[IMSI]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "IMSI",
+        "Subscriber ID",
+        "Subscriber Number",
+        "Mobile Subscriber"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "license_plate",
+    "entityType": "license_plate",
+    "replacement": "[LICENSE_PLATE]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "License Plate",
+        "Plate Number",
+        "Registration",
+        "Vehicle Registration",
+        "License Plate Number",
+        "Tag Number",
+        "License Plate No.",
+        "Plate No."
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "passport",
+    "entityType": "passport",
+    "replacement": "[PASSPORT]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 30,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Passport Number",
+        "Passport No.",
+        "Passport"
+      ],
+      "position": "both",
+      "window": {
+        "before": 30,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "vin",
+    "entityType": "vin",
+    "replacement": "[VIN]",
+    "stream": {
+      "maxMatchLength": 17,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "legal_case",
+    "entityType": "legal_case",
+    "replacement": "[LEGAL_CASE]",
+    "stream": {
+      "maxMatchLength": 16,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Case",
+        "Case No.",
+        "Case No",
+        "Docket",
+        "Docket No.",
+        "Docket No",
+        "Court",
+        "Court No.",
+        "Court No",
+        "Subpoena",
+        "Subpoena No.",
+        "Subpoena No",
+        "Summons",
+        "Summons No.",
+        "Summons No",
+        "Judgment",
+        "Judgment No.",
+        "Judgment No",
+        "Order",
+        "Order No.",
+        "Order No",
+        "Decree",
+        "Decree No.",
+        "Decree No",
+        "Bankruptcy",
+        "Bankruptcy No.",
+        "Bankruptcy No",
+        "BK",
+        "BK No.",
+        "BK No",
+        "Probate",
+        "Probate No.",
+        "Probate No",
+        "Estate",
+        "Estate No.",
+        "Estate No",
+        "Legal",
+        "Legal No.",
+        "Legal No",
+        "Lawsuit",
+        "Lawsuit No.",
+        "Lawsuit No"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "legal_license",
+    "entityType": "legal_license",
+    "replacement": "[LEGAL_LICENSE]",
+    "stream": {
+      "maxMatchLength": 12,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Bar",
+        "Bar No.",
+        "Bar No",
+        "Bar License.",
+        "Bar License",
+        "Bar Registration.",
+        "Bar Registration",
+        "Bar Commission.",
+        "Bar Commission",
+        "Attorney",
+        "Attorney No.",
+        "Attorney No",
+        "Attorney License.",
+        "Attorney License",
+        "Attorney Registration.",
+        "Attorney Registration",
+        "Attorney Commission.",
+        "Attorney Commission",
+        "Lawyer",
+        "Lawyer No.",
+        "Lawyer No",
+        "Lawyer License.",
+        "Lawyer License",
+        "Lawyer Registration.",
+        "Lawyer Registration",
+        "Lawyer Commission.",
+        "Lawyer Commission",
+        "Notary",
+        "Notary No.",
+        "Notary No",
+        "Notary License.",
+        "Notary License",
+        "Notary Registration.",
+        "Notary Registration",
+        "Notary Commission.",
+        "Notary Commission",
+        "Notarial",
+        "Notarial No.",
+        "Notarial No",
+        "Notarial License.",
+        "Notarial License",
+        "Notarial Registration.",
+        "Notarial Registration",
+        "Notarial Commission.",
+        "Notarial Commission",
+        "Court Reporter",
+        "Court Reporter No.",
+        "Court Reporter No",
+        "Court Reporter License.",
+        "Court Reporter License",
+        "Court Reporter Registration.",
+        "Court Reporter Registration",
+        "Court Reporter Commission.",
+        "Court Reporter Commission",
+        "CSR",
+        "CSR No.",
+        "CSR No",
+        "CSR License.",
+        "CSR License",
+        "CSR Registration.",
+        "CSR Registration",
+        "CSR Commission.",
+        "CSR Commission",
+        "RPR",
+        "RPR No.",
+        "RPR No",
+        "RPR License.",
+        "RPR License",
+        "RPR Registration.",
+        "RPR Registration",
+        "RPR Commission.",
+        "RPR Commission",
+        "License",
+        "License No.",
+        "License No",
+        "License License.",
+        "License License",
+        "License Registration.",
+        "License Registration",
+        "License Commission.",
+        "License Commission",
+        "Commission",
+        "Commission No.",
+        "Commission No",
+        "Commission License.",
+        "Commission License",
+        "Commission Registration.",
+        "Commission Registration",
+        "Commission Commission.",
+        "Commission Commission",
+        "Legal",
+        "Legal No.",
+        "Legal No",
+        "Legal License.",
+        "Legal License",
+        "Legal Registration.",
+        "Legal Registration",
+        "Legal Commission.",
+        "Legal Commission",
+        "Law Firm",
+        "Law Firm No.",
+        "Law Firm No",
+        "Law Firm License.",
+        "Law Firm License",
+        "Law Firm Registration.",
+        "Law Firm Registration",
+        "Law Firm Commission.",
+        "Law Firm Commission"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "legal_reference",
+    "entityType": "legal_reference",
+    "replacement": "[LEGAL_REFERENCE]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Matter",
+        "Matter No.",
+        "Matter No",
+        "Matter ID.",
+        "Matter ID",
+        "Matter Agreement.",
+        "Matter Agreement",
+        "Engagement",
+        "Engagement No.",
+        "Engagement No",
+        "Engagement ID.",
+        "Engagement ID",
+        "Engagement Agreement.",
+        "Engagement Agreement",
+        "Client",
+        "Client No.",
+        "Client No",
+        "Client ID.",
+        "Client ID",
+        "Client Agreement.",
+        "Client Agreement",
+        "Settlement",
+        "Settlement No.",
+        "Settlement No",
+        "Settlement ID.",
+        "Settlement ID",
+        "Settlement Agreement.",
+        "Settlement Agreement",
+        "Agreement",
+        "Agreement No.",
+        "Agreement No",
+        "Agreement ID.",
+        "Agreement ID",
+        "Agreement Agreement.",
+        "Agreement Agreement",
+        "Retainer",
+        "Retainer No.",
+        "Retainer No",
+        "Retainer ID.",
+        "Retainer ID",
+        "Retainer Agreement.",
+        "Retainer Agreement",
+        "NDA",
+        "NDA No.",
+        "NDA No",
+        "NDA ID.",
+        "NDA ID",
+        "NDA Agreement.",
+        "NDA Agreement",
+        "Confidentiality",
+        "Confidentiality No.",
+        "Confidentiality No",
+        "Confidentiality ID.",
+        "Confidentiality ID",
+        "Confidentiality Agreement.",
+        "Confidentiality Agreement",
+        "Non-Disclosure",
+        "Non-Disclosure No.",
+        "Non-Disclosure No",
+        "Non-Disclosure ID.",
+        "Non-Disclosure ID",
+        "Non-Disclosure Agreement.",
+        "Non-Disclosure Agreement",
+        "Contract",
+        "Contract No.",
+        "Contract No",
+        "Contract ID.",
+        "Contract ID",
+        "Contract Agreement.",
+        "Contract Agreement",
+        "CNTR",
+        "CNTR No.",
+        "CNTR No",
+        "CNTR ID.",
+        "CNTR ID",
+        "CNTR Agreement.",
+        "CNTR Agreement",
+        "Legal",
+        "Legal No.",
+        "Legal No",
+        "Legal ID.",
+        "Legal ID",
+        "Legal Agreement.",
+        "Legal Agreement",
+        "Law Firm",
+        "Law Firm No.",
+        "Law Firm No",
+        "Law Firm ID.",
+        "Law Firm ID",
+        "Law Firm Agreement.",
+        "Law Firm Agreement",
+        "Attorney",
+        "Attorney No.",
+        "Attorney No",
+        "Attorney ID.",
+        "Attorney ID",
+        "Attorney Agreement.",
+        "Attorney Agreement",
+        "Counsel",
+        "Counsel No.",
+        "Counsel No",
+        "Counsel ID.",
+        "Counsel ID",
+        "Counsel Agreement.",
+        "Counsel Agreement"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ar_cuit",
+    "entityType": "ar_cuit",
+    "replacement": "[AR_CUIT]",
+    "stream": {
+      "maxMatchLength": 13,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Argentina",
+        "CUIT",
+        "CUIL",
+        "Tax",
+        "Impuesto",
+        "Tributario"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ar_dni",
+    "entityType": "ar_dni",
+    "replacement": "[AR_DNI]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Argentina",
+        "Argentin",
+        "DNI",
+        "Documento Nacional",
+        "Identidad"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "au_tfn",
+    "entityType": "au_tfn",
+    "replacement": "[AU_TFN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "bg_egn",
+    "entityType": "bg_egn",
+    "replacement": "[BG_EGN]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Bulgaria",
+        "Bulgarian",
+        "EGN",
+        "Personal Number",
+        "Единен"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "bh_cpr",
+    "entityType": "bh_cpr",
+    "replacement": "[BH_CPR]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Bahrain",
+        "CPR",
+        "Central Population",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ca_sin",
+    "entityType": "ca_sin",
+    "replacement": "[CA_SIN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "cl_rut",
+    "entityType": "cl_rut",
+    "replacement": "[CL_RUT]",
+    "stream": {
+      "maxMatchLength": 12,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Chile",
+        "Chilean",
+        "RUT",
+        "Rol Único",
+        "Tributario",
+        "Cédula"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "co_cedula",
+    "entityType": "co_cedula",
+    "replacement": "[CO_CEDULA]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Colombia",
+        "Colombian",
+        "Cédula",
+        "Cedula",
+        "Ciudadanía",
+        "CC"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "co_nit",
+    "entityType": "co_nit",
+    "replacement": "[CO_NIT]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Colombia",
+        "NIT",
+        "Tax",
+        "Impuesto",
+        "Tributario",
+        "Empresa"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "cz_id",
+    "entityType": "cz_id",
+    "replacement": "[CZ_ID]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Czech",
+        "Czechia",
+        "Republic",
+        "Rodné",
+        "Číslo",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "de_id",
+    "entityType": "de_id",
+    "replacement": "[DE_ID]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Personalausweis",
+        "German ID",
+        "National ID",
+        "Identity Card",
+        "Ausweis"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ec_cedula",
+    "entityType": "ec_cedula",
+    "replacement": "[EC_CEDULA]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Ecuador",
+        "Ecuadorian",
+        "Cédula",
+        "Cedula",
+        "Identidad"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "eg_id",
+    "entityType": "eg_id",
+    "replacement": "[EG_ID]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Egypt",
+        "Egyptian",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "es_dni",
+    "entityType": "es_dni",
+    "replacement": "[ES_DNI]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "DNI",
+        "Documento Nacional de Identidad",
+        "Spanish ID",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "fj_id",
+    "entityType": "fj_id",
+    "replacement": "[FJ_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Fiji",
+        "Fijian",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "fr_insee",
+    "entityType": "fr_insee",
+    "replacement": "[FR_INSEE]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 40,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "INSEE",
+        "NIR",
+        "Numéro de Sécurité Sociale",
+        "Social Security Number",
+        "Numéro INSEE"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "gh_card",
+    "entityType": "gh_card",
+    "replacement": "[GH_CARD]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Ghana",
+        "Ghanaian",
+        "Ghana Card",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "hu_id",
+    "entityType": "hu_id",
+    "replacement": "[HU_ID]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Hungarian",
+        "Magyar",
+        "Személyi",
+        "Igazolvány",
+        "Personal ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "hu_tax_id",
+    "entityType": "hu_tax_id",
+    "replacement": "[HU_TAX_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Hungarian",
+        "Magyar",
+        "Adó",
+        "Tax",
+        "Adóazonosító"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "id_nik",
+    "entityType": "id_nik",
+    "replacement": "[ID_NIK]",
+    "stream": {
+      "maxMatchLength": 16,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Indonesia",
+        "Indonesian",
+        "NIK",
+        "Nomor Induk",
+        "KTP",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "id_npwp",
+    "entityType": "id_npwp",
+    "replacement": "[ID_NPWP]",
+    "stream": {
+      "maxMatchLength": 20,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Indonesia",
+        "NPWP",
+        "Tax",
+        "Pajak",
+        "Wajib Pajak"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "il_id",
+    "entityType": "il_id",
+    "replacement": "[IL_ID]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Israel",
+        "Teudat",
+        "Zehut",
+        "Israeli",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "it_codice_fiscale",
+    "entityType": "it_codice_fiscale",
+    "replacement": "[IT_CODICE_FISCALE]",
+    "stream": {
+      "maxMatchLength": 16,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Codice Fiscale",
+        "Fiscal Code",
+        "Tax Code",
+        "Italian ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "jo_id",
+    "entityType": "jo_id",
+    "replacement": "[JO_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Jordan",
+        "Amman",
+        "National ID",
+        "Jordanian"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "jp_my_number",
+    "entityType": "jp_my_number",
+    "replacement": "[JP_MY_NUMBER]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "kg_pin",
+    "entityType": "kg_pin",
+    "replacement": "[KG_PIN]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Kyrgyz",
+        "Kyrgyzstan",
+        "PIN",
+        "Personal ID",
+        "Личный",
+        "Номер"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ke_id",
+    "entityType": "ke_id",
+    "replacement": "[KE_ID]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Kenya",
+        "Kenyan",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ke_kra_pin",
+    "entityType": "ke_kra_pin",
+    "replacement": "[KE_KRA_PIN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "KRA",
+        "Kenya",
+        "Revenue",
+        "Authority",
+        "Tax",
+        "PIN",
+        "Taxpayer"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "kz_iin",
+    "entityType": "kz_iin",
+    "replacement": "[KZ_IIN]",
+    "stream": {
+      "maxMatchLength": 12,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Kazakhstan",
+        "Kazakh",
+        "IIN",
+        "Individual Identification",
+        "ЖСН"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "kw_id",
+    "entityType": "kw_id",
+    "replacement": "[KW_ID]",
+    "stream": {
+      "maxMatchLength": 12,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Kuwait",
+        "Civil ID",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "lb_id",
+    "entityType": "lb_id",
+    "replacement": "[LB_ID]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Lebanon",
+        "Lebanese",
+        "Beirut",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ma_id",
+    "entityType": "ma_id",
+    "replacement": "[MA_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Morocco",
+        "Moroccan",
+        "CNIE",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "mm_nrc",
+    "entityType": "mm_nrc",
+    "replacement": "[MM_NRC]",
+    "stream": {
+      "maxMatchLength": 20,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Myanmar",
+        "Burmese",
+        "NRC",
+        "National Registration",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "my_ic",
+    "entityType": "my_ic",
+    "replacement": "[MY_IC]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Malaysia",
+        "Malaysian",
+        "MyKad",
+        "IC Number",
+        "Kad Pengenalan"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ng_bvn",
+    "entityType": "ng_bvn",
+    "replacement": "[NG_BVN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "BVN",
+        "Bank Verification",
+        "Nigeria",
+        "Nigerian",
+        "Banking"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ng_nin",
+    "entityType": "ng_nin",
+    "replacement": "[NG_NIN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Nigeria",
+        "NIN",
+        "National ID",
+        "Identity",
+        "Nigerian"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "nl_bsn",
+    "entityType": "nl_bsn",
+    "replacement": "[NL_BSN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 30,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "BSN",
+        "Burgerservicenummer",
+        "Dutch ID",
+        "Citizen Service Number"
+      ],
+      "position": "both",
+      "window": {
+        "before": 30,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "nz_driver_license",
+    "entityType": "nz_driver_license",
+    "replacement": "[NZ_DRIVER_LICENSE]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "New Zealand",
+        "NZ",
+        "Kiwi",
+        "Driver License",
+        "Driver Licence",
+        "Driver",
+        "License",
+        "Licence"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "nz_ird",
+    "entityType": "nz_ird",
+    "replacement": "[NZ_IRD]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "ird",
+        "ird no.",
+        "ird no",
+        "ird number",
+        "nz ird",
+        "tax",
+        "tax no.",
+        "tax no",
+        "tax number"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "nz_ird_extra",
+    "entityType": "nz_ird_extra",
+    "replacement": "[NZ_IRD_EXTRA]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "New Zealand",
+        "NZ",
+        "IRD",
+        "Tax",
+        "Inland Revenue"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "nz_passport",
+    "entityType": "nz_passport",
+    "replacement": "[NZ_PASSPORT]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "New Zealand",
+        "NZ",
+        "Passport",
+        "Travel Document"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "om_id",
+    "entityType": "om_id",
+    "replacement": "[OM_ID]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Oman",
+        "Muscat",
+        "Civil ID",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "pe_dni",
+    "entityType": "pe_dni",
+    "replacement": "[PE_DNI]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Peru",
+        "Peruvian",
+        "Perú",
+        "Peruano",
+        "DNI",
+        "Documento Nacional",
+        "Identidad",
+        "RENIEC"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "pe_ruc",
+    "entityType": "pe_ruc",
+    "replacement": "[PE_RUC]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Peru",
+        "Perú",
+        "RUC",
+        "Tax",
+        "SUNAT",
+        "Tributario"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ph_umid",
+    "entityType": "ph_umid",
+    "replacement": "[PH_UMID]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Philippines",
+        "Filipino",
+        "UMID",
+        "Unified",
+        "Multipurpose",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "pl_pesel",
+    "entityType": "pl_pesel",
+    "replacement": "[PL_PESEL]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 30,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "PESEL",
+        "Polish ID",
+        "National ID",
+        "Identity Number"
+      ],
+      "position": "both",
+      "window": {
+        "before": 30,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "png_id",
+    "entityType": "png_id",
+    "replacement": "[PNG_ID]",
+    "stream": {
+      "maxMatchLength": 12,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Papua New Guinea",
+        "Papua",
+        "New Guinea",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "qa_id",
+    "entityType": "qa_id",
+    "replacement": "[QA_ID]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Qatar",
+        "QID",
+        "Doha",
+        "National ID",
+        "Resident Permit"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ro_cnp",
+    "entityType": "ro_cnp",
+    "replacement": "[RO_CNP]",
+    "stream": {
+      "maxMatchLength": 13,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Romania",
+        "Romanian",
+        "CNP",
+        "Cod Numeric",
+        "Personal"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "rs_jmbg",
+    "entityType": "rs_jmbg",
+    "replacement": "[RS_JMBG]",
+    "stream": {
+      "maxMatchLength": 13,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Serbian",
+        "Serbia",
+        "JMBG",
+        "Jedinstveni",
+        "Matični",
+        "Personal"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ru_passport",
+    "entityType": "ru_passport",
+    "replacement": "[RU_PASSPORT]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Russia",
+        "Russian",
+        "Passport",
+        "Паспорт",
+        "Российский"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ru_snils",
+    "entityType": "ru_snils",
+    "replacement": "[RU_SNILS]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Russia",
+        "Russian",
+        "SNILS",
+        "СНИЛС",
+        "Pension",
+        "Пенсионный"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "sa_id",
+    "entityType": "sa_id",
+    "replacement": "[SA_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Saudi",
+        "KSA",
+        "Kingdom",
+        "Iqama",
+        "National ID",
+        "Muqeem"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "us_ssn",
+    "entityType": "us_ssn",
+    "replacement": "[US_SSN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 39,
+      "rightContext": 32,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "SSN",
+        "Social Security Number",
+        "Social Security No."
+      ],
+      "position": "both",
+      "window": {
+        "before": 39,
+        "after": 32
+      }
+    }
+  },
+  {
+    "id": "th_id",
+    "entityType": "th_id",
+    "replacement": "[TH_ID]",
+    "stream": {
+      "maxMatchLength": 13,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Thailand",
+        "Thai",
+        "National ID",
+        "บัตร",
+        "ประชาชน"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "tj_id",
+    "entityType": "tj_id",
+    "replacement": "[TJ_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Tajik",
+        "Tajikistan",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "tm_passport",
+    "entityType": "tm_passport",
+    "replacement": "[TM_PASSPORT]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Turkmen",
+        "Turkmenistan",
+        "Passport",
+        "Pasport"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "to_id",
+    "entityType": "to_id",
+    "replacement": "[TO_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Tonga",
+        "Tongan",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "tr_id",
+    "entityType": "tr_id",
+    "replacement": "[TR_ID]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Turkey",
+        "Turkish",
+        "TC",
+        "Kimlik",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ua_inn",
+    "entityType": "ua_inn",
+    "replacement": "[UA_INN]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Ukrainian",
+        "INN",
+        "Tax",
+        "Податковий",
+        "ІНН"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ua_passport",
+    "entityType": "ua_passport",
+    "replacement": "[UA_PASSPORT]",
+    "stream": {
+      "maxMatchLength": 8,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Ukrainian",
+        "Passport",
+        "Паспорт",
+        "Український"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "uae_id",
+    "entityType": "uae_id",
+    "replacement": "[UAE_ID]",
+    "stream": {
+      "maxMatchLength": 18,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "UAE",
+        "Emirates",
+        "Dubai",
+        "Abu Dhabi",
+        "National ID",
+        "Emirates ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "uk_nhs",
+    "entityType": "uk_nhs",
+    "replacement": "[UK_NHS]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "nhs",
+        "nhs no.",
+        "nhs no",
+        "nhs number",
+        "patient"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "uk_nino",
+    "entityType": "uk_nino",
+    "replacement": "[UK_NINO]",
+    "stream": {
+      "maxMatchLength": 14,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "us_ein",
+    "entityType": "us_ein",
+    "replacement": "[US_EIN]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "ein",
+        "employer id",
+        "employer id no.",
+        "employer id no",
+        "employer id number",
+        "employer identification",
+        "employer identification no.",
+        "employer identification no",
+        "employer identification number",
+        "tax id"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "us_itin",
+    "entityType": "us_itin",
+    "replacement": "[US_ITIN]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "itin",
+        "individual taxpayer id",
+        "individual taxpayer id no.",
+        "individual taxpayer id no",
+        "individual taxpayer id number",
+        "individual taxpayer identification",
+        "individual taxpayer identification no.",
+        "individual taxpayer identification no",
+        "individual taxpayer identification number",
+        "tax id"
+      ],
+      "position": "both",
+      "window": {
+        "before": 40,
+        "after": 40
+      }
+    }
+  },
+  {
+    "id": "uy_cedula",
+    "entityType": "uy_cedula",
+    "replacement": "[UY_CEDULA]",
+    "stream": {
+      "maxMatchLength": 11,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Uruguay",
+        "Uruguayan",
+        "Cédula",
+        "Cedula",
+        "Identidad"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "uz_passport",
+    "entityType": "uz_passport",
+    "replacement": "[UZ_PASSPORT]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Uzbek",
+        "Uzbekistan",
+        "Passport",
+        "Pasport"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "uz_stir",
+    "entityType": "uz_stir",
+    "replacement": "[UZ_STIR]",
+    "stream": {
+      "maxMatchLength": 9,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Uzbek",
+        "Uzbekistan",
+        "STIR",
+        "Tax",
+        "INN",
+        "Soliq"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ve_cedula",
+    "entityType": "ve_cedula",
+    "replacement": "[VE_CEDULA]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Venezuela",
+        "Venezuelan",
+        "Cédula",
+        "Cedula",
+        "Identidad",
+        "CI"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ve_rif",
+    "entityType": "ve_rif",
+    "replacement": "[VE_RIF]",
+    "stream": {
+      "maxMatchLength": 13,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Venezuela",
+        "RIF",
+        "Tax",
+        "SENIAT",
+        "Tributario"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "vn_cccd",
+    "entityType": "vn_cccd",
+    "replacement": "[VN_CCCD]",
+    "stream": {
+      "maxMatchLength": 12,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Vietnam",
+        "Vietnamese",
+        "CCCD",
+        "Citizen Identity",
+        "CMND",
+        "National ID"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ws_id",
+    "entityType": "ws_id",
+    "replacement": "[WS_ID]",
+    "stream": {
+      "maxMatchLength": 10,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Samoa",
+        "Samoan",
+        "National ID",
+        "Identity"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "za_id",
+    "entityType": "za_id",
+    "replacement": "[ZA_ID]",
+    "stream": {
+      "maxMatchLength": 13,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "South Africa",
+        "RSA",
+        "ZA",
+        "National ID",
+        "Identity",
+        "ID Number"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  },
+  {
+    "id": "ipv4",
+    "entityType": "ipv4",
+    "replacement": "[IPV4]",
+    "stream": {
+      "maxMatchLength": 15,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "ipv6",
+    "entityType": "ipv6",
+    "replacement": "[IPV6]",
+    "stream": {
+      "maxMatchLength": 39,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "mac_address",
+    "entityType": "mac_address",
+    "replacement": "[MAC_ADDRESS]",
+    "stream": {
+      "maxMatchLength": 17,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "url_with_auth",
+    "entityType": "url_with_auth",
+    "replacement": "[URL_WITH_AUTH]",
+    "stream": {
+      "maxMatchLength": 2048,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "url_query_key",
+    "entityType": "url_query_key",
+    "replacement": "[URL_QUERY_KEY]",
+    "stream": {
+      "maxMatchLength": 8192,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "person_name",
+    "entityType": "person_name",
+    "replacement": "[PERSON_NAME]",
+    "stream": {
+      "maxMatchLength": 40,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "person_name_lite",
+    "entityType": "person_name_lite",
+    "replacement": "[PERSON_NAME]",
+    "stream": {
+      "maxMatchLength": 40,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "generic_api_key",
+    "entityType": "generic_api_key",
+    "replacement": "[GENERIC_API_KEY]",
+    "stream": {
+      "maxMatchLength": 256,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "API key",
+        "apikey",
+        "API token"
+      ],
+      "position": "preceding",
+      "window": {
+        "before": 0,
+        "after": 0
+      },
+      "instructions": "Context is inline: the label (e.g. \"api_key\", \"apikey\", \"api token\") must immediately precede the key value, separated by a colon, whitespace, or equals sign."
+    }
+  },
+  {
+    "id": "github_token",
+    "entityType": "github_token",
+    "replacement": "[GITHUB_TOKEN]",
+    "stream": {
+      "maxMatchLength": 255,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "http_auth_header",
+    "entityType": "http_auth_header",
+    "replacement": "[HTTP_AUTH_HEADER]",
+    "stream": {
+      "maxMatchLength": 1024,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "jwt_token",
+    "entityType": "jwt_token",
+    "replacement": "[JWT_TOKEN]",
+    "stream": {
+      "maxMatchLength": 4096,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "private_key",
+    "entityType": "private_key",
+    "replacement": "[PRIVATE_KEY]",
+    "stream": {
+      "maxMatchLength": 65536,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "anthropic_api_key",
+    "entityType": "anthropic_api_key",
+    "replacement": "[ANTHROPIC_API_KEY]",
+    "stream": {
+      "maxMatchLength": 110,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "datadog_api_key",
+    "entityType": "datadog_api_key",
+    "replacement": "[DATADOG_API_KEY]",
+    "stream": {
+      "maxMatchLength": 40,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "discord_bot_token",
+    "entityType": "discord_bot_token",
+    "replacement": "[DISCORD_BOT_TOKEN]",
+    "stream": {
+      "maxMatchLength": 60,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "gitlab_token",
+    "entityType": "gitlab_token",
+    "replacement": "[GITLAB_TOKEN]",
+    "stream": {
+      "maxMatchLength": 30,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "heroku_api_key",
+    "entityType": "heroku_api_key",
+    "replacement": "[HEROKU_API_KEY]",
+    "stream": {
+      "maxMatchLength": 65,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "huggingface_token",
+    "entityType": "huggingface_token",
+    "replacement": "[HUGGINGFACE_TOKEN]",
+    "stream": {
+      "maxMatchLength": 42,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "linear_api_key",
+    "entityType": "linear_api_key",
+    "replacement": "[LINEAR_API_KEY]",
+    "stream": {
+      "maxMatchLength": 48,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "mailchimp_api_key",
+    "entityType": "mailchimp_api_key",
+    "replacement": "[MAILCHIMP_API_KEY]",
+    "stream": {
+      "maxMatchLength": 40,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "mailgun_api_key",
+    "entityType": "mailgun_api_key",
+    "replacement": "[MAILGUN_API_KEY]",
+    "stream": {
+      "maxMatchLength": 80,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "notion_token",
+    "entityType": "notion_token",
+    "replacement": "[NOTION_TOKEN]",
+    "stream": {
+      "maxMatchLength": 50,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "npm_token",
+    "entityType": "npm_token",
+    "replacement": "[NPM_TOKEN]",
+    "stream": {
+      "maxMatchLength": 40,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "okta_token",
+    "entityType": "okta_token",
+    "replacement": "[OKTA_TOKEN]",
+    "stream": {
+      "maxMatchLength": 42,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "openai_api_key",
+    "entityType": "openai_api_key",
+    "replacement": "[OPENAI_API_KEY]",
+    "stream": {
+      "maxMatchLength": 200,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "pagerduty_token",
+    "entityType": "pagerduty_token",
+    "replacement": "[PAGERDUTY_TOKEN]",
+    "stream": {
+      "maxMatchLength": 20,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "scaleway_key",
+    "entityType": "scaleway_key",
+    "replacement": "[SCALEWAY_KEY]",
+    "stream": {
+      "maxMatchLength": 36,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "sendgrid_api_key",
+    "entityType": "sendgrid_api_key",
+    "replacement": "[SENDGRID_API_KEY]",
+    "stream": {
+      "maxMatchLength": 100,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "sentry_token",
+    "entityType": "sentry_token",
+    "replacement": "[SENTRY_TOKEN]",
+    "stream": {
+      "maxMatchLength": 210,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "shopify_token",
+    "entityType": "shopify_token",
+    "replacement": "[SHOPIFY_TOKEN]",
+    "stream": {
+      "maxMatchLength": 44,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "slack_webhook_url",
+    "entityType": "slack_webhook_url",
+    "replacement": "[SLACK_WEBHOOK_URL]",
+    "stream": {
+      "maxMatchLength": 120,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "square_token",
+    "entityType": "square_token",
+    "replacement": "[SQUARE_TOKEN]",
+    "stream": {
+      "maxMatchLength": 64,
+      "leftContext": 40,
+      "rightContext": 40,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "telegram_bot_token",
+    "entityType": "telegram_bot_token",
+    "replacement": "[TELEGRAM_BOT_TOKEN]",
+    "stream": {
+      "maxMatchLength": 60,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "twilio_sid",
+    "entityType": "twilio_sid",
+    "replacement": "[TWILIO_SID]",
+    "stream": {
+      "maxMatchLength": 34,
+      "leftContext": 0,
+      "rightContext": 0,
+      "boundaryLookaround": 1
+    }
+  },
+  {
+    "id": "tracking_number",
+    "entityType": "tracking_number",
+    "replacement": "[TRACKING_NUMBER]",
+    "stream": {
+      "maxMatchLength": 22,
+      "leftContext": 35,
+      "rightContext": 20,
+      "boundaryLookaround": 1
+    },
+    "contextHint": {
+      "required": true,
+      "labels": [
+        "Tracking Number",
+        "Tracking No.",
+        "Tracking No",
+        "Tracking ID",
+        "Package ID",
+        "Shipment ID",
+        "Waybill No.",
+        "Waybill No",
+        "Consignment No.",
+        "Consignment No"
+      ],
+      "position": "both",
+      "window": {
+        "before": 35,
+        "after": 20
+      }
+    }
+  }
+]

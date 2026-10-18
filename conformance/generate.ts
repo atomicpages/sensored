@@ -6,6 +6,7 @@
  */
 import { mkdir, readdir, rm } from "node:fs/promises";
 import { join, relative } from "node:path";
+import { builtInDetectors } from "../packages/sensored/src/detectors/registry";
 import { buildDetectorFixtures, type DetectorFixtures } from "./detectors";
 import {
   type Disagreement,
@@ -34,6 +35,7 @@ import {
 const GOLDEN_DIR = join(import.meta.dir, "golden");
 const DETECTORS_DIR = join(GOLDEN_DIR, "detectors");
 const MANIFEST_NAME = "detectors.manifest.json";
+const BUILTINS_NAME = "builtins.json";
 
 function serialize(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
@@ -55,6 +57,22 @@ function golden<Case extends { readonly id: string }>(
   }
 
   return { version: GOLDEN_VERSION, cases: kept };
+}
+
+/**
+ * Every built-in's metadata, in `listDetectors()` order. The Rust core checks
+ * its registry against it and builds stub detectors from it.
+ */
+function builtins(): unknown[] {
+  return Array.from(builtInDetectors().values(), (detector) => ({
+    id: detector.id,
+    entityType: detector.entityType,
+    replacement: detector.replacement,
+    ...(detector.stream !== undefined ? { stream: detector.stream } : {}),
+    ...(detector.contextHint !== undefined
+      ? { contextHint: detector.contextHint }
+      : {}),
+  }));
 }
 
 /** Restore cases for every render case that produced a restoration map. */
@@ -234,6 +252,8 @@ async function main(): Promise<void> {
       serialize(file),
     ]),
   );
+
+  expected.set(join(GOLDEN_DIR, BUILTINS_NAME), serialize(builtins()));
 
   if (detectors === undefined) {
     console.error(

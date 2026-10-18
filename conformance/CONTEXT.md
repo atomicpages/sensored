@@ -33,6 +33,9 @@ See `docs/internal/plans/rust-core-rewrite.md`.
   corpus never exercises (HMRC NINO rules, digit-required IDs, case folding,
   card group bounds, email and postal boundaries). Add one whenever a
   detector rule is fixed or a port could plausibly miss it.
+- `golden/builtins.json` (committed) is every built-in's metadata (id,
+  entity type, replacement, stream windows, context hint) in
+  `listDetectors()` order. The Rust core checks its registry against it.
 - `golden/detectors/*.json` are derived from the eval corpus and gitignored,
   because synthetic tokens trip secret scanners. `golden/detectors.manifest.json`
   (committed) holds their SHA-256 digests and the corpus digest, so drift is

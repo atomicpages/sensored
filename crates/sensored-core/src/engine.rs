@@ -75,9 +75,17 @@ pub fn collect_matches<'r>(
     rules: &'r [ActiveRule],
     allowlist: &HashSet<String>,
 ) -> Vec<AppliedMatch<'r>> {
-    let placeholders = placeholder_spans(text);
+    filter_detected(text, detect_matches(text, rules), allowlist)
+}
 
-    filter_matches(text, detect_matches(text, rules), allowlist, &placeholders)
+/// Drops matches that overlap existing placeholders or are allowlisted.
+/// Mirrors `filterMatches`.
+pub fn filter_detected<'r>(
+    text: &str,
+    matches: Vec<AppliedMatch<'r>>,
+    allowlist: &HashSet<String>,
+) -> Vec<AppliedMatch<'r>> {
+    filter_matches(text, matches, allowlist, &placeholder_spans(text))
 }
 
 /// Spans of `[UPPERCASE]` / `[UPPERCASE_N]` placeholders already in the text,

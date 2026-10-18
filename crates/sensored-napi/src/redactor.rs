@@ -1,6 +1,6 @@
 //! The `Redactor` class. Fast path: `redact`, `redactWithMap`, `inspect` and
 //! `stream` go straight to the core `Redactor`, one FFI call each. The hybrid
-//! seam (`collect`, `render`) goes to the core's seam methods.
+//! seam (`collect`, `filter`, `render`) goes to the core's seam methods.
 
 use napi::Env;
 use napi_derive::napi;
@@ -79,13 +79,25 @@ impl Redactor {
     pub fn collect(&self, env: &Env, text: String) -> napi::Result<Vec<Detection>> {
         let detections = self.core.collect(&text).or_throw(env)?;
 
-        let bounds = detections.iter().flat_map(|d| [d.start, d.end]);
-        let offsets = OffsetMap::utf8_to_utf16(&text, bounds);
+        Ok(to_js(&text, detections))
+    }
 
-        Ok(detections
-            .into_iter()
-            .map(|d| Detection::from_core(d, |bytes| js_offset(offsets.get(bytes))))
-            .collect())
+    /// `detections` (core plus JS) without those `render` drops: matches
+    /// inside existing placeholders and allowlisted values.
+    #[napi]
+    pub fn filter(
+        &self,
+        env: &Env,
+        text: String,
+        detections: Vec<Detection>,
+    ) -> napi::Result<Vec<Detection>> {
+        let Some(detections) = to_core(&text, detections) else {
+            return throw(env, ErrorCode::DetectorContract);
+        };
+
+        let kept = self.core.filter(&text, detections).or_throw(env)?;
+
+        Ok(to_js(&text, kept))
     }
 
     /// Filters, groups and renders `detections` (core plus JS). Groups are
@@ -98,15 +110,43 @@ impl Redactor {
         detections: Vec<Detection>,
         report: bool,
     ) -> napi::Result<Inspection> {
-        let bounds = detections
-            .iter()
-            .flat_map(|d| [d.start as usize, d.end as usize]);
-
-        let Some(offsets) = OffsetMap::utf16_to_utf8(&text, bounds) else {
+        let Some(detections) = to_core(&text, detections) else {
             return throw(env, ErrorCode::DetectorContract);
         };
 
-        let detections = detections
+        let inspection = self.core.render(&text, detections, report).or_throw(env)?;
+
+        Ok(Inspection::from_core(&text, inspection))
+    }
+
+    /// The enabled rules' `DetectorDescription`s, in policy order, as JSON.
+    #[napi]
+    pub fn describe_json(&self) -> napi::Result<String> {
+        serde_json::to_string(&self.core.describe()).map_err(napi::Error::from)
+    }
+}
+
+/// Core detections with UTF-16 offsets.
+fn to_js(text: &str, detections: Vec<core::Detection>) -> Vec<Detection> {
+    let bounds = detections.iter().flat_map(|d| [d.start, d.end]);
+    let offsets = OffsetMap::utf8_to_utf16(text, bounds);
+
+    detections
+        .into_iter()
+        .map(|d| Detection::from_core(d, |bytes| js_offset(offsets.get(bytes))))
+        .collect()
+}
+
+/// JS detections with byte offsets; `None` if an offset is out of bounds or
+/// inside a surrogate pair.
+fn to_core(text: &str, detections: Vec<Detection>) -> Option<Vec<core::Detection>> {
+    let bounds = detections
+        .iter()
+        .flat_map(|d| [d.start as usize, d.end as usize]);
+    let offsets = OffsetMap::utf16_to_utf8(text, bounds)?;
+
+    Some(
+        detections
             .into_iter()
             .map(|d| core::Detection {
                 start: offsets.get(d.start as usize),
@@ -115,10 +155,6 @@ impl Redactor {
                 entity_type: d.entity_type,
                 reasons: d.reasons,
             })
-            .collect();
-
-        let inspection = self.core.render(&text, detections, report).or_throw(env)?;
-
-        Ok(Inspection::from_core(&text, inspection))
-    }
+            .collect(),
+    )
 }

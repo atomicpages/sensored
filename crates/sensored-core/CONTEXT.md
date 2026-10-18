@@ -63,7 +63,10 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
   hybrid seam: core plus caller detections in, rendered segments out.
 - `stream.rs`: `StreamCore` (sync push/finish). Flush math, buffer limit and
   trimming in UTF-16 units; reported offsets in the caller's `OffsetUnit`.
-- `redactor.rs`: `Redactor` (new, inspect, redact, stream, policy).
+- `redactor.rs`: `Redactor` (new, inspect, redact, stream, policy, describe)
+  and the seam (`collect`, `filter`, `render`); `list_detectors()` lists the
+  built-ins in the TS `listDetectors()` order (family order in `builtins()`,
+  then each family's `register` order).
 
 ## Regex porting
 
@@ -77,7 +80,7 @@ lookaround; replace it with code.
 ## Tests
 
 `tests/support/` loads golden fixtures and builds `stub_registry()`: every TS
-built-in's metadata (`tests/data/detectors.json`, exported from the TS
+built-in's metadata (`conformance/golden/builtins.json`, exported from the TS
 registry) as detectors that find nothing, so policy and rendering are tested
 against recorded matches before detectors are ported. Run `cargo test` from
 `crates/`.
@@ -90,7 +93,8 @@ against recorded matches before detectors are ported. Run `cargo test` from
   `SENSORED_DETECTORS=email,phone` narrows the run. Also runs the committed
   `render.json`, `offsets.json` and `presets.json` cases (incl.
   `detector-edge/*`) through the real detectors once all their rules are
-  ported. `person_name` is excluded from its golden fixtures (`NOT_GOLDEN`):
+  ported. `list_detectors_matches_ts` checks `list_detectors()` against
+  `builtins.json`, order and context hints included. `person_name` is excluded from its golden fixtures (`NOT_GOLDEN`):
   TS wraps `compromise`, while the Rust detector is a rule-based NER judged
   by quality, not parity.
 - `tests/stream.rs`: stream fixtures whose rules are all ported, at every

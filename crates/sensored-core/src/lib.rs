@@ -21,4 +21,4 @@ pub mod token_generators;
 pub mod types;
 
 pub use errors::{ErrorCode, Result, SensoredError};
-pub use redactor::{Redacted, Redactor, StreamSettings};
+pub use redactor::{Redacted, Redactor, StreamSettings, list_detectors};

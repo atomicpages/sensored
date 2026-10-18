@@ -129,6 +129,23 @@ fn check(file: &str) {
             ));
         }
 
+        // Filtering first changes nothing: `render` filters the same way.
+        let collected = redactor.collect(&case.input).expect("collect");
+        let filtered = redactor.filter(&case.input, collected).expect("filter");
+        let rendered = redactor
+            .render(&case.input, filtered, true)
+            .expect("render");
+        let rendered = serde_json::to_value(&rendered)
+            .expect("rendered")
+            .to_string();
+
+        if rendered != actual {
+            failures.push(format!(
+                "{}: collect + filter + render differs from inspect()",
+                case.id
+            ));
+        }
+
         let redacted = redactor.redact(&case.input).expect("redact");
 
         if redacted.text != case.expected.text {

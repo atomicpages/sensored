@@ -107,11 +107,11 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(it_codice_fiscale::detector()));
     registry.insert(Arc::new(jo_id::detector()));
     registry.insert(Arc::new(jp_my_number::detector()));
+    registry.insert(Arc::new(kg_pin::detector()));
     registry.insert(Arc::new(ke_id::detector()));
     registry.insert(Arc::new(ke_kra_pin::detector()));
-    registry.insert(Arc::new(kg_pin::detector()));
-    registry.insert(Arc::new(kw_id::detector()));
     registry.insert(Arc::new(kz_iin::detector()));
+    registry.insert(Arc::new(kw_id::detector()));
     registry.insert(Arc::new(lb_id::detector()));
     registry.insert(Arc::new(ma_id::detector()));
     registry.insert(Arc::new(mm_nrc::detector()));
@@ -135,6 +135,7 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(ru_passport::detector()));
     registry.insert(Arc::new(ru_snils::detector()));
     registry.insert(Arc::new(sa_id::detector()));
+    registry.insert(Arc::new(us_ssn::detector()));
     registry.insert(Arc::new(th_id::detector()));
     registry.insert(Arc::new(tj_id::detector()));
     registry.insert(Arc::new(tm_passport::detector()));
@@ -147,7 +148,6 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(uk_nino::detector()));
     registry.insert(Arc::new(us_ein::detector()));
     registry.insert(Arc::new(us_itin::detector()));
-    registry.insert(Arc::new(us_ssn::detector()));
     registry.insert(Arc::new(uy_cedula::detector()));
     registry.insert(Arc::new(uz_passport::detector()));
     registry.insert(Arc::new(uz_stir::detector()));

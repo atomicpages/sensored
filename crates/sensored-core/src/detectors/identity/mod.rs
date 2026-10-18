@@ -14,12 +14,12 @@ mod vin;
 
 pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(digital_identity::DigitalIdentity));
-    registry.insert(Arc::new(license_plate::detector()));
     registry.insert(Arc::new(drivers_license::detector()));
-    registry.insert(Arc::new(vin::detector()));
     registry.insert(Arc::new(imei::detector()));
     registry.insert(Arc::new(imsi::detector()));
+    registry.insert(Arc::new(license_plate::detector()));
     registry.insert(Arc::new(passport::detector()));
+    registry.insert(Arc::new(vin::detector()));
 }
 
 #[cfg(test)]

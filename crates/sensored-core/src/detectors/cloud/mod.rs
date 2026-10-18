@@ -17,11 +17,11 @@ mod stripe_api_key;
 
 pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(aws_access_key::detector()));
-    registry.insert(Arc::new(cloudflare_api_token::detector()));
-    registry.insert(Arc::new(digitalocean_token::detector()));
     registry.insert(Arc::new(google_api_key::detector()));
     registry.insert(Arc::new(slack_token::detector()));
     registry.insert(Arc::new(stripe_api_key::detector()));
+    registry.insert(Arc::new(cloudflare_api_token::detector()));
+    registry.insert(Arc::new(digitalocean_token::detector()));
 }
 
 #[cfg(test)]

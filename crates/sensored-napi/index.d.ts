@@ -25,10 +25,17 @@ export declare class Redactor {
   /** Raw core detections, before allowlist and placeholder filtering. */
   collect(text: string): Array<Detection>
   /**
+   * `detections` (core plus JS) without those `render` drops: matches
+   * inside existing placeholders and allowlisted values.
+   */
+  filter(text: string, detections: Array<Detection>): Array<Detection>
+  /**
    * Filters, groups and renders `detections` (core plus JS). Groups are
    * reported only when `report` is set.
    */
   render(text: string, detections: Array<Detection>, report: boolean): Inspection
+  /** The enabled rules' `DetectorDescription`s, in policy order, as JSON. */
+  describeJson(): string
 }
 
 export declare class Stream {
@@ -71,6 +78,9 @@ export interface InspectionGroup {
   replacement: string
   matches: Array<InspectedMatch>
 }
+
+/** Every built-in `DetectorDescription`, in `listDetectors()` order, as JSON. */
+export declare function listDetectorsJson(): string
 
 /** `map` is set when restoration is enabled. */
 export interface RedactResult {

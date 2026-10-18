@@ -11,7 +11,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use indexmap::IndexMap;
-use sensored_core::detector::{ExternalDetector, StreamMeta};
+use sensored_core::detector::{ContextHint, ExternalDetector, StreamMeta};
 use sensored_core::detectors::Registry;
 use sensored_core::text::utf16_to_utf8;
 use sensored_core::types::{MaskPreserve, RuleSetting};
@@ -134,8 +134,8 @@ pub fn golden<Case: DeserializeOwned>(file: &str) -> Vec<Case> {
     parsed.cases
 }
 
-/// Every TS built-in's metadata (`tests/data/detectors.json`) as metadata-only
-/// detectors that find nothing.
+/// Every TS built-in's metadata (`conformance/golden/builtins.json`) as
+/// metadata-only detectors that find nothing.
 pub fn stub_registry() -> Registry {
     #[derive(Deserialize)]
     #[serde(rename_all = "camelCase")]
@@ -144,12 +144,13 @@ pub fn stub_registry() -> Registry {
         entity_type: String,
         replacement: String,
         stream: Option<StreamMeta>,
+        context_hint: Option<ContextHint>,
     }
 
-    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/data/detectors.json");
+    let path = repo_root().join("conformance/golden/builtins.json");
     let entries: Vec<Entry> =
-        serde_json::from_str(&std::fs::read_to_string(path).expect("detectors.json"))
-            .expect("valid detectors.json");
+        serde_json::from_str(&std::fs::read_to_string(path).expect("builtins.json"))
+            .expect("valid builtins.json");
 
     let mut registry = Registry::default();
 
@@ -159,7 +160,7 @@ pub fn stub_registry() -> Registry {
             entity_type: entry.entity_type,
             replacement: entry.replacement,
             stream: entry.stream,
-            context_hint: None,
+            context_hint: entry.context_hint,
         }));
     }
 

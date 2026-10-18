@@ -11,10 +11,10 @@ mod phone;
 mod postal_code;
 
 pub fn register(registry: &mut Registry) {
+    registry.insert(Arc::new(address::detector()));
     registry.insert(Arc::new(email::EmailDetector));
     registry.insert(Arc::new(phone::PhoneDetector));
     registry.insert(Arc::new(postal_code::PostalCodeDetector));
-    registry.insert(Arc::new(address::detector()));
 }
 
 /// A detection whose rule id and entity type are both `id`.

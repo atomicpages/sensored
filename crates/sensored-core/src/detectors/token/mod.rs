@@ -39,16 +39,17 @@ mod twilio_sid;
 mod tests;
 
 pub fn register(registry: &mut Registry) {
+    registry.insert(Arc::new(generic_api_key::GenericApiKeyDetector));
+    registry.insert(Arc::new(github_token::detector()));
+    registry.insert(Arc::new(http_auth_header::detector()));
+    registry.insert(Arc::new(jwt_token::JwtTokenDetector));
+    registry.insert(Arc::new(private_key::PrivateKeyDetector));
     registry.insert(Arc::new(anthropic_api_key::detector()));
     registry.insert(Arc::new(datadog_api_key::detector()));
     registry.insert(Arc::new(discord_bot_token::detector()));
-    registry.insert(Arc::new(generic_api_key::GenericApiKeyDetector));
-    registry.insert(Arc::new(github_token::detector()));
     registry.insert(Arc::new(gitlab_token::detector()));
     registry.insert(Arc::new(heroku_api_key::detector()));
-    registry.insert(Arc::new(http_auth_header::detector()));
     registry.insert(Arc::new(huggingface_token::detector()));
-    registry.insert(Arc::new(jwt_token::JwtTokenDetector));
     registry.insert(Arc::new(linear_api_key::detector()));
     registry.insert(Arc::new(mailchimp_api_key::detector()));
     registry.insert(Arc::new(mailgun_api_key::detector()));
@@ -57,7 +58,6 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(okta_token::detector()));
     registry.insert(Arc::new(openai_api_key::detector()));
     registry.insert(Arc::new(pagerduty_token::detector()));
-    registry.insert(Arc::new(private_key::PrivateKeyDetector));
     registry.insert(Arc::new(scaleway_key::detector()));
     registry.insert(Arc::new(sendgrid_api_key::detector()));
     registry.insert(Arc::new(sentry_token::detector()));

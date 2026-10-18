@@ -38,7 +38,7 @@ impl StreamMeta {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum HintPosition {
     Preceding,
@@ -47,7 +47,7 @@ pub enum HintPosition {
 }
 
 /// Mirrors `ContextHint`. Window sizes are UTF-16 code units.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ContextHint {
     pub required: bool,
     pub labels: Vec<String>,
@@ -57,10 +57,35 @@ pub struct ContextHint {
     pub instructions: Option<String>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct HintWindow {
     pub before: usize,
     pub after: usize,
+}
+
+/// Mirrors `DetectorDescription`: what `listDetectors()` and `describe()`
+/// report.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DetectorDescription {
+    pub id: String,
+    pub entity_type: String,
+    pub replacement: String,
+    pub stream: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context_hint: Option<ContextHint>,
+}
+
+impl DetectorDescription {
+    pub fn of(detector: &dyn Detector) -> Self {
+        Self {
+            id: detector.id().to_owned(),
+            entity_type: detector.entity_type().to_owned(),
+            replacement: detector.replacement().to_owned(),
+            stream: detector.stream().is_some(),
+            context_hint: detector.context_hint(),
+        }
+    }
 }
 
 pub trait Detector: Send + Sync {

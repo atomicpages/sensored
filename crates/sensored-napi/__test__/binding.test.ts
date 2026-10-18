@@ -2,14 +2,14 @@ import { describe, expect, test } from "bun:test";
 
 import {
   type Detection,
+  listDetectorsJson,
   Redactor,
   restore,
   type StreamEvent,
 } from "../index.js";
 
-// No built-in detector is ported on this branch yet, so the rule is a JS
-// detector descriptor: the core finds nothing for it, and its matches come in
-// through `render`, as the TS wrapper will send them.
+// The rule is a JS detector descriptor: the core finds nothing for it, and its
+// matches come in through `render`, as the TS wrapper sends them.
 const ticket = {
   id: "ticket_id",
   entityType: "ticket",
@@ -176,6 +176,18 @@ describe("collect and render", () => {
     });
   });
 
+  test("filter keeps only what render would", () => {
+    const redactor = Redactor.create(config({ allowlist: ["T-123"] }));
+    const kept = ticketAt(text, "T-999");
+
+    expect(redactor.filter(text, [ticketAt(text, "T-123"), kept])).toEqual([
+      kept,
+    ]);
+    expect(caught(() => redactor.filter(text, [{ ...kept, start: 1 }])).code).toBe(
+      "DETECTOR_CONTRACT",
+    );
+  });
+
   test("throws DETECTOR_CONTRACT for bad detections", () => {
     const redactor = Redactor.create(config());
     const valid = ticketAt(text, "T-123");
@@ -239,4 +251,27 @@ test("restore replaces known placeholders only", () => {
   expect(restore("[EMAIL_1] and [EMAIL_2]", { "[EMAIL_1]": "a@b.co" })).toBe(
     "a@b.co and [EMAIL_2]",
   );
+});
+
+test("describeJson lists enabled rules in policy order", () => {
+  const redactor = Redactor.create(
+    JSON.stringify({
+      rules: { phone: { action: "redact" }, ticket_id: { action: "redact" } },
+      detectors: [ticket],
+    }),
+  );
+
+  const ids = JSON.parse(redactor.describeJson()).map(
+    (d: { id: string }) => d.id,
+  );
+
+  expect(ids).toEqual(["phone", "ticket_id"]);
+});
+
+test("listDetectorsJson lists every built-in", () => {
+  const listed = JSON.parse(listDetectorsJson());
+
+  expect(listed[0]).toMatchObject({ id: "address", stream: true });
+  expect(listed[0].contextHint.required).toBe(true);
+  expect(listed.length).toBeGreaterThan(150);
 });

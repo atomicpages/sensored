@@ -7,8 +7,9 @@
 
 mod support;
 
+use sensored_core::detector::DetectorDescription;
 use sensored_core::detectors::builtins;
-use sensored_core::{ErrorCode, Redactor};
+use sensored_core::{ErrorCode, Redactor, list_detectors};
 
 fn selected() -> Vec<String> {
     let filter = std::env::var("SENSORED_DETECTORS").ok();
@@ -43,6 +44,24 @@ fn ported_detectors_match_ts_metadata() {
             detector.id()
         );
         assert_eq!(detector.stream(), ts.stream(), "{}", detector.id());
+    }
+}
+
+/// `listDetectors()` is public: same descriptions, in the same order, as TS.
+#[test]
+fn list_detectors_matches_ts() {
+    let reference: Vec<DetectorDescription> = support::stub_registry()
+        .iter()
+        .map(|detector| DetectorDescription::of(detector.as_ref()))
+        .collect();
+
+    let listed = list_detectors();
+    let ids = |list: &[DetectorDescription]| list.iter().map(|d| d.id.clone()).collect::<Vec<_>>();
+
+    assert_eq!(ids(&listed), ids(&reference), "order");
+
+    for (rust, ts) in listed.iter().zip(&reference) {
+        assert_eq!(rust, ts, "{}", ts.id);
     }
 }
 

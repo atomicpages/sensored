@@ -59,25 +59,25 @@ impl Registry {
 
 /// All built-in detectors, built once and shared.
 ///
-/// Order only affects listing (rules follow policy order); matching the TS
-/// `listDetectors()` order is a phase 4 task.
+/// Order only affects listing (rules follow policy order); it matches the TS
+/// `listDetectors()` order.
 pub fn builtins() -> Registry {
     static BUILTINS: LazyLock<Registry> = LazyLock::new(|| {
         let mut registry = Registry::default();
 
         contact::register(&mut registry);
-        financial::register(&mut registry);
-        national_id::register(&mut registry);
-        identity::register(&mut registry);
-        person::register(&mut registry);
-        network::register(&mut registry);
+        crypto::register(&mut registry);
         cloud::register(&mut registry);
-        token::register(&mut registry);
-        logistics::register(&mut registry);
+        financial::register(&mut registry);
         healthcare::register(&mut registry);
         hr::register(&mut registry);
+        identity::register(&mut registry);
         legal::register(&mut registry);
-        crypto::register(&mut registry);
+        national_id::register(&mut registry);
+        network::register(&mut registry);
+        person::register(&mut registry);
+        token::register(&mut registry);
+        logistics::register(&mut registry);
 
         registry
     });

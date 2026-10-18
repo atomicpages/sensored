@@ -17,8 +17,8 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(ipv4::detector()));
     registry.insert(Arc::new(ipv6::detector()));
     registry.insert(Arc::new(mac_address::MacAddressDetector));
-    registry.insert(Arc::new(url_query_key::UrlQueryKeyDetector));
     registry.insert(Arc::new(url_with_auth::UrlWithAuthDetector));
+    registry.insert(Arc::new(url_query_key::UrlQueryKeyDetector));
 }
 
 /// A `<id>.format` detection whose rule id and entity type are both `id`.
