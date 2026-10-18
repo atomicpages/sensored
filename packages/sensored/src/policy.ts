@@ -118,12 +118,15 @@ function resolvePresets(
     | undefined,
   explicit: ReadonlySet<string>,
 ): Record<string, RuleSetting> {
-  const merged: Record<string, RuleSetting> = {};
+  const merged: Record<string, RuleSetting> = Object.create(null);
 
   for (const ref of presetNames) {
     const { name, version } = parsePresetRef(ref);
 
-    const customPreset = customPresets?.[name];
+    const customPreset =
+      customPresets && Object.hasOwn(customPresets, name)
+        ? customPresets[name]
+        : undefined;
 
     if (customPreset !== undefined) {
       if (version !== undefined) {
@@ -137,7 +140,9 @@ function resolvePresets(
       continue;
     }
 
-    const versions = BUILTIN_PRESETS[name];
+    const versions = Object.hasOwn(BUILTIN_PRESETS, name)
+      ? BUILTIN_PRESETS[name]
+      : undefined;
 
     if (versions === undefined) {
       throw new SensoredError("UNKNOWN_RULE", "presets");
@@ -228,7 +233,9 @@ export function resolvePolicy(config: unknown): {
   }
 
   // Expand presets into a merged rule map, then apply explicit overrides.
-  const presetRules: Record<string, RuleSetting> = {};
+  // Prototype-free maps, so rule ids like `__proto__` or `constructor` are
+  // ordinary keys. Plain objects keep JS key order, which the Rust core mirrors.
+  const presetRules: Record<string, RuleSetting> = Object.create(null);
 
   if (config.presets !== undefined) {
     Object.assign(
@@ -242,9 +249,10 @@ export function resolvePolicy(config: unknown): {
   }
 
   // Apply explicit rules on top of presets — explicit always wins.
-  const effectiveRules: Record<string, RuleSetting | "off"> = {
-    ...presetRules,
-  };
+  const effectiveRules: Record<string, RuleSetting | "off"> = Object.assign(
+    Object.create(null),
+    presetRules,
+  );
 
   for (const [id, value] of Object.entries(config.rules)) {
     effectiveRules[id] = value;

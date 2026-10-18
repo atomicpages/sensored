@@ -607,3 +607,44 @@ describe("compliance preset conflicts", () => {
     }
   });
 });
+
+describe("prototype-named keys", () => {
+  test("an inherited name is not a preset", () => {
+    for (const config of [
+      { presets: ["constructor"], rules: {} },
+      { presets: ["toString"], customPresets: { team: {} }, rules: {} },
+    ]) {
+      expect(() => createRedactor(config)).toThrow(SensoredError);
+
+      try {
+        createRedactor(config);
+      } catch (error) {
+        expect(error).toMatchObject({ code: "UNKNOWN_RULE", path: "presets" });
+      }
+    }
+  });
+
+  test("a __proto__ rule id is an unknown rule", () => {
+    const rules = JSON.parse('{"__proto__": {"action": "redact"}}');
+
+    try {
+      createRedactor({ rules });
+      expect.unreachable();
+    } catch (error) {
+      expect(error).toMatchObject({ code: "UNKNOWN_RULE", path: "rules" });
+    }
+  });
+
+  test("a custom preset rule named constructor does not conflict", () => {
+    const customPresets = JSON.parse(
+      '{"team": {"constructor": {"action": "redact"}}}',
+    );
+
+    try {
+      createRedactor({ presets: ["team"], customPresets, rules: {} });
+      expect.unreachable();
+    } catch (error) {
+      expect(error).toMatchObject({ code: "UNKNOWN_RULE", path: "rules" });
+    }
+  });
+});
