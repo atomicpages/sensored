@@ -1,11 +1,17 @@
 [package]
 name = "sensored-core"
 version = "0.1.0"
-description = "Streaming-first PII redaction engine"
+description = "Streaming-first PII redaction engine: 150+ detectors, redact, mask, tokenize and restore"
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
+homepage = "https://github.com/atomicpages/sensored"
+readme = "README.md"
+keywords = ["pii", "redaction", "privacy", "streaming", "gdpr"]
+categories = ["text-processing"]
+# Tests and examples read fixtures and the eval corpus outside this crate.
+include = ["/src/**/*.rs", "/src/**/*.bin", "/README.md"]
 
 [dependencies]
 indexmap = { version = "2.14.2", features = ["serde"] }
