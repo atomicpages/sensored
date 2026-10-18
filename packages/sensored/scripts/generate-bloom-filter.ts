@@ -72,15 +72,11 @@ class BloomFilter {
 
 const isLatin = (s: string): boolean => /^[a-zA-Z][a-zA-Z\s\-'.]+$/.test(s);
 
-function extractWikidataNames(): Set<string> {
-  const male =
-    require("../node_modules/wikidata-names/data/male.json") as string[];
-  const female =
-    require("../node_modules/wikidata-names/data/female.json") as string[];
-  const family =
-    require("../node_modules/wikidata-names/data/family.json") as string[];
-  const unisex =
-    require("../node_modules/wikidata-names/data/unisex.json") as string[];
+async function extractWikidataNames(): Promise<Set<string>> {
+  const { default: male } = await import("wikidata-names/data/male.json");
+  const { default: female } = await import("wikidata-names/data/female.json");
+  const { default: family } = await import("wikidata-names/data/family.json");
+  const { default: unisex } = await import("wikidata-names/data/unisex.json");
 
   const names = new Set<string>();
 
@@ -111,14 +107,16 @@ function extractWikidataNames(): Set<string> {
   return names;
 }
 
-function extractCompromiseNames(): Set<string> {
-  const unpack = require("efrt/unpack").default ?? require("efrt/unpack");
-  const data = require("../node_modules/compromise/src/2-two/preTagger/model/lexicon/_data.js");
+async function extractCompromiseNames(): Promise<Set<string>> {
+  const { default: unpack } = await import("efrt/unpack");
+  const { default: data } = await import(
+    "../node_modules/compromise/src/2-two/preTagger/model/lexicon/_data.js"
+  );
 
   const names = new Set<string>();
 
   for (const cat of ["MaleName", "FemaleName", "FirstName", "LastName"]) {
-    const compressed = data.default[cat];
+    const compressed = data[cat];
 
     if (!compressed) {
       continue;
@@ -136,8 +134,8 @@ function extractCompromiseNames(): Set<string> {
   return names;
 }
 
-function extractFakerNames(): Set<string> {
-  const locales = require("@faker-js/faker") as Record<string, unknown>;
+async function extractFakerNames(): Promise<Set<string>> {
+  const locales = await import("@faker-js/faker");
   const names = new Set<string>();
 
   for (const locale of Object.values(locales)) {
@@ -646,17 +644,17 @@ function generateStopwords(names: Set<string>): string[] {
 // Main
 // ---------------------------------------------------------------------------
 
-function main(): void {
+async function main(): Promise<void> {
   console.log("Extracting names from wikidata-names...");
-  const wikiNames = extractWikidataNames();
+  const wikiNames = await extractWikidataNames();
   console.log(`  ${wikiNames.size} Latin-script names`);
 
   console.log("Extracting names from compromise lexicon...");
-  const compromiseNames = extractCompromiseNames();
+  const compromiseNames = await extractCompromiseNames();
   console.log(`  ${compromiseNames.size} names`);
 
   console.log("Extracting names from faker locales...");
-  const fakerNames = extractFakerNames();
+  const fakerNames = await extractFakerNames();
   console.log(`  ${fakerNames.size} names`);
 
   const allNames = new Set<string>([
@@ -737,4 +735,4 @@ export const STOPWORDS: ReadonlySet<string> = new Set(${JSON.stringify(stopwords
   console.log(`Written to ${outputPath}`);
 }
 
-main();
+await main();

@@ -2,7 +2,9 @@
   "name": "sensored-monorepo",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "bun run --filter sensored build",
     "changeset": "changeset",
@@ -28,8 +30,8 @@
     "@commitlint/config-conventional": "^21.2.3",
     "@faker-js/faker": "^10.6.0",
     "@speed-highlight/core": "^2.1.0",
-    "@types/bun": "1.4.2",
-    "@typesafe-ai/sdk": "^0.6.0",
+    "@types/bun": "1.4.3",
+    "@typesafe-ai/sdk": "^0.7.0",
     "citty": "^0.2.2",
     "commitizen": "^4.3.2",
     "compromise": "^14.18.0",
@@ -38,9 +40,9 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "mitata": "^1.0.34",
-    "prettier": "3.9.9",
+    "prettier": "3.9.10",
     "publint": "^0.3.25",
-    "tsdown": "^0.23.0",
+    "tsdown": "^0.23.1",
     "vitepress": "^2.0.0-alpha.20",
     "vitepress-plugin-llms": "^1.14.0",
     "wikidata-names": "^1.0.0"
