@@ -18,7 +18,25 @@ or the Wasm build (`crates/sensored-wasm`). Plan:
     addon cannot load. `SENSORED_ENGINE=wasm` forces Wasm.
   - `../index.wasm-url.ts` (browser, Deno) and `../index.wasm-module.ts`
     (Workers, Vercel Edge): Wasm, initialised with top-level await.
-- `wasm-sync.ts`: `loadWasmSync()`, the synchronous Wasm loader.
+
+## Wasm loaders
+
+Each returns the glue's `{ Redactor, restore, listDetectorsJson }` as a
+`NativeBinding`. The glue and binary are `wasm-bindgen --target web` output
+from `bun run build:wasm` (`scripts/build-wasm.ts`) in the gitignored
+`packages/sensored/wasm/`, which tsdown copies to `dist/wasm/` and keeps
+external. Every loader reaches it at `../../wasm/`, which resolves from both
+`src/native/` and `dist/src/native/`, so build the Wasm before tests or
+typecheck that touch these files.
+
+- `wasm-sync.ts`: `loadWasmSync()`, Node and Bun. Reads the bytes with
+  `node:fs` and calls `initSync`, once; the only loader with a `node:` import.
+- `wasm-url.ts`: `loadWasmUrl()`, browser and Deno. `init` fetches the
+  `.wasm` by `new URL(..., import.meta.url)`.
+- `wasm-module.ts`: `loadWasmModule()`, Workers and Vercel Edge. Imports the
+  `.wasm` as a precompiled `WebAssembly.Module` (bundler-specific; runtimes
+  such as Bun that resolve the import to something else cannot use it). Its
+  type comes from the `sensored_wasm_bg.wasm.d.ts` the build script writes.
 
 ## Hybrid seam
 

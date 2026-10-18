@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["sensored-core", "sensored-napi"]
+members = ["sensored-core", "sensored-napi", "sensored-wasm"]
 
 [workspace.package]
 edition = "2024"

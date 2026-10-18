@@ -38,7 +38,13 @@
   "exports": {
     "./cli": "./dist/cli/index.mjs",
     "./cli/config": "./dist/cli/config.mjs",
-    ".": "./dist/src/index.mjs",
+    ".": {
+      "worker": "./dist/src/index.wasm-module.mjs",
+      "edge-light": "./dist/src/index.wasm-module.mjs",
+      "browser": "./dist/src/index.wasm-url.mjs",
+      "deno": "./dist/src/index.wasm-url.mjs",
+      "default": "./dist/src/index.mjs"
+    },
     "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
     "./adapters/openai": "./dist/src/adapters/openai.mjs",
     "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",
@@ -59,7 +65,8 @@
   ],
   "scripts": {
     "bench": "bun run bench/benchmark.ts",
-    "build": "tsdown",
+    "build": "bun run build:wasm && tsdown",
+    "build:wasm": "bun scripts/build-wasm.ts",
     "eval:gate": "bun eval/cli.ts gate eval/corpus.json eval/after.json eval/baseline.json",
     "eval:generate": "bun eval/generate-corpus.ts",
     "eval:score": "bun eval/cli.ts score eval/corpus.json eval/report.json eval/baseline.json",

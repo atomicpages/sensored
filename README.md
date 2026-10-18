@@ -24,9 +24,10 @@ deno add npm:sensored
 ## Runtime support
 
 sensored runs on Node.js 20+, Bun, Deno, browsers, and edge runtimes
-(Cloudflare Workers, Vercel Edge). The core library has zero runtime-specific
-dependencies. CI smoke tests verify Node.js, Deno, and browser/edge
-compatibility on every push.
+(Cloudflare Workers, Vercel Edge): a native Rust engine on Node.js and Bun,
+its WebAssembly build everywhere else (see the
+[runtime guide](docs/guide/runtime-support.md)). CI smoke tests verify
+Node.js, Deno, and browser/edge compatibility on every push.
 
 > **Note:** The CLI requires Bun. The core library and adapters work everywhere.
 

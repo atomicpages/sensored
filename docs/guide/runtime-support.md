@@ -1,8 +1,32 @@
 # Runtime support
 
-sensored is designed to run anywhere JavaScript runs. The core library has zero
-runtime-specific dependencies — no `node:` imports, no Bun built-ins, no
-browser-only APIs.
+sensored is designed to run anywhere JavaScript runs. The engine is Rust: a
+native addon where one exists for the platform, a WebAssembly build
+everywhere else. Each runtime gets the right one through the package's export
+conditions, with the same API and the same output.
+
+## Engines
+
+| Runtime                         | Engine                       | Entry (`exports["."]`) |
+| ------------------------------- | ---------------------------- | ---------------------- |
+| Node.js 20+, Bun                | Native (napi), Wasm fallback | `default`              |
+| Deno                            | Wasm, loaded by URL          | `deno`                 |
+| Browser                         | Wasm, loaded by URL          | `browser`              |
+| Cloudflare Workers, Vercel Edge | Wasm, imported as a module   | `worker`, `edge-light` |
+
+- Node and Bun load Wasm synchronously when the native addon for the platform
+  is missing or fails to load. `SENSORED_ENGINE=wasm` forces it.
+- Deno loads Wasm rather than the native addon, which would need
+  `--allow-ffi`.
+- The Wasm entries load the engine with top-level await, so `createRedactor`
+  stays synchronous. Your runtime or bundler must support top-level await in
+  ES modules (every current browser, Deno, Workers, Vite, esbuild with an
+  `esnext` or `es2022` target, webpack 5).
+- Workers and Vercel Edge compile `.wasm` imports at deploy time. Wrangler
+  handles the import as is; on Vercel Edge and other bundlers you may need a
+  Wasm plugin.
+- The Wasm binary (`dist/wasm/sensored_wasm_bg.wasm`) is 1.7 MB, 0.73 MB
+  gzipped. It redacts about a third as fast as the native addon.
 
 ## Supported runtimes
 
