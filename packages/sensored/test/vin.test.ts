@@ -144,3 +144,12 @@ describe("vin complete-string processing", () => {
     ).toThrow(SensoredError);
   });
 });
+
+describe("vin case", () => {
+  const redactor = createRedactor({ rules: { vin: { action: "redact" } } });
+
+  test("a lowercase VIN validates like its uppercase form", () => {
+    expect(redactor.redact("VIN 1HGCM82633A004352")).toBe("VIN [VIN]");
+    expect(redactor.redact("VIN 1hgcm82633a004352")).toBe("VIN [VIN]");
+  });
+});

@@ -98,7 +98,7 @@ function isAtHandle(value: string): boolean {
 }
 
 function isSteamId(value: string): boolean {
-  return /^STEAM_\d:\d:\d+$/.test(value);
+  return /^STEAM_\d:\d:\d+$/i.test(value);
 }
 
 export class DigitalIdentityDetector extends Detector {

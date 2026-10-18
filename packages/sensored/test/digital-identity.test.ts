@@ -386,3 +386,18 @@ describe("digital_identity detector — policy and errors", () => {
     expect(() => redactor.redact(undefined as never)).toThrow(SensoredError);
   });
 });
+
+describe("digital_identity Steam ID case", () => {
+  const redactor = createRedactor({
+    rules: { digital_identity: { action: "redact" } },
+  });
+
+  test("a lowercase Steam ID accepts unparenthesized following context", () => {
+    expect(redactor.redact("STEAM_0:1:12345 Steam ID")).toBe(
+      "[DIGITAL_IDENTITY] Steam ID",
+    );
+    expect(redactor.redact("steam_0:1:12345 Steam ID")).toBe(
+      "[DIGITAL_IDENTITY] Steam ID",
+    );
+  });
+});

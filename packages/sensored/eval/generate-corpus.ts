@@ -120,10 +120,11 @@ function generateSSN(): { formatted: string; compact: string } {
   }
 }
 
+// HMRC NIM39110: letter, prefix and suffix rules.
 const INVALID_FIRST_NINO = new Set(["D", "F", "I", "Q", "U", "V"]);
-const VALID_SUFFIX_NINO = new Set([
-  "A", "B", "C", "D", "F", "J", "H", "M", "N", "P", "R", "S", "T", "W", "X", "Y", "Z",
-]);
+const INVALID_SECOND_NINO = new Set(["D", "F", "I", "O", "Q", "U", "V"]);
+const UNALLOCATED_NINO_PREFIXES = new Set(["BG", "GB", "KN", "NK", "NT", "TN", "ZZ"]);
+const VALID_SUFFIX_NINO = new Set(["A", "B", "C", "D"]);
 
 const NINO_NAME_PREFIXES = new Set(["JR", "ED", "LY", "MS", "LT", "AL", "BO", "CY", "DI", "EF", "GI", "HO", "IV", "JO", "KY", "LU", "MY", "NO", "PA", "RE", "SU", "TY", "VA", "WO", "WU"]);
 
@@ -138,10 +139,10 @@ function generateNino(): string {
 
   do {
     second = faker.helpers.arrayElement("ABCDEFGHIJKLMNPQRSTUVWXYZ".split(""));
-  } while (second === "O");
+  } while (INVALID_SECOND_NINO.has(second));
 
   prefix = first + second;
-  if (NINO_NAME_PREFIXES.has(prefix)) {
+  if (NINO_NAME_PREFIXES.has(prefix) || UNALLOCATED_NINO_PREFIXES.has(prefix)) {
     return generateNino();
   }
 
@@ -1573,6 +1574,17 @@ function safeNumeric(len: number, prefix = ""): string {
   }
 }
 
+/** `safeAlphanumeric` with at least one digit, for IDs that need one. */
+function alphanumericWithDigit(len: number): string {
+  while (true) {
+    const result = safeAlphanumeric(len);
+
+    if (/\d/.test(result)) {
+      return result;
+    }
+  }
+}
+
 function safeAlphanumeric(len: number): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -2172,7 +2184,7 @@ function generateCoNitPositive(): Case {
 }
 
 function generateFjIdPositive(): Case {
-  const value = safeAlphanumeric(faker.number.int({ min: 8, max: 10 }));
+  const value = alphanumericWithDigit(faker.number.int({ min: 8, max: 10 }));
 
   return ctxWrap(
     value,
@@ -2448,7 +2460,7 @@ function generatePhUmidPositive(): Case {
 }
 
 function generatePngIdPositive(): Case {
-  const value = safeAlphanumeric(faker.number.int({ min: 8, max: 12 }));
+  const value = alphanumericWithDigit(faker.number.int({ min: 8, max: 12 }));
 
   return ctxWrap(
     value,
@@ -2536,7 +2548,7 @@ function generateTmPassportPositive(): Case {
 }
 
 function generateToIdPositive(): Case {
-  const value = safeAlphanumeric(faker.number.int({ min: 8, max: 10 }));
+  const value = alphanumericWithDigit(faker.number.int({ min: 8, max: 10 }));
 
   return ctxWrap(
     value,

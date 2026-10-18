@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { createRedactor } from "../src";
 import { toIdDetector } from "../src/detectors/national-id/to-id";
 
 describe("Tonga National ID detector", () => {
@@ -72,5 +73,18 @@ describe("Tonga National ID detector", () => {
       rightContext: 20,
       boundaryLookaround: 1,
     });
+  });
+});
+
+describe("to_id requires a digit", () => {
+  const redactor = createRedactor({ rules: { to_id: { action: "redact" } } });
+
+  test("a letters-only word next to a label is not an ID", () => {
+    expect(redactor.redact("National ID: passport")).toBe(
+      "National ID: passport",
+    );
+    expect(redactor.redact("Tonga Identity: verified")).toBe(
+      "Tonga Identity: verified",
+    );
   });
 });

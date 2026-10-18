@@ -76,7 +76,9 @@ function getBloom(): BloomFilter {
 // ---------------------------------------------------------------------------
 
 const honorifics = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."];
-const suffixes = ["Jr.", "Sr.", "II", "III", "IV"];
+// Longest first: alternation is leftmost-first, so "II" before "III" would
+// match "John Smith III" as "John Smith II" and drop it at the stray "I".
+const suffixes = ["Jr.", "Sr.", "III", "II", "IV"];
 
 const honorificPattern = honorifics
   .map((h) => h.replace(".", "\\.")) // escape dots

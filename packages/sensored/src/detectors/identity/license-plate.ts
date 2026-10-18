@@ -29,10 +29,6 @@ export class LicensePlateDetector extends ContextDetector {
   );
 
   protected override validate(candidate: string): false | readonly string[] {
-    if (candidate.length < 2 || candidate.length > 15) {
-      return false;
-    }
-
     if (!/\d/.test(candidate)) {
       return false;
     }

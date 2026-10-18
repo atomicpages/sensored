@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { createRedactor } from "../src";
 import { pngIdDetector } from "../src/detectors/national-id/png-id";
 
 describe("Papua New Guinea National ID detector", () => {
@@ -71,5 +72,18 @@ describe("Papua New Guinea National ID detector", () => {
       rightContext: 20,
       boundaryLookaround: 1,
     });
+  });
+});
+
+describe("png_id requires a digit", () => {
+  const redactor = createRedactor({ rules: { png_id: { action: "redact" } } });
+
+  test("a letters-only word next to a label is not an ID", () => {
+    expect(redactor.redact("National ID: passport")).toBe(
+      "National ID: passport",
+    );
+    expect(redactor.redact("PNG Identity: verified")).toBe(
+      "PNG Identity: verified",
+    );
   });
 });

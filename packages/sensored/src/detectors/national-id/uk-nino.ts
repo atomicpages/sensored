@@ -1,27 +1,13 @@
 import type { Detection } from "../../types";
 import { Detector } from "../base";
 
+// HMRC NIM39110: D, F, I, Q, U and V are never used as the first or second
+// letter, O never as the second; these prefixes are not allocated; the
+// suffix is always A-D.
 const invalidFirstLetters = new Set(["D", "F", "I", "Q", "U", "V"]);
-const invalidSecondLetters = new Set(["O"]);
-const validSuffixLetters = new Set([
-  "A",
-  "B",
-  "C",
-  "D",
-  "F",
-  "J",
-  "H",
-  "M",
-  "N",
-  "P",
-  "R",
-  "S",
-  "T",
-  "W",
-  "X",
-  "Y",
-  "Z",
-]);
+const invalidSecondLetters = new Set(["D", "F", "I", "O", "Q", "U", "V"]);
+const unallocatedPrefixes = new Set(["BG", "GB", "KN", "NK", "NT", "TN", "ZZ"]);
+const validSuffixLetters = new Set(["A", "B", "C", "D"]);
 
 function isValidNino(candidate: string): boolean {
   const first = candidate[0]?.toUpperCase();
@@ -33,6 +19,10 @@ function isValidNino(candidate: string): boolean {
   }
 
   if (second && invalidSecondLetters.has(second)) {
+    return false;
+  }
+
+  if (first && second && unallocatedPrefixes.has(first + second)) {
     return false;
   }
 

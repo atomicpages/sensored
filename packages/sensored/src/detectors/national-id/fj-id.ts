@@ -16,6 +16,15 @@ export class FjIdDetector extends ContextDetector {
   protected readonly leftContext = 35;
   protected readonly rightContext = 20;
 
+  // A letters-only word next to a label ("National ID: passport") is prose.
+  protected override validate(candidate: string): false | readonly string[] {
+    if (!/\d/.test(candidate)) {
+      return false;
+    }
+
+    return ["fj_id.format"];
+  }
+
   override readonly stream = streamMeta(
     10,
     this.leftContext,
