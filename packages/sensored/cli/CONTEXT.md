@@ -147,5 +147,10 @@ gets execute permission in the build output.
 ## Distribution
 
 - npm: `bunx sensored` via `bin` entry in package.json
-- Compiled binaries: `bun build --compile` in CI for linux-x64, linux-arm64,
-  darwin-arm64, attached to GitHub Releases
+- Compiled binaries: `bun scripts/build-cli.ts --target <bun-target>`
+  (`bun build --compile` through `Bun.build`) in `release.yml` for linux-x64,
+  linux-arm64, darwin-arm64, attached to GitHub Releases. Each embeds its
+  target's napi addon: the script swaps `src/native/node.ts` for a static
+  `require` of the `.node` file, the only way Bun embeds an addon. The binary
+  has no Wasm fallback, so `SENSORED_ENGINE` does nothing there. CI's Build
+  job compiles and runs one for linux-x64.

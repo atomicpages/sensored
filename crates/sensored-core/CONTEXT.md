@@ -116,3 +116,12 @@ against recorded matches before detectors are ported. Run `cargo test` from
 - `examples/person_name_eval.rs`: scores `person_name` on the eval corpus
   (official labels and true names only; results in
   `packages/sensored/eval/person-name-baseline.json`).
+
+## Publishing
+
+Published to crates.io as `sensored-core` (`release.yml`, opt-in `crate`
+input; see `.github/RELEASING.md`). `Cargo.toml` `include` ships `src/` (with
+`person/bloom.bin`) and `README.md` only: tests and examples read
+`conformance/` and the eval corpus outside the crate, so `cargo package`
+warns that it ignores them. Check with `cargo package -p sensored-core --list`.
+The bindings are `publish = false`.

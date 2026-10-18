@@ -81,8 +81,20 @@ Run these from this directory, with bun:
 - `cargo test` from `crates/` runs the Rust unit tests.
 
 Committed: `index.d.ts` (the generated API contract, so API changes show up in
-review) and `bun.lock`. Ignored: `*.node` (platform binaries) and `index.js`
-(the generated platform loader, rebuilt on every build). The package is
-private and a root Bun workspace, so `packages/sensored` resolves
-`@sensored/native` (`workspace:*`). `package.json` lists the 7 plan
-targets; local builds are darwin-arm64 only.
+review). Ignored: `*.node` (platform binaries) and `index.js` (the generated
+platform loader, rebuilt on every build). The package is a root Bun
+workspace, so `packages/sensored` resolves `@sensored/native` (`workspace:*`,
+which `bun pm pack` rewrites to the exact version at publish).
+
+## Publishing
+
+`@sensored/native` (`index.js`, `index.d.ts`) is public and versions in a
+changesets fixed group with `sensored`. `package.json` lists the 7 napi
+targets; `npm/<platform>/` holds each `@sensored/native-<platform>` package
+(`napi create-npm-dirs` output, committed; `napi version` syncs their
+versions). `release.yml` builds each target on its own runner (`--use-napi-cross`
+for linux gnu, glibc 2.17; zig via `-x` for musl), then `napi artifacts`
+moves the `.node` files into `npm/` and `napi pre-publish` publishes them and
+writes `optionalDependencies` into `package.json`. They are not committed:
+unpublished versions would break `bun install`. Procedure:
+`.github/RELEASING.md`. Local builds are host only.

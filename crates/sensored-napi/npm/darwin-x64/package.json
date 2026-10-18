@@ -1,0 +1,32 @@
+{
+  "name": "@sensored/native-darwin-x64",
+  "version": "1.7.0",
+  "cpu": [
+    "x64"
+  ],
+  "main": "sensored.darwin-x64.node",
+  "files": [
+    "sensored.darwin-x64.node"
+  ],
+  "description": "Native (napi-rs) bindings for the sensored Rust core",
+  "author": "Dennis Thompson",
+  "homepage": "https://github.com/atomicpages/sensored",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomicpages/sensored.git",
+    "directory": "crates/sensored-napi"
+  },
+  "bugs": {
+    "url": "https://github.com/atomicpages/sensored/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "os": [
+    "darwin"
+  ]
+}

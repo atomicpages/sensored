@@ -34,9 +34,10 @@
     },
     "crates/sensored-napi": {
       "name": "@sensored/native",
-      "version": "0.0.0",
+      "version": "1.7.0",
       "devDependencies": {
         "@napi-rs/cli": "3.10.8",
+        "@napi-rs/cross-toolchain": "1.0.3",
       },
     },
     "packages/enterprise": {
