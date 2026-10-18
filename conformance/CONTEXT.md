@@ -8,8 +8,26 @@ See `docs/internal/plans/rust-core-rewrite.md`.
   `JsonRedactorConfig`, the JSON-only config that crosses the FFI boundary.
   `bun run conformance:schema` regenerates
   `packages/sensored/schema/redactor-config.schema.json` from it.
-- `generate.ts` runs the TS reference through the public API and writes
-  `golden/`. Run with `bun run conformance:generate`.
+- `generate.ts` writes `golden/` (`bun run conformance:generate`). With
+  `--check` (`bun run conformance:check`) it regenerates in memory and exits 1
+  listing every stale file and the case ids added (`+`), removed (`-`) or
+  changed (`~`).
+- `reference.ts` runs the TS reference through its real APIs
+  (`createRedactor().inspect/stream`, `resolvePolicy`, `restore`,
+  `StreamRestorer`) and fills each seed's `expected`. Stream and streamed
+  restore seeds are run at every code-point split and one chunk per code
+  point. A stream seed whose chunkings disagree is excluded; a restore seed is
+  kept with `streamed: false`. Both are printed as findings, never hidden.
+- `seeds/` holds the hand-written inputs, one module per committed file, plus
+  `values.ts` (shared fake values). Render seeds with `restore: true` also
+  become `from-render/*` restore cases. Keep stream inputs under ~300 UTF-16
+  units, and pick rules with small stream windows (ipv4, phone, payment_card,
+  us_ssn) so splits actually cross mid-stream flushes.
+- `detectors.ts` builds `golden/detectors/<rule>.json` from
+  `packages/sensored/eval/corpus.json`: every non-deferred case labelled with
+  the rule, plus the first 100 negatives by id, rendered with
+  `{ rules: { [rule]: { action: "redact" } } }`. Without the corpus, generate
+  and check skip these files with a notice.
 - `golden/*.json` are committed. Their inputs are hand-written and safe to push.
 - `golden/detectors/*.json` are derived from the eval corpus and gitignored,
   because synthetic tokens trip secret scanners. `golden/detectors.manifest.json`

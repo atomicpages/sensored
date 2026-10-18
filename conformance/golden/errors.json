@@ -1,0 +1,1147 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "invalid-config/root/null",
+      "config": null,
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/root/array",
+      "config": [],
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/root/string",
+      "config": "email",
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/root/missing-rules",
+      "config": {},
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/root/rules-array",
+      "config": {
+        "rules": []
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/root/rules-null",
+      "config": {
+        "rules": null
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/root/unknown-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "rule": {}
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/setting-string",
+      "config": {
+        "rules": {
+          "email": "redact"
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/setting-null",
+      "config": {
+        "rules": {
+          "email": null
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/unknown-action",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "hash"
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/missing-action",
+      "config": {
+        "rules": {
+          "email": {
+            "replacement": "x"
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/redact-replacement-number",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "replacement": 1
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/redact-priority-float",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "priority": 1.5
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/redact-priority-string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "priority": "1"
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/redact-extra-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "preserve": {
+              "first": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/mask-preserve-array",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask",
+            "preserve": [
+              1
+            ]
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/mask-preserve-extra-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask",
+            "preserve": {
+              "middle": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/mask-preserve-negative",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask",
+            "preserve": {
+              "first": -1
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/mask-preserve-float",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask",
+            "preserve": {
+              "last": 0.5
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/token-replace-tokens-array",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace",
+            "tokens": [
+              "x"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/token-replace-token-number",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace",
+            "tokens": {
+              "email": 1
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/token-replace-empty-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace",
+            "tokens": {
+              "": "x"
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/format-preserve-extra-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "format-preserve",
+            "replacement": "x"
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/rules/remove-extra-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "remove",
+            "priority": 1
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/presets/string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "presets": "pii"
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "invalid-config/presets/empty-name",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "presets": [
+          ""
+        ]
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "invalid-config/presets/non-string-name",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "presets": [
+          1
+        ]
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "invalid-config/customPresets/array",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "customPresets": []
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "customPresets"
+      }
+    },
+    {
+      "id": "invalid-config/customPresets/uppercase-name",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "customPresets": {
+          "Team": {
+            "email": {
+              "action": "redact"
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "customPresets"
+      }
+    },
+    {
+      "id": "invalid-config/customPresets/digit-first-name",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "customPresets": {
+          "1team": {
+            "email": {
+              "action": "redact"
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "customPresets"
+      }
+    },
+    {
+      "id": "invalid-config/customPresets/rules-array",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "customPresets": {
+          "team": []
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "customPresets"
+      }
+    },
+    {
+      "id": "invalid-config/customPresets/empty-rule-id",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "customPresets": {
+          "team": {
+            "": {
+              "action": "redact"
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "customPresets"
+      }
+    },
+    {
+      "id": "invalid-config/customPresets/invalid-setting",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "hash"
+            }
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "invalid-config/restore/string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "restore": "true"
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "restore"
+      }
+    },
+    {
+      "id": "invalid-config/allowlist/string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "allowlist": "a@example.com"
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "allowlist"
+      }
+    },
+    {
+      "id": "invalid-config/allowlist/empty-entry",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          ""
+        ]
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "allowlist"
+      }
+    },
+    {
+      "id": "invalid-config/allowlist/non-string-entry",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          1
+        ]
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "allowlist"
+      }
+    },
+    {
+      "id": "invalid-config/limits/number",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": 10
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "limits.maxInputLength"
+      }
+    },
+    {
+      "id": "invalid-config/limits/unknown-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": {
+          "maxLength": 10
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "limits.maxInputLength"
+      }
+    },
+    {
+      "id": "invalid-config/limits/zero",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": {
+          "maxInputLength": 0
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "limits.maxInputLength"
+      }
+    },
+    {
+      "id": "invalid-config/limits/negative",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": {
+          "maxInputLength": -1
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "limits.maxInputLength"
+      }
+    },
+    {
+      "id": "invalid-config/limits/float",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": {
+          "maxInputLength": 1.5
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "limits.maxInputLength"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/array",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": []
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/unknown-detector",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "email": {}
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/http-auth-header-array",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": []
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions.http_auth_header"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/http-auth-header-unknown-key",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "headers": []
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions.http_auth_header"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/custom-headers-empty",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "customHeaders": []
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions.http_auth_header.customHeaders"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/custom-headers-string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "customHeaders": "X-Example-Auth"
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions.http_auth_header.customHeaders"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/custom-headers-empty-entry",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "customHeaders": [
+              ""
+            ]
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions.http_auth_header.customHeaders"
+      }
+    },
+    {
+      "id": "invalid-config/detectorOptions/custom-headers-non-string",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "customHeaders": [
+              1
+            ]
+          }
+        }
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectorOptions.http_auth_header.customHeaders"
+      }
+    },
+    {
+      "id": "invalid-config/detectors/object",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectors": {}
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectors"
+      }
+    },
+    {
+      "id": "invalid-config/detectors/json-definition",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectors": [
+          {}
+        ]
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectors"
+      }
+    },
+    {
+      "id": "invalid-config/semantic/empty",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "semantic": {}
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "semantic.provider"
+      }
+    },
+    {
+      "id": "invalid-config/detectOnly/with-restore",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "detectOnly": true,
+        "restore": true
+      },
+      "expected": {
+        "code": "INVALID_CONFIG",
+        "path": "detectOnly"
+      }
+    },
+    {
+      "id": "unknown-rule/rules/unknown-id",
+      "config": {
+        "rules": {
+          "not_a_rule": {
+            "action": "redact"
+          }
+        }
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "unknown-rule/rules/unknown-id-off",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "not_a_rule": "off"
+        }
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "unknown-rule/rules/custom-preset-unknown-id",
+      "config": {
+        "presets": [
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "not_a_rule": {
+              "action": "redact"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/unknown-name",
+      "config": {
+        "presets": [
+          "not-a-preset"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/version-out-of-range",
+      "config": {
+        "presets": [
+          "pii@2"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/version-zero",
+      "config": {
+        "presets": [
+          "pii@0"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/version-not-numeric",
+      "config": {
+        "presets": [
+          "pii@latest"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/version-leading-plus",
+      "config": {
+        "presets": [
+          "pii@+1"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/empty-name-with-version",
+      "config": {
+        "presets": [
+          "@1"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "unknown-rule/presets/custom-preset-with-version",
+      "config": {
+        "presets": [
+          "team@1"
+        ],
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "redact"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "code": "UNKNOWN_RULE",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "empty-policy/no-rules",
+      "config": {
+        "rules": {}
+      },
+      "expected": {
+        "code": "EMPTY_POLICY",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "empty-policy/all-off",
+      "config": {
+        "rules": {
+          "email": "off"
+        }
+      },
+      "expected": {
+        "code": "EMPTY_POLICY",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "empty-policy/preset-rule-turned-off",
+      "config": {
+        "presets": [
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "redact"
+            }
+          }
+        },
+        "rules": {
+          "email": "off"
+        }
+      },
+      "expected": {
+        "code": "EMPTY_POLICY",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "empty-policy/custom-preset-only-off",
+      "config": {
+        "presets": [
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "email": "off"
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "code": "EMPTY_POLICY",
+        "path": "rules"
+      }
+    },
+    {
+      "id": "policy-conflict/custom-vs-builtin",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "payment_card": {
+              "action": "mask"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "code": "POLICY_CONFLICT",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "policy-conflict/explicit-override-does-not-resolve",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "payment_card": {
+              "action": "mask"
+            }
+          }
+        },
+        "rules": {
+          "payment_card": {
+            "action": "remove"
+          }
+        }
+      },
+      "expected": {
+        "code": "POLICY_CONFLICT",
+        "path": "presets"
+      }
+    },
+    {
+      "id": "input-limit/max-input-length",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": {
+          "maxInputLength": 8
+        }
+      },
+      "input": "123456789",
+      "expected": {
+        "code": "INPUT_LIMIT"
+      }
+    },
+    {
+      "id": "input-limit/counts-utf16-units",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "limits": {
+          "maxInputLength": 3
+        }
+      },
+      "input": "😀😀",
+      "expected": {
+        "code": "INPUT_LIMIT"
+      }
+    }
+  ]
+}

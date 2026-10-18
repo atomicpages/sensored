@@ -9,6 +9,7 @@
     "build": "bun run --filter sensored build",
     "changeset": "changeset",
     "conformance:generate": "bun conformance/generate.ts",
+    "conformance:check": "bun conformance/generate.ts --check",
     "conformance:schema": "ts-json-schema-generator --path conformance/types.ts --type JsonRedactorConfig --tsconfig tsconfig.base.json --no-top-ref -o packages/sensored/schema/redactor-config.schema.json",
     "changeset:version": "changeset version",
     "lint": "biome check . --diagnostic-level error",
