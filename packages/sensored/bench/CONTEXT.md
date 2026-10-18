@@ -46,3 +46,13 @@ values across calls. Measures chat p95 (4 KiB input, same as chat workload),
 throughput (MiB/s, same 1 MiB input as throughput benchmark), restore p95
 (redacting then restoring a 4 KiB chat input), and dedup overhead (5 sequential
 redact calls with overlapping PII values to measure reverse-lookup cost).
+
+**Inputs:** `inputs.ts` holds the shared generators (chat/doc ASCII at three
+PII densities, Unicode mixes) used by `benchmark.ts` and `engine-gate.ts`.
+
+**Engine gate (`engine-gate.ts`):** the Rust core rewrite's go/no-go check.
+Runs the TS engine and the napi binding on the same 20-detector config (the
+detectors that dominate TS detection time on these inputs) and the same
+inputs. Outputs must match first. Passes when native throughput on the 1 MiB
+documents is at least 3x TS and native chat p99 is no worse. Writes
+`gate-results.json`. Build the binding first (`crates/sensored-napi`).
