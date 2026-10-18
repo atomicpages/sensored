@@ -1,0 +1,3023 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "redact/default/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact [EMAIL] today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/replacement/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "replacement": "<email>"
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact <email> today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "<email>",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/replacement-empty/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "replacement": ""
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact  today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/default/multiple-entities",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "jane.doe@example.com, 4111 1111 1111 1111, 192.0.2.10, +1 555 010 0199, GB82 WEST 1234 5698 7654 32.",
+      "expected": {
+        "text": "[EMAIL], [PAYMENT_CARD], [IPV4], [PHONE], [IBAN].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 22,
+            "end": 41,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 22,
+                "end": 41,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 43,
+            "end": 53,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 43,
+                "end": 53,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 55,
+            "end": 70,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 55,
+                "end": 70,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 72,
+            "end": 99,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 72,
+                "end": 99,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/default/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact ******************** today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/preserve-first-last/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask",
+            "preserve": {
+              "first": 2,
+              "last": 4
+            }
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact ja**************.com today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "ja**************.com",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/preserve-first/payment-card",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "mask",
+            "preserve": {
+              "first": 4
+            }
+          }
+        }
+      },
+      "input": "Card 4111 1111 1111 1111 on file.",
+      "expected": {
+        "text": "Card 4111*************** on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "4111***************",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/preserve-last/payment-card",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "mask",
+            "preserve": {
+              "last": 4
+            }
+          }
+        }
+      },
+      "input": "Card 4111 1111 1111 1111 on file.",
+      "expected": {
+        "text": "Card ***************1111 on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "***************1111",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/preserve-exceeds-length/ipv4",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "mask",
+            "preserve": {
+              "first": 8,
+              "last": 8
+            }
+          }
+        }
+      },
+      "input": "Host 192.0.2.10 up.",
+      "expected": {
+        "text": "Host ********** up.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 15,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 5,
+                "end": 15,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/preserve-zero/ipv4",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "mask",
+            "preserve": {
+              "first": 0,
+              "last": 0
+            }
+          }
+        }
+      },
+      "input": "Host 192.0.2.10 up.",
+      "expected": {
+        "text": "Host ********** up.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 15,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 5,
+                "end": 15,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "format-preserve/payment-card",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "format-preserve"
+          }
+        }
+      },
+      "input": "Card 4111-1111-1111-1111 on file.",
+      "expected": {
+        "text": "Card XXXX-XXXX-XXXX-XXXX on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "XXXX-XXXX-XXXX-XXXX",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111-1111-1111-1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "format-preserve/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "format-preserve"
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact ****.***@*******.*** today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "****.***@*******.***",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "format-preserve/iban",
+      "config": {
+        "rules": {
+          "iban": {
+            "action": "format-preserve"
+          }
+        }
+      },
+      "input": "IBAN GB82 WEST 1234 5698 7654 32.",
+      "expected": {
+        "text": "IBAN **XX **** XXXX XXXX XXXX XX.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 32,
+            "replacement": "**XX **** XXXX XXXX XXXX XX",
+            "matches": [
+              {
+                "start": 5,
+                "end": 32,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "token-replace/default/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace"
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact redacted@example today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "redacted@example",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "token-replace/default/multiple-entities",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace"
+          },
+          "payment_card": {
+            "action": "token-replace"
+          },
+          "ipv4": {
+            "action": "token-replace"
+          },
+          "phone": {
+            "action": "token-replace"
+          },
+          "iban": {
+            "action": "token-replace"
+          }
+        }
+      },
+      "input": "jane.doe@example.com, 4111 1111 1111 1111, 192.0.2.10, +1 555 010 0199, GB82 WEST 1234 5698 7654 32.",
+      "expected": {
+        "text": "redacted@example, 0000-0000-0000-0001, 0.0.0.1, +0-000-0000, XX00XXXX000000000000000.",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "redacted@example",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 22,
+            "end": 41,
+            "replacement": "0000-0000-0000-0001",
+            "matches": [
+              {
+                "start": 22,
+                "end": 41,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 43,
+            "end": 53,
+            "replacement": "0.0.0.1",
+            "matches": [
+              {
+                "start": 43,
+                "end": 53,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 55,
+            "end": 70,
+            "replacement": "+0-000-0000",
+            "matches": [
+              {
+                "start": 55,
+                "end": 70,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 72,
+            "end": 99,
+            "replacement": "XX00XXXX000000000000000",
+            "matches": [
+              {
+                "start": 72,
+                "end": 99,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "token-replace/custom-tokens/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace",
+            "tokens": {
+              "email": "someone@example.net"
+            }
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact someone@example.net today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "someone@example.net",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "token-replace/custom-tokens-other-entity/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace",
+            "tokens": {
+              "ipv4": "198.51.100.1"
+            }
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact redacted@example today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "redacted@example",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "remove/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "remove"
+          }
+        }
+      },
+      "input": "Contact jane.doe@example.com today.",
+      "expected": {
+        "text": "Contact  today.",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "remove/payment-card",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "remove"
+          }
+        }
+      },
+      "input": "Card 4111 1111 1111 1111 on file.",
+      "expected": {
+        "text": "Card  on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/equal-rank-conflict/redacted-fallback",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [REDACTED] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/equal-rank-same-replacement",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact",
+            "replacement": "[HIDDEN]"
+          },
+          "ipv4": {
+            "action": "redact",
+            "replacement": "[HIDDEN]"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [HIDDEN] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[HIDDEN]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/priority/outer-wins",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact",
+            "priority": 2
+          },
+          "ipv4": {
+            "action": "redact",
+            "priority": 1
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [URL_WITH_AUTH] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[URL_WITH_AUTH]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/priority/inner-wins",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact",
+            "priority": 1
+          },
+          "ipv4": {
+            "action": "redact",
+            "priority": 2
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [IPV4] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/priority/negative",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact",
+            "priority": -1
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [IPV4] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/priority/equal-conflict",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact",
+            "priority": 3
+          },
+          "ipv4": {
+            "action": "redact",
+            "priority": 3
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [REDACTED] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "overlap/nested/mask-union",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "mask",
+            "preserve": {
+              "first": 8
+            }
+          },
+          "ipv4": {
+            "action": "mask",
+            "preserve": {
+              "last": 3
+            }
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See https://************************* now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "https://*************************",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "overlap/transitive/card-digit-groups",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "token-replace"
+          },
+          "jp_my_number": {
+            "action": "mask"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "Card 4111 1111 1111 1111 on file.",
+      "expected": {
+        "text": "Card 0000-0000-0000-0001 on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "0000-0000-0000-0001",
+            "matches": [
+              {
+                "start": 5,
+                "end": 9,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "4111"
+              },
+              {
+                "start": 5,
+                "end": 19,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              },
+              {
+                "start": 10,
+                "end": 14,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "1111"
+              },
+              {
+                "start": 15,
+                "end": 19,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "1111"
+              },
+              {
+                "start": 20,
+                "end": 24,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "overlap/transitive/without-bridge",
+      "config": {
+        "rules": {
+          "jp_my_number": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Card 4111 1111 1111 1111 on file.",
+      "expected": {
+        "text": "Card [REDACTED] [POSTAL_CODE] on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 19,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 9,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "4111"
+              },
+              {
+                "start": 5,
+                "end": 19,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 10,
+                "end": 14,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "1111"
+              },
+              {
+                "start": 15,
+                "end": 19,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "1111"
+              }
+            ]
+          },
+          {
+            "start": 20,
+            "end": 24,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 20,
+                "end": 24,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "overlap/context-and-postal-code",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "SSN: 123-45-6789 on file.",
+      "expected": {
+        "text": "SSN: [US_SSN] on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 16,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 16,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              },
+              {
+                "start": 12,
+                "end": 16,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "6789"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "adjacent/private-keys/redact",
+      "config": {
+        "rules": {
+          "private_key": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "-----BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY----------BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY-----",
+      "expected": {
+        "text": "[PRIVATE_KEY][PRIVATE_KEY]",
+        "groups": [
+          {
+            "start": 0,
+            "end": 87,
+            "replacement": "[PRIVATE_KEY]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 87,
+                "ruleId": "private_key",
+                "entityType": "private_key",
+                "reasons": [
+                  "private_key.format"
+                ],
+                "value": "-----BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY-----"
+              }
+            ]
+          },
+          {
+            "start": 87,
+            "end": 174,
+            "replacement": "[PRIVATE_KEY]",
+            "matches": [
+              {
+                "start": 87,
+                "end": 174,
+                "ruleId": "private_key",
+                "entityType": "private_key",
+                "reasons": [
+                  "private_key.format"
+                ],
+                "value": "-----BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY-----"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "adjacent/private-keys/mask",
+      "config": {
+        "rules": {
+          "private_key": {
+            "action": "mask",
+            "preserve": {
+              "first": 5,
+              "last": 5
+            }
+          }
+        }
+      },
+      "input": "-----BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY----------BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY-----",
+      "expected": {
+        "text": "-----*****************************************************************************----------*****************************************************************************-----",
+        "groups": [
+          {
+            "start": 0,
+            "end": 87,
+            "replacement": "-----*****************************************************************************-----",
+            "matches": [
+              {
+                "start": 0,
+                "end": 87,
+                "ruleId": "private_key",
+                "entityType": "private_key",
+                "reasons": [
+                  "private_key.format"
+                ],
+                "value": "-----BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY-----"
+              }
+            ]
+          },
+          {
+            "start": 87,
+            "end": 174,
+            "replacement": "-----*****************************************************************************-----",
+            "matches": [
+              {
+                "start": 87,
+                "end": 174,
+                "ruleId": "private_key",
+                "entityType": "private_key",
+                "reasons": [
+                  "private_key.format"
+                ],
+                "value": "-----BEGIN PRIVATE KEY-----\nNOT A REAL KEY, TEST FIXTURE ONLY\n-----END PRIVATE KEY-----"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "adjacent/one-char-apart/ipv4-postal-code",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Bind 192.0.2.10:8080 now.",
+      "expected": {
+        "text": "Bind [IPV4]:[POSTAL_CODE] now.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 15,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 15,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 16,
+            "end": 20,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 16,
+                "end": 20,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "8080"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/remove-over-redact/outer-remove",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "remove"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See  now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/remove-over-redact/inner-remove",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "remove"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See  now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/redact-over-format-preserve/outer-redact",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "format-preserve"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [URL_WITH_AUTH] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[URL_WITH_AUTH]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/redact-over-format-preserve/inner-redact",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "format-preserve"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [IPV4] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/format-preserve-over-token-replace/outer-format-preserve",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "format-preserve"
+          },
+          "ipv4": {
+            "action": "token-replace"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See *****://****:****@XXX.X.X.XX/**** now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "*****://****:****@XXX.X.X.XX/****",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/format-preserve-over-token-replace/inner-format-preserve",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "token-replace"
+          },
+          "ipv4": {
+            "action": "format-preserve"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See *****://****:****@XXX.X.X.XX/**** now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "*****://****:****@XXX.X.X.XX/****",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/token-replace-over-mask/outer-token-replace",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "token-replace"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See https://redacted@example now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "https://redacted@example",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "precedence/token-replace-over-mask/inner-token-replace",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "token-replace"
+          }
+        }
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See 0.0.0.1 now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "0.0.0.1",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "allowlist/exact-match",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          "john@example.org"
+        ]
+      },
+      "input": "jane.doe@example.com and john@example.org.",
+      "expected": {
+        "text": "[EMAIL] and john@example.org.",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "allowlist/case-sensitive",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          "JOHN@EXAMPLE.ORG"
+        ]
+      },
+      "input": "jane.doe@example.com and john@example.org.",
+      "expected": {
+        "text": "[EMAIL] and [EMAIL].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 25,
+            "end": 41,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 25,
+                "end": 41,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "allowlist/overlap-member",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          "192.0.2.10"
+        ]
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See [URL_WITH_AUTH] now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[URL_WITH_AUTH]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detect-only/email-and-card",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "mask"
+          }
+        },
+        "detectOnly": true
+      },
+      "input": "jane.doe@example.com paid with 4111 1111 1111 1111.",
+      "expected": {
+        "text": "jane.doe@example.com paid with 4111 1111 1111 1111.",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "jane.doe@example.com",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 31,
+            "end": 50,
+            "replacement": "4111 1111 1111 1111",
+            "matches": [
+              {
+                "start": 31,
+                "end": 50,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detect-only/overlap",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "remove"
+          }
+        },
+        "detectOnly": true
+      },
+      "input": "See https://user:pass@192.0.2.10/path now.",
+      "expected": {
+        "text": "See https://user:pass@192.0.2.10/path now.",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "https://user:pass@192.0.2.10/path",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "restore/redact/multiple-entities",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        },
+        "restore": true
+      },
+      "input": "jane.doe@example.com paid with 4111 1111 1111 1111 from 192.0.2.10; cc john@example.org and jane.doe@example.com.",
+      "expected": {
+        "text": "[EMAIL_1] paid with [PAYMENT_CARD_1] from [IPV4_1]; cc [EMAIL_2] and [EMAIL_3].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL_1]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 31,
+            "end": 50,
+            "replacement": "[PAYMENT_CARD_1]",
+            "matches": [
+              {
+                "start": 31,
+                "end": 50,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 56,
+            "end": 66,
+            "replacement": "[IPV4_1]",
+            "matches": [
+              {
+                "start": 56,
+                "end": 66,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 71,
+            "end": 87,
+            "replacement": "[EMAIL_2]",
+            "matches": [
+              {
+                "start": 71,
+                "end": 87,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          },
+          {
+            "start": 92,
+            "end": 112,
+            "replacement": "[EMAIL_3]",
+            "matches": [
+              {
+                "start": 92,
+                "end": 112,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[EMAIL_1]": "jane.doe@example.com",
+          "[PAYMENT_CARD_1]": "4111 1111 1111 1111",
+          "[IPV4_1]": "192.0.2.10",
+          "[EMAIL_2]": "john@example.org",
+          "[EMAIL_3]": "jane.doe@example.com"
+        }
+      }
+    },
+    {
+      "id": "restore/redact/custom-replacement",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "replacement": "<email>"
+          }
+        },
+        "restore": true
+      },
+      "input": "jane.doe@example.com and john@example.org.",
+      "expected": {
+        "text": "[EMAIL_1] and [EMAIL_2].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL_1]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 25,
+            "end": 41,
+            "replacement": "[EMAIL_2]",
+            "matches": [
+              {
+                "start": 25,
+                "end": 41,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[EMAIL_1]": "jane.doe@example.com",
+          "[EMAIL_2]": "john@example.org"
+        }
+      }
+    },
+    {
+      "id": "restore/mask/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          }
+        },
+        "restore": true
+      },
+      "input": "jane.doe@example.com and john@example.org.",
+      "expected": {
+        "text": "[EMAIL_1] and [EMAIL_2].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL_1]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 25,
+            "end": 41,
+            "replacement": "[EMAIL_2]",
+            "matches": [
+              {
+                "start": 25,
+                "end": 41,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[EMAIL_1]": "jane.doe@example.com",
+          "[EMAIL_2]": "john@example.org"
+        }
+      }
+    },
+    {
+      "id": "restore/token-replace/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "token-replace"
+          }
+        },
+        "restore": true
+      },
+      "input": "jane.doe@example.com and john@example.org.",
+      "expected": {
+        "text": "[EMAIL_1] and [EMAIL_2].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL_1]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 25,
+            "end": 41,
+            "replacement": "[EMAIL_2]",
+            "matches": [
+              {
+                "start": 25,
+                "end": 41,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[EMAIL_1]": "jane.doe@example.com",
+          "[EMAIL_2]": "john@example.org"
+        }
+      }
+    },
+    {
+      "id": "restore/remove/email",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "remove"
+          }
+        },
+        "restore": true
+      },
+      "input": "jane.doe@example.com and john@example.org.",
+      "expected": {
+        "text": "[EMAIL_1] and [EMAIL_2].",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL_1]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 25,
+            "end": 41,
+            "replacement": "[EMAIL_2]",
+            "matches": [
+              {
+                "start": 25,
+                "end": 41,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[EMAIL_1]": "jane.doe@example.com",
+          "[EMAIL_2]": "john@example.org"
+        }
+      }
+    },
+    {
+      "id": "restore/format-preserve/payment-card",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "format-preserve"
+          }
+        },
+        "restore": true
+      },
+      "input": "Card 4111 1111 1111 1111 on file.",
+      "expected": {
+        "text": "Card [PAYMENT_CARD_1] on file.",
+        "groups": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "[PAYMENT_CARD_1]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[PAYMENT_CARD_1]": "4111 1111 1111 1111"
+        }
+      }
+    },
+    {
+      "id": "restore/overlap/redacted-fallback",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        },
+        "restore": true
+      },
+      "input": "See https://user:pass@192.0.2.10/path and 192.0.2.10.",
+      "expected": {
+        "text": "See [REDACTED_1] and [IPV4_1].",
+        "groups": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[REDACTED_1]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 52,
+            "replacement": "[IPV4_1]",
+            "matches": [
+              {
+                "start": 42,
+                "end": 52,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[REDACTED_1]": "https://user:pass@192.0.2.10/path",
+          "[IPV4_1]": "192.0.2.10"
+        }
+      }
+    },
+    {
+      "id": "restore/no-matches",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        },
+        "restore": true
+      },
+      "input": "Nothing to see here.",
+      "expected": {
+        "text": "Nothing to see here.",
+        "groups": [],
+        "map": {}
+      }
+    },
+    {
+      "id": "idempotency/placeholders-untouched",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Already [EMAIL], [EMAIL_1], [REDACTED] and [US_SSN_12] but not [Email].",
+      "expected": {
+        "text": "Already [EMAIL], [EMAIL_1], [REDACTED] and [US_SSN_12] but not [Email].",
+        "groups": []
+      }
+    },
+    {
+      "id": "idempotency/placeholder-next-to-value",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "[EMAIL] jane.doe@example.com [EMAIL_2]",
+      "expected": {
+        "text": "[EMAIL] [EMAIL] [EMAIL_2]",
+        "groups": [
+          {
+            "start": 8,
+            "end": 28,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 8,
+                "end": 28,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "idempotency/re-redact-output/multiple-entities",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "[EMAIL] paid with [PAYMENT_CARD] from [IPV4] at [REDACTED].",
+      "expected": {
+        "text": "[EMAIL] paid with [PAYMENT_CARD] from [IPV4] at [REDACTED].",
+        "groups": []
+      }
+    },
+    {
+      "id": "idempotency/re-redact-output/restore-placeholders",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          }
+        },
+        "restore": true
+      },
+      "input": "[EMAIL_1] and [EMAIL_2] near [POSTAL_CODE_10001].",
+      "expected": {
+        "text": "[EMAIL_1] and [EMAIL_2] near [POSTAL_CODE_10001].",
+        "groups": [],
+        "map": {}
+      }
+    },
+    {
+      "id": "context/us-ssn/label-preceding",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "SSN: 123-45-6789",
+      "expected": {
+        "text": "SSN: [US_SSN]",
+        "groups": [
+          {
+            "start": 5,
+            "end": 16,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 16,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "context/us-ssn/label-following",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "123-45-6789 is the SSN on record.",
+      "expected": {
+        "text": "123-45-6789 is the SSN on record.",
+        "groups": []
+      }
+    },
+    {
+      "id": "context/us-ssn/label-long-form",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Social Security Number 123-45-6789",
+      "expected": {
+        "text": "Social Security Number [US_SSN]",
+        "groups": [
+          {
+            "start": 23,
+            "end": 34,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 23,
+                "end": 34,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "context/us-ssn/label-inside-left-window",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789",
+      "expected": {
+        "text": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789",
+        "groups": []
+      }
+    },
+    {
+      "id": "context/us-ssn/label-outside-left-window",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789",
+      "expected": {
+        "text": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789",
+        "groups": []
+      }
+    },
+    {
+      "id": "context/us-ssn/label-outside-right-window",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "123-45-6789 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx SSN",
+      "expected": {
+        "text": "123-45-6789 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx SSN",
+        "groups": []
+      }
+    },
+    {
+      "id": "context/us-ssn/no-label",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Reference 123-45-6789 only.",
+      "expected": {
+        "text": "Reference 123-45-6789 only.",
+        "groups": []
+      }
+    },
+    {
+      "id": "context/us-ssn/one-label-two-values",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "SSN: 123-45-6789 and later 123-45-6789",
+      "expected": {
+        "text": "SSN: [US_SSN] and later 123-45-6789",
+        "groups": [
+          {
+            "start": 5,
+            "end": 16,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 16,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-options/http-auth-header/builtin-headers",
+      "config": {
+        "rules": {
+          "http_auth_header": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Authorization: Basic dXNlcjpwYXNz\nX-Api-Key: example-key-123\nX-Example-Auth: example-value-1\n",
+      "expected": {
+        "text": "Authorization: Basic [HTTP_AUTH_HEADER]\nX-Api-Key: [HTTP_AUTH_HEADER]\nX-Example-Auth: example-value-1\n",
+        "groups": [
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 45,
+            "end": 60,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 45,
+                "end": 60,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "example-key-123"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-options/http-auth-header/custom-headers",
+      "config": {
+        "rules": {
+          "http_auth_header": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "customHeaders": [
+              "X-Example-Auth",
+              "Session.Id"
+            ]
+          }
+        }
+      },
+      "input": "Authorization: Basic dXNlcjpwYXNz\nX-Example-Auth: example-value-1\nSession.Id: abc123\nSessionXId: abc123\n",
+      "expected": {
+        "text": "Authorization: Basic [HTTP_AUTH_HEADER]\nX-Example-Auth: [HTTP_AUTH_HEADER]\nSession.Id: [HTTP_AUTH_HEADER]\nSessionXId: abc123\n",
+        "groups": [
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 50,
+            "end": 65,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 50,
+                "end": 65,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "example-value-1"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 84,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 84,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "abc123"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,2752 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "preset/pii",
+      "config": {
+        "presets": [
+          "pii"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "uk_nino": {
+            "action": "redact"
+          },
+          "ca_sin": {
+            "action": "redact"
+          },
+          "au_tfn": {
+            "action": "redact"
+          },
+          "jp_my_number": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "us_itin": {
+            "action": "redact"
+          },
+          "us_ein": {
+            "action": "redact"
+          },
+          "nz_ird": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "eu_vat": {
+            "action": "redact"
+          },
+          "swift_bic": {
+            "action": "redact"
+          },
+          "uk_sort_code": {
+            "action": "redact"
+          },
+          "us_routing": {
+            "action": "redact"
+          },
+          "uk_bank_account": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "za_id": {
+            "action": "redact"
+          },
+          "ng_nin": {
+            "action": "redact"
+          },
+          "ng_bvn": {
+            "action": "redact"
+          },
+          "ke_id": {
+            "action": "redact"
+          },
+          "ke_kra_pin": {
+            "action": "redact"
+          },
+          "eg_id": {
+            "action": "redact"
+          },
+          "gh_card": {
+            "action": "redact"
+          },
+          "ma_id": {
+            "action": "redact"
+          },
+          "kz_iin": {
+            "action": "redact"
+          },
+          "uz_passport": {
+            "action": "redact"
+          },
+          "uz_stir": {
+            "action": "redact"
+          },
+          "kg_pin": {
+            "action": "redact"
+          },
+          "tj_id": {
+            "action": "redact"
+          },
+          "tm_passport": {
+            "action": "redact"
+          },
+          "ru_passport": {
+            "action": "redact"
+          },
+          "ru_snils": {
+            "action": "redact"
+          },
+          "ua_passport": {
+            "action": "redact"
+          },
+          "ua_inn": {
+            "action": "redact"
+          },
+          "cz_id": {
+            "action": "redact"
+          },
+          "ro_cnp": {
+            "action": "redact"
+          },
+          "hu_id": {
+            "action": "redact"
+          },
+          "hu_tax_id": {
+            "action": "redact"
+          },
+          "bg_egn": {
+            "action": "redact"
+          },
+          "rs_jmbg": {
+            "action": "redact"
+          },
+          "ar_dni": {
+            "action": "redact"
+          },
+          "ar_cuit": {
+            "action": "redact"
+          },
+          "cl_rut": {
+            "action": "redact"
+          },
+          "co_cedula": {
+            "action": "redact"
+          },
+          "co_nit": {
+            "action": "redact"
+          },
+          "pe_dni": {
+            "action": "redact"
+          },
+          "pe_ruc": {
+            "action": "redact"
+          },
+          "ve_cedula": {
+            "action": "redact"
+          },
+          "ve_rif": {
+            "action": "redact"
+          },
+          "ec_cedula": {
+            "action": "redact"
+          },
+          "uy_cedula": {
+            "action": "redact"
+          },
+          "uae_id": {
+            "action": "redact"
+          },
+          "sa_id": {
+            "action": "redact"
+          },
+          "il_id": {
+            "action": "redact"
+          },
+          "tr_id": {
+            "action": "redact"
+          },
+          "qa_id": {
+            "action": "redact"
+          },
+          "kw_id": {
+            "action": "redact"
+          },
+          "bh_cpr": {
+            "action": "redact"
+          },
+          "om_id": {
+            "action": "redact"
+          },
+          "jo_id": {
+            "action": "redact"
+          },
+          "lb_id": {
+            "action": "redact"
+          },
+          "nz_driver_license": {
+            "action": "redact"
+          },
+          "nz_passport": {
+            "action": "redact"
+          },
+          "fj_id": {
+            "action": "redact"
+          },
+          "png_id": {
+            "action": "redact"
+          },
+          "ws_id": {
+            "action": "redact"
+          },
+          "to_id": {
+            "action": "redact"
+          },
+          "nz_ird_extra": {
+            "action": "redact"
+          },
+          "id_nik": {
+            "action": "redact"
+          },
+          "id_npwp": {
+            "action": "redact"
+          },
+          "th_id": {
+            "action": "redact"
+          },
+          "my_ic": {
+            "action": "redact"
+          },
+          "ph_umid": {
+            "action": "redact"
+          },
+          "vn_cccd": {
+            "action": "redact"
+          },
+          "mm_nrc": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "health_insurance_id": {
+            "action": "redact"
+          },
+          "vin": {
+            "action": "redact"
+          },
+          "imei": {
+            "action": "redact"
+          },
+          "imsi": {
+            "action": "redact"
+          },
+          "tracking_number": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/gdpr",
+      "config": {
+        "presets": [
+          "gdpr"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "eu_vat": {
+            "action": "redact"
+          },
+          "uk_nino": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "uk_sort_code": {
+            "action": "redact"
+          },
+          "uk_bank_account": {
+            "action": "redact"
+          },
+          "swift_bic": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "cz_id": {
+            "action": "redact"
+          },
+          "ro_cnp": {
+            "action": "redact"
+          },
+          "hu_id": {
+            "action": "redact"
+          },
+          "hu_tax_id": {
+            "action": "redact"
+          },
+          "bg_egn": {
+            "action": "redact"
+          },
+          "rs_jmbg": {
+            "action": "redact"
+          },
+          "ru_passport": {
+            "action": "redact"
+          },
+          "ru_snils": {
+            "action": "redact"
+          },
+          "ua_passport": {
+            "action": "redact"
+          },
+          "ua_inn": {
+            "action": "redact"
+          },
+          "hr_identifier": {
+            "action": "redact"
+          },
+          "hr_screening": {
+            "action": "redact"
+          },
+          "hr_compensation": {
+            "action": "redact"
+          },
+          "hr_recruitment": {
+            "action": "redact"
+          },
+          "legal_case": {
+            "action": "redact"
+          },
+          "legal_license": {
+            "action": "redact"
+          },
+          "legal_reference": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/hipaa",
+      "config": {
+        "presets": [
+          "hipaa"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "us_npi": {
+            "action": "redact"
+          },
+          "us_dea": {
+            "action": "redact"
+          },
+          "medical_record_number": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "us_itin": {
+            "action": "redact"
+          },
+          "us_ein": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "health_insurance_id": {
+            "action": "redact"
+          },
+          "medical_code": {
+            "action": "redact"
+          },
+          "clinical_trial_id": {
+            "action": "redact"
+          },
+          "medical_device_id": {
+            "action": "redact"
+          },
+          "genetic_info": {
+            "action": "redact"
+          },
+          "medical_reference": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/ccpa",
+      "config": {
+        "presets": [
+          "ccpa"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "uk_nino": {
+            "action": "redact"
+          },
+          "ca_sin": {
+            "action": "redact"
+          },
+          "au_tfn": {
+            "action": "redact"
+          },
+          "jp_my_number": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "us_itin": {
+            "action": "redact"
+          },
+          "us_ein": {
+            "action": "redact"
+          },
+          "nz_ird": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "za_id": {
+            "action": "redact"
+          },
+          "ng_nin": {
+            "action": "redact"
+          },
+          "ng_bvn": {
+            "action": "redact"
+          },
+          "ke_id": {
+            "action": "redact"
+          },
+          "ke_kra_pin": {
+            "action": "redact"
+          },
+          "eg_id": {
+            "action": "redact"
+          },
+          "gh_card": {
+            "action": "redact"
+          },
+          "ma_id": {
+            "action": "redact"
+          },
+          "kz_iin": {
+            "action": "redact"
+          },
+          "uz_passport": {
+            "action": "redact"
+          },
+          "uz_stir": {
+            "action": "redact"
+          },
+          "kg_pin": {
+            "action": "redact"
+          },
+          "tj_id": {
+            "action": "redact"
+          },
+          "tm_passport": {
+            "action": "redact"
+          },
+          "ru_passport": {
+            "action": "redact"
+          },
+          "ru_snils": {
+            "action": "redact"
+          },
+          "ua_passport": {
+            "action": "redact"
+          },
+          "ua_inn": {
+            "action": "redact"
+          },
+          "cz_id": {
+            "action": "redact"
+          },
+          "ro_cnp": {
+            "action": "redact"
+          },
+          "hu_id": {
+            "action": "redact"
+          },
+          "hu_tax_id": {
+            "action": "redact"
+          },
+          "bg_egn": {
+            "action": "redact"
+          },
+          "rs_jmbg": {
+            "action": "redact"
+          },
+          "ar_dni": {
+            "action": "redact"
+          },
+          "ar_cuit": {
+            "action": "redact"
+          },
+          "cl_rut": {
+            "action": "redact"
+          },
+          "co_cedula": {
+            "action": "redact"
+          },
+          "co_nit": {
+            "action": "redact"
+          },
+          "pe_dni": {
+            "action": "redact"
+          },
+          "pe_ruc": {
+            "action": "redact"
+          },
+          "ve_cedula": {
+            "action": "redact"
+          },
+          "ve_rif": {
+            "action": "redact"
+          },
+          "ec_cedula": {
+            "action": "redact"
+          },
+          "uy_cedula": {
+            "action": "redact"
+          },
+          "uae_id": {
+            "action": "redact"
+          },
+          "sa_id": {
+            "action": "redact"
+          },
+          "il_id": {
+            "action": "redact"
+          },
+          "tr_id": {
+            "action": "redact"
+          },
+          "qa_id": {
+            "action": "redact"
+          },
+          "kw_id": {
+            "action": "redact"
+          },
+          "bh_cpr": {
+            "action": "redact"
+          },
+          "om_id": {
+            "action": "redact"
+          },
+          "jo_id": {
+            "action": "redact"
+          },
+          "lb_id": {
+            "action": "redact"
+          },
+          "nz_driver_license": {
+            "action": "redact"
+          },
+          "nz_passport": {
+            "action": "redact"
+          },
+          "fj_id": {
+            "action": "redact"
+          },
+          "png_id": {
+            "action": "redact"
+          },
+          "ws_id": {
+            "action": "redact"
+          },
+          "to_id": {
+            "action": "redact"
+          },
+          "nz_ird_extra": {
+            "action": "redact"
+          },
+          "id_nik": {
+            "action": "redact"
+          },
+          "id_npwp": {
+            "action": "redact"
+          },
+          "th_id": {
+            "action": "redact"
+          },
+          "my_ic": {
+            "action": "redact"
+          },
+          "ph_umid": {
+            "action": "redact"
+          },
+          "vn_cccd": {
+            "action": "redact"
+          },
+          "mm_nrc": {
+            "action": "redact"
+          },
+          "vin": {
+            "action": "redact"
+          },
+          "imei": {
+            "action": "redact"
+          },
+          "imsi": {
+            "action": "redact"
+          },
+          "tracking_number": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/pci-dss",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/healthcare",
+      "config": {
+        "presets": [
+          "healthcare"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "us_npi": {
+            "action": "redact"
+          },
+          "us_dea": {
+            "action": "redact"
+          },
+          "medical_record_number": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "health_insurance_id": {
+            "action": "redact"
+          },
+          "medical_code": {
+            "action": "redact"
+          },
+          "clinical_trial_id": {
+            "action": "redact"
+          },
+          "medical_device_id": {
+            "action": "redact"
+          },
+          "genetic_info": {
+            "action": "redact"
+          },
+          "medical_reference": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/finance",
+      "config": {
+        "presets": [
+          "finance"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "eu_vat": {
+            "action": "redact"
+          },
+          "swift_bic": {
+            "action": "redact"
+          },
+          "uk_sort_code": {
+            "action": "redact"
+          },
+          "us_routing": {
+            "action": "redact"
+          },
+          "uk_bank_account": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "crypto_tx_hash": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/education",
+      "config": {
+        "presets": [
+          "education"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/soc2",
+      "config": {
+        "presets": [
+          "soc2"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          },
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "aws_access_key": {
+            "action": "redact"
+          },
+          "google_api_key": {
+            "action": "redact"
+          },
+          "stripe_api_key": {
+            "action": "redact"
+          },
+          "slack_token": {
+            "action": "redact"
+          },
+          "github_token": {
+            "action": "redact"
+          },
+          "jwt_token": {
+            "action": "redact"
+          },
+          "private_key": {
+            "action": "redact"
+          },
+          "generic_api_key": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "crypto_tx_hash": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          },
+          "legal_case": {
+            "action": "redact"
+          },
+          "legal_license": {
+            "action": "redact"
+          },
+          "legal_reference": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "vin": {
+            "action": "redact"
+          },
+          "imei": {
+            "action": "redact"
+          },
+          "imsi": {
+            "action": "redact"
+          },
+          "http_auth_header": {
+            "action": "redact"
+          },
+          "url_query_key": {
+            "action": "redact"
+          },
+          "digitalocean_token": {
+            "action": "redact"
+          },
+          "cloudflare_api_token": {
+            "action": "redact"
+          },
+          "sendgrid_api_key": {
+            "action": "redact"
+          },
+          "huggingface_token": {
+            "action": "redact"
+          },
+          "slack_webhook_url": {
+            "action": "redact"
+          },
+          "telegram_bot_token": {
+            "action": "redact"
+          },
+          "gitlab_token": {
+            "action": "redact"
+          },
+          "npm_token": {
+            "action": "redact"
+          },
+          "openai_api_key": {
+            "action": "redact"
+          },
+          "anthropic_api_key": {
+            "action": "redact"
+          },
+          "shopify_token": {
+            "action": "redact"
+          },
+          "twilio_sid": {
+            "action": "redact"
+          },
+          "mailchimp_api_key": {
+            "action": "redact"
+          },
+          "notion_token": {
+            "action": "redact"
+          },
+          "sentry_token": {
+            "action": "redact"
+          },
+          "heroku_api_key": {
+            "action": "redact"
+          },
+          "linear_api_key": {
+            "action": "redact"
+          },
+          "mailgun_api_key": {
+            "action": "redact"
+          },
+          "okta_token": {
+            "action": "redact"
+          },
+          "square_token": {
+            "action": "redact"
+          },
+          "discord_bot_token": {
+            "action": "redact"
+          },
+          "datadog_api_key": {
+            "action": "redact"
+          },
+          "pagerduty_token": {
+            "action": "redact"
+          },
+          "scaleway_key": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset/security",
+      "config": {
+        "presets": [
+          "security"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "aws_access_key": {
+            "action": "redact"
+          },
+          "google_api_key": {
+            "action": "redact"
+          },
+          "stripe_api_key": {
+            "action": "redact"
+          },
+          "slack_token": {
+            "action": "redact"
+          },
+          "github_token": {
+            "action": "redact"
+          },
+          "jwt_token": {
+            "action": "redact"
+          },
+          "private_key": {
+            "action": "redact"
+          },
+          "generic_api_key": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          },
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "crypto_tx_hash": {
+            "action": "redact"
+          },
+          "http_auth_header": {
+            "action": "redact"
+          },
+          "url_query_key": {
+            "action": "redact"
+          },
+          "digitalocean_token": {
+            "action": "redact"
+          },
+          "cloudflare_api_token": {
+            "action": "redact"
+          },
+          "sendgrid_api_key": {
+            "action": "redact"
+          },
+          "huggingface_token": {
+            "action": "redact"
+          },
+          "slack_webhook_url": {
+            "action": "redact"
+          },
+          "telegram_bot_token": {
+            "action": "redact"
+          },
+          "gitlab_token": {
+            "action": "redact"
+          },
+          "npm_token": {
+            "action": "redact"
+          },
+          "openai_api_key": {
+            "action": "redact"
+          },
+          "anthropic_api_key": {
+            "action": "redact"
+          },
+          "shopify_token": {
+            "action": "redact"
+          },
+          "twilio_sid": {
+            "action": "redact"
+          },
+          "mailchimp_api_key": {
+            "action": "redact"
+          },
+          "notion_token": {
+            "action": "redact"
+          },
+          "sentry_token": {
+            "action": "redact"
+          },
+          "heroku_api_key": {
+            "action": "redact"
+          },
+          "linear_api_key": {
+            "action": "redact"
+          },
+          "mailgun_api_key": {
+            "action": "redact"
+          },
+          "okta_token": {
+            "action": "redact"
+          },
+          "square_token": {
+            "action": "redact"
+          },
+          "discord_bot_token": {
+            "action": "redact"
+          },
+          "datadog_api_key": {
+            "action": "redact"
+          },
+          "pagerduty_token": {
+            "action": "redact"
+          },
+          "scaleway_key": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset-versioned/pii@1",
+      "config": {
+        "presets": [
+          "pii@1"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "uk_nino": {
+            "action": "redact"
+          },
+          "ca_sin": {
+            "action": "redact"
+          },
+          "au_tfn": {
+            "action": "redact"
+          },
+          "jp_my_number": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "us_itin": {
+            "action": "redact"
+          },
+          "us_ein": {
+            "action": "redact"
+          },
+          "nz_ird": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "eu_vat": {
+            "action": "redact"
+          },
+          "swift_bic": {
+            "action": "redact"
+          },
+          "uk_sort_code": {
+            "action": "redact"
+          },
+          "us_routing": {
+            "action": "redact"
+          },
+          "uk_bank_account": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "za_id": {
+            "action": "redact"
+          },
+          "ng_nin": {
+            "action": "redact"
+          },
+          "ng_bvn": {
+            "action": "redact"
+          },
+          "ke_id": {
+            "action": "redact"
+          },
+          "ke_kra_pin": {
+            "action": "redact"
+          },
+          "eg_id": {
+            "action": "redact"
+          },
+          "gh_card": {
+            "action": "redact"
+          },
+          "ma_id": {
+            "action": "redact"
+          },
+          "kz_iin": {
+            "action": "redact"
+          },
+          "uz_passport": {
+            "action": "redact"
+          },
+          "uz_stir": {
+            "action": "redact"
+          },
+          "kg_pin": {
+            "action": "redact"
+          },
+          "tj_id": {
+            "action": "redact"
+          },
+          "tm_passport": {
+            "action": "redact"
+          },
+          "ru_passport": {
+            "action": "redact"
+          },
+          "ru_snils": {
+            "action": "redact"
+          },
+          "ua_passport": {
+            "action": "redact"
+          },
+          "ua_inn": {
+            "action": "redact"
+          },
+          "cz_id": {
+            "action": "redact"
+          },
+          "ro_cnp": {
+            "action": "redact"
+          },
+          "hu_id": {
+            "action": "redact"
+          },
+          "hu_tax_id": {
+            "action": "redact"
+          },
+          "bg_egn": {
+            "action": "redact"
+          },
+          "rs_jmbg": {
+            "action": "redact"
+          },
+          "ar_dni": {
+            "action": "redact"
+          },
+          "ar_cuit": {
+            "action": "redact"
+          },
+          "cl_rut": {
+            "action": "redact"
+          },
+          "co_cedula": {
+            "action": "redact"
+          },
+          "co_nit": {
+            "action": "redact"
+          },
+          "pe_dni": {
+            "action": "redact"
+          },
+          "pe_ruc": {
+            "action": "redact"
+          },
+          "ve_cedula": {
+            "action": "redact"
+          },
+          "ve_rif": {
+            "action": "redact"
+          },
+          "ec_cedula": {
+            "action": "redact"
+          },
+          "uy_cedula": {
+            "action": "redact"
+          },
+          "uae_id": {
+            "action": "redact"
+          },
+          "sa_id": {
+            "action": "redact"
+          },
+          "il_id": {
+            "action": "redact"
+          },
+          "tr_id": {
+            "action": "redact"
+          },
+          "qa_id": {
+            "action": "redact"
+          },
+          "kw_id": {
+            "action": "redact"
+          },
+          "bh_cpr": {
+            "action": "redact"
+          },
+          "om_id": {
+            "action": "redact"
+          },
+          "jo_id": {
+            "action": "redact"
+          },
+          "lb_id": {
+            "action": "redact"
+          },
+          "nz_driver_license": {
+            "action": "redact"
+          },
+          "nz_passport": {
+            "action": "redact"
+          },
+          "fj_id": {
+            "action": "redact"
+          },
+          "png_id": {
+            "action": "redact"
+          },
+          "ws_id": {
+            "action": "redact"
+          },
+          "to_id": {
+            "action": "redact"
+          },
+          "nz_ird_extra": {
+            "action": "redact"
+          },
+          "id_nik": {
+            "action": "redact"
+          },
+          "id_npwp": {
+            "action": "redact"
+          },
+          "th_id": {
+            "action": "redact"
+          },
+          "my_ic": {
+            "action": "redact"
+          },
+          "ph_umid": {
+            "action": "redact"
+          },
+          "vn_cccd": {
+            "action": "redact"
+          },
+          "mm_nrc": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "health_insurance_id": {
+            "action": "redact"
+          },
+          "vin": {
+            "action": "redact"
+          },
+          "imei": {
+            "action": "redact"
+          },
+          "imsi": {
+            "action": "redact"
+          },
+          "tracking_number": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "preset-versioned/security@1",
+      "config": {
+        "presets": [
+          "security@1"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "aws_access_key": {
+            "action": "redact"
+          },
+          "google_api_key": {
+            "action": "redact"
+          },
+          "stripe_api_key": {
+            "action": "redact"
+          },
+          "slack_token": {
+            "action": "redact"
+          },
+          "github_token": {
+            "action": "redact"
+          },
+          "jwt_token": {
+            "action": "redact"
+          },
+          "private_key": {
+            "action": "redact"
+          },
+          "generic_api_key": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          },
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "crypto_tx_hash": {
+            "action": "redact"
+          },
+          "http_auth_header": {
+            "action": "redact"
+          },
+          "url_query_key": {
+            "action": "redact"
+          },
+          "digitalocean_token": {
+            "action": "redact"
+          },
+          "cloudflare_api_token": {
+            "action": "redact"
+          },
+          "sendgrid_api_key": {
+            "action": "redact"
+          },
+          "huggingface_token": {
+            "action": "redact"
+          },
+          "slack_webhook_url": {
+            "action": "redact"
+          },
+          "telegram_bot_token": {
+            "action": "redact"
+          },
+          "gitlab_token": {
+            "action": "redact"
+          },
+          "npm_token": {
+            "action": "redact"
+          },
+          "openai_api_key": {
+            "action": "redact"
+          },
+          "anthropic_api_key": {
+            "action": "redact"
+          },
+          "shopify_token": {
+            "action": "redact"
+          },
+          "twilio_sid": {
+            "action": "redact"
+          },
+          "mailchimp_api_key": {
+            "action": "redact"
+          },
+          "notion_token": {
+            "action": "redact"
+          },
+          "sentry_token": {
+            "action": "redact"
+          },
+          "heroku_api_key": {
+            "action": "redact"
+          },
+          "linear_api_key": {
+            "action": "redact"
+          },
+          "mailgun_api_key": {
+            "action": "redact"
+          },
+          "okta_token": {
+            "action": "redact"
+          },
+          "square_token": {
+            "action": "redact"
+          },
+          "discord_bot_token": {
+            "action": "redact"
+          },
+          "datadog_api_key": {
+            "action": "redact"
+          },
+          "pagerduty_token": {
+            "action": "redact"
+          },
+          "scaleway_key": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "combined/pii+security",
+      "config": {
+        "presets": [
+          "pii",
+          "security"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "uk_nino": {
+            "action": "redact"
+          },
+          "ca_sin": {
+            "action": "redact"
+          },
+          "au_tfn": {
+            "action": "redact"
+          },
+          "jp_my_number": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "us_itin": {
+            "action": "redact"
+          },
+          "us_ein": {
+            "action": "redact"
+          },
+          "nz_ird": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "eu_vat": {
+            "action": "redact"
+          },
+          "swift_bic": {
+            "action": "redact"
+          },
+          "uk_sort_code": {
+            "action": "redact"
+          },
+          "us_routing": {
+            "action": "redact"
+          },
+          "uk_bank_account": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "za_id": {
+            "action": "redact"
+          },
+          "ng_nin": {
+            "action": "redact"
+          },
+          "ng_bvn": {
+            "action": "redact"
+          },
+          "ke_id": {
+            "action": "redact"
+          },
+          "ke_kra_pin": {
+            "action": "redact"
+          },
+          "eg_id": {
+            "action": "redact"
+          },
+          "gh_card": {
+            "action": "redact"
+          },
+          "ma_id": {
+            "action": "redact"
+          },
+          "kz_iin": {
+            "action": "redact"
+          },
+          "uz_passport": {
+            "action": "redact"
+          },
+          "uz_stir": {
+            "action": "redact"
+          },
+          "kg_pin": {
+            "action": "redact"
+          },
+          "tj_id": {
+            "action": "redact"
+          },
+          "tm_passport": {
+            "action": "redact"
+          },
+          "ru_passport": {
+            "action": "redact"
+          },
+          "ru_snils": {
+            "action": "redact"
+          },
+          "ua_passport": {
+            "action": "redact"
+          },
+          "ua_inn": {
+            "action": "redact"
+          },
+          "cz_id": {
+            "action": "redact"
+          },
+          "ro_cnp": {
+            "action": "redact"
+          },
+          "hu_id": {
+            "action": "redact"
+          },
+          "hu_tax_id": {
+            "action": "redact"
+          },
+          "bg_egn": {
+            "action": "redact"
+          },
+          "rs_jmbg": {
+            "action": "redact"
+          },
+          "ar_dni": {
+            "action": "redact"
+          },
+          "ar_cuit": {
+            "action": "redact"
+          },
+          "cl_rut": {
+            "action": "redact"
+          },
+          "co_cedula": {
+            "action": "redact"
+          },
+          "co_nit": {
+            "action": "redact"
+          },
+          "pe_dni": {
+            "action": "redact"
+          },
+          "pe_ruc": {
+            "action": "redact"
+          },
+          "ve_cedula": {
+            "action": "redact"
+          },
+          "ve_rif": {
+            "action": "redact"
+          },
+          "ec_cedula": {
+            "action": "redact"
+          },
+          "uy_cedula": {
+            "action": "redact"
+          },
+          "uae_id": {
+            "action": "redact"
+          },
+          "sa_id": {
+            "action": "redact"
+          },
+          "il_id": {
+            "action": "redact"
+          },
+          "tr_id": {
+            "action": "redact"
+          },
+          "qa_id": {
+            "action": "redact"
+          },
+          "kw_id": {
+            "action": "redact"
+          },
+          "bh_cpr": {
+            "action": "redact"
+          },
+          "om_id": {
+            "action": "redact"
+          },
+          "jo_id": {
+            "action": "redact"
+          },
+          "lb_id": {
+            "action": "redact"
+          },
+          "nz_driver_license": {
+            "action": "redact"
+          },
+          "nz_passport": {
+            "action": "redact"
+          },
+          "fj_id": {
+            "action": "redact"
+          },
+          "png_id": {
+            "action": "redact"
+          },
+          "ws_id": {
+            "action": "redact"
+          },
+          "to_id": {
+            "action": "redact"
+          },
+          "nz_ird_extra": {
+            "action": "redact"
+          },
+          "id_nik": {
+            "action": "redact"
+          },
+          "id_npwp": {
+            "action": "redact"
+          },
+          "th_id": {
+            "action": "redact"
+          },
+          "my_ic": {
+            "action": "redact"
+          },
+          "ph_umid": {
+            "action": "redact"
+          },
+          "vn_cccd": {
+            "action": "redact"
+          },
+          "mm_nrc": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "health_insurance_id": {
+            "action": "redact"
+          },
+          "vin": {
+            "action": "redact"
+          },
+          "imei": {
+            "action": "redact"
+          },
+          "imsi": {
+            "action": "redact"
+          },
+          "tracking_number": {
+            "action": "redact"
+          },
+          "aws_access_key": {
+            "action": "redact"
+          },
+          "google_api_key": {
+            "action": "redact"
+          },
+          "stripe_api_key": {
+            "action": "redact"
+          },
+          "slack_token": {
+            "action": "redact"
+          },
+          "github_token": {
+            "action": "redact"
+          },
+          "jwt_token": {
+            "action": "redact"
+          },
+          "private_key": {
+            "action": "redact"
+          },
+          "generic_api_key": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          },
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "crypto_tx_hash": {
+            "action": "redact"
+          },
+          "http_auth_header": {
+            "action": "redact"
+          },
+          "url_query_key": {
+            "action": "redact"
+          },
+          "digitalocean_token": {
+            "action": "redact"
+          },
+          "cloudflare_api_token": {
+            "action": "redact"
+          },
+          "sendgrid_api_key": {
+            "action": "redact"
+          },
+          "huggingface_token": {
+            "action": "redact"
+          },
+          "slack_webhook_url": {
+            "action": "redact"
+          },
+          "telegram_bot_token": {
+            "action": "redact"
+          },
+          "gitlab_token": {
+            "action": "redact"
+          },
+          "npm_token": {
+            "action": "redact"
+          },
+          "openai_api_key": {
+            "action": "redact"
+          },
+          "anthropic_api_key": {
+            "action": "redact"
+          },
+          "shopify_token": {
+            "action": "redact"
+          },
+          "twilio_sid": {
+            "action": "redact"
+          },
+          "mailchimp_api_key": {
+            "action": "redact"
+          },
+          "notion_token": {
+            "action": "redact"
+          },
+          "sentry_token": {
+            "action": "redact"
+          },
+          "heroku_api_key": {
+            "action": "redact"
+          },
+          "linear_api_key": {
+            "action": "redact"
+          },
+          "mailgun_api_key": {
+            "action": "redact"
+          },
+          "okta_token": {
+            "action": "redact"
+          },
+          "square_token": {
+            "action": "redact"
+          },
+          "discord_bot_token": {
+            "action": "redact"
+          },
+          "datadog_api_key": {
+            "action": "redact"
+          },
+          "pagerduty_token": {
+            "action": "redact"
+          },
+          "scaleway_key": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "combined/hipaa+pci-dss+finance",
+      "config": {
+        "presets": [
+          "hipaa",
+          "pci-dss",
+          "finance"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          },
+          "phone": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "redact"
+          },
+          "us_ssn": {
+            "action": "redact"
+          },
+          "person_name_lite": {
+            "action": "redact"
+          },
+          "passport": {
+            "action": "redact"
+          },
+          "drivers_license": {
+            "action": "redact"
+          },
+          "us_npi": {
+            "action": "redact"
+          },
+          "us_dea": {
+            "action": "redact"
+          },
+          "medical_record_number": {
+            "action": "redact"
+          },
+          "uk_nhs": {
+            "action": "redact"
+          },
+          "us_itin": {
+            "action": "redact"
+          },
+          "us_ein": {
+            "action": "redact"
+          },
+          "address": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "redact"
+          },
+          "digital_identity": {
+            "action": "redact"
+          },
+          "health_insurance_id": {
+            "action": "redact"
+          },
+          "medical_code": {
+            "action": "redact"
+          },
+          "clinical_trial_id": {
+            "action": "redact"
+          },
+          "medical_device_id": {
+            "action": "redact"
+          },
+          "genetic_info": {
+            "action": "redact"
+          },
+          "medical_reference": {
+            "action": "redact"
+          },
+          "de_id": {
+            "action": "redact"
+          },
+          "fr_insee": {
+            "action": "redact"
+          },
+          "it_codice_fiscale": {
+            "action": "redact"
+          },
+          "es_dni": {
+            "action": "redact"
+          },
+          "nl_bsn": {
+            "action": "redact"
+          },
+          "pl_pesel": {
+            "action": "redact"
+          },
+          "license_plate": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          },
+          "eu_vat": {
+            "action": "redact"
+          },
+          "swift_bic": {
+            "action": "redact"
+          },
+          "uk_sort_code": {
+            "action": "redact"
+          },
+          "us_routing": {
+            "action": "redact"
+          },
+          "uk_bank_account": {
+            "action": "redact"
+          },
+          "crypto_address": {
+            "action": "redact"
+          },
+          "crypto_tx_hash": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "combined/duplicate-preset",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "pci-dss"
+        ],
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "rules-only/single",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "rules-only/every-action",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact",
+            "replacement": "<email>",
+            "priority": 2
+          },
+          "phone": {
+            "action": "mask",
+            "preserve": {
+              "first": 1,
+              "last": 2
+            }
+          },
+          "payment_card": {
+            "action": "format-preserve"
+          },
+          "ipv4": {
+            "action": "token-replace",
+            "tokens": {
+              "ipv4": "198.51.100.1"
+            }
+          },
+          "iban": {
+            "action": "remove"
+          }
+        }
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact",
+            "replacement": "<email>",
+            "priority": 2
+          },
+          "phone": {
+            "action": "mask",
+            "preserve": {
+              "first": 1,
+              "last": 2
+            }
+          },
+          "payment_card": {
+            "action": "format-preserve"
+          },
+          "ipv4": {
+            "action": "token-replace",
+            "tokens": {
+              "ipv4": "198.51.100.1"
+            }
+          },
+          "iban": {
+            "action": "remove"
+          }
+        }
+      }
+    },
+    {
+      "id": "rules-only/off-is-dropped",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": "off"
+        }
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "custom-preset/alone",
+      "config": {
+        "presets": [
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "mask"
+            },
+            "ipv4": {
+              "action": "redact"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "custom-preset/off-entry-is-skipped",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "redact"
+            },
+            "payment_card": "off"
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          },
+          "email": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "custom-preset/with-builtin-same-action",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "team"
+        ],
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "redact"
+            },
+            "payment_card": {
+              "action": "redact",
+              "replacement": "<card>"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact",
+            "replacement": "<card>"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          },
+          "email": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "custom-preset/unused-is-ignored",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "customPresets": {
+          "team": {
+            "email": {
+              "action": "mask"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "custom-preset/shadows-builtin-name",
+      "config": {
+        "presets": [
+          "pii"
+        ],
+        "customPresets": {
+          "pii": {
+            "email": {
+              "action": "mask"
+            }
+          }
+        },
+        "rules": {}
+      },
+      "expected": {
+        "policy": {
+          "email": {
+            "action": "mask"
+          }
+        }
+      }
+    },
+    {
+      "id": "override/explicit-action-wins",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {
+          "payment_card": {
+            "action": "mask",
+            "preserve": {
+              "last": 4
+            }
+          }
+        }
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "mask",
+            "preserve": {
+              "last": 4
+            }
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "override/explicit-off-removes-preset-rule",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {
+          "payment_card": "off"
+        }
+      },
+      "expected": {
+        "policy": {
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    },
+    {
+      "id": "override/explicit-adds-rule",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {
+          "email": {
+            "action": "remove"
+          }
+        }
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          },
+          "email": {
+            "action": "remove"
+          }
+        }
+      }
+    },
+    {
+      "id": "override/restore-and-allowlist-do-not-affect-policy",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {},
+        "restore": true,
+        "allowlist": [
+          "example"
+        ]
+      },
+      "expected": {
+        "policy": {
+          "payment_card": {
+            "action": "redact"
+          },
+          "iban": {
+            "action": "redact"
+          },
+          "card_data": {
+            "action": "redact"
+          },
+          "financial_reference": {
+            "action": "redact"
+          },
+          "investment_account": {
+            "action": "redact"
+          },
+          "payment_gateway_id": {
+            "action": "redact"
+          }
+        }
+      }
+    }
+  ]
+}
