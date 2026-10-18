@@ -3,6 +3,7 @@
 //! Offsets are UTF-8 byte offsets into the text being processed. Bindings that
 //! expose UTF-16 offsets (napi, Wasm) convert at their boundary.
 
+use std::borrow::Cow;
 use std::sync::Arc;
 
 use indexmap::IndexMap;
@@ -10,15 +11,19 @@ use serde::Serialize;
 
 use crate::detector::Detector;
 
+/// A rule id, entity type or reason: borrowed for built-in detectors, so a
+/// detection allocates only its `reasons` list; owned for caller detections.
+pub type Label = Cow<'static, str>;
+
 /// One detector hit on the original text.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Detection {
     pub start: usize,
     pub end: usize,
-    pub rule_id: String,
-    pub entity_type: String,
-    pub reasons: Vec<String>,
+    pub rule_id: Label,
+    pub entity_type: Label,
+    pub reasons: Vec<Label>,
 }
 
 /// A detection plus the original text it covers (reports only).

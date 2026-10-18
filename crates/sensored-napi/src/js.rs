@@ -74,9 +74,9 @@ impl Detection {
         Self {
             start: offset(detection.start),
             end: offset(detection.end),
-            rule_id: detection.rule_id,
-            entity_type: detection.entity_type,
-            reasons: detection.reasons,
+            rule_id: detection.rule_id.into_owned(),
+            entity_type: detection.entity_type.into_owned(),
+            reasons: owned(detection.reasons),
         }
     }
 }
@@ -89,9 +89,9 @@ impl InspectionGroup {
             .map(|inspected| InspectedMatch {
                 start: offset(inspected.detection.start),
                 end: offset(inspected.detection.end),
-                rule_id: inspected.detection.rule_id,
-                entity_type: inspected.detection.entity_type,
-                reasons: inspected.detection.reasons,
+                rule_id: inspected.detection.rule_id.into_owned(),
+                entity_type: inspected.detection.entity_type.into_owned(),
+                reasons: owned(inspected.detection.reasons),
                 value: inspected.value,
             })
             .collect();
@@ -130,4 +130,8 @@ impl Inspection {
             map: inspection.map,
         }
     }
+}
+
+fn owned(labels: Vec<core::Label>) -> Vec<String> {
+    labels.into_iter().map(core::Label::into_owned).collect()
 }

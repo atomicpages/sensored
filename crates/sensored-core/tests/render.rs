@@ -58,9 +58,9 @@ fn check_file(file: &str) -> (usize, usize) {
                         detection: Detection {
                             start: offsets[0],
                             end: offsets[1],
-                            rule_id: m.rule_id.clone(),
-                            entity_type: m.entity_type.clone(),
-                            reasons: m.reasons.clone(),
+                            rule_id: m.rule_id.clone().into(),
+                            entity_type: m.entity_type.clone().into(),
+                            reasons: m.reasons.iter().cloned().map(Into::into).collect(),
                         },
                         rule: &rules[&m.rule_id],
                     }

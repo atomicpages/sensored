@@ -62,7 +62,7 @@ impl Detector for UrlWithAuthDetector {
                 continue;
             }
 
-            candidates.push(format_detection(ID, start, end));
+            candidates.push(format_detection(ID, "url_with_auth.format", start, end));
         }
 
         push_aligned(text, candidates, out);

@@ -127,9 +127,9 @@ impl Detector for HrCompensation {
             candidates.push(Detection {
                 start,
                 end,
-                rule_id: ID.to_owned(),
-                entity_type: ID.to_owned(),
-                reasons: REASONS.iter().map(|reason| (*reason).to_owned()).collect(),
+                rule_id: ID.into(),
+                entity_type: ID.into(),
+                reasons: REASONS.iter().map(|reason| (*reason).into()).collect(),
             });
         }
 

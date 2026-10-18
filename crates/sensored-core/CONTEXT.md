@@ -15,6 +15,10 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 ## Modules
 
 - `types.rs`, `errors.rs`: shared types and error codes (contract).
+  `Detection` labels are `Label` (`Cow<'static, str>`): built-ins borrow
+  static ids and reasons, so a detection allocates only its `reasons` list.
+  Reasons derived from an id at runtime (`<id>.format`) go through
+  `detector::intern`, once per `detect_in` call.
 - `text.rs`: UTF-16 measurement and offset conversion.
 - `grapheme.rs`: grapheme boundaries via `unicode-segmentation`. Keeps the TS
   quirk that a position between two ASCII bytes is a boundary.

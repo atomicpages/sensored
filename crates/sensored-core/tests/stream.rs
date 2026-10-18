@@ -124,8 +124,8 @@ fn tickets(text: &str) -> Vec<Detection> {
             found.push(Detection {
                 start: at,
                 end,
-                rule_id: "ticket_id".to_owned(),
-                entity_type: "ticket".to_owned(),
+                rule_id: "ticket_id".into(),
+                entity_type: "ticket".into(),
                 reasons: Vec::new(),
             });
         }

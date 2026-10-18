@@ -21,14 +21,14 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(url_query_key::UrlQueryKeyDetector));
 }
 
-/// A `<id>.format` detection whose rule id and entity type are both `id`.
-fn format_detection(id: &str, start: usize, end: usize) -> Detection {
+/// A detection with one `reason` whose rule id and entity type are both `id`.
+fn format_detection(id: &'static str, reason: &'static str, start: usize, end: usize) -> Detection {
     Detection {
         start,
         end,
-        rule_id: id.to_owned(),
-        entity_type: id.to_owned(),
-        reasons: vec![format!("{id}.format")],
+        rule_id: id.into(),
+        entity_type: id.into(),
+        reasons: vec![reason.into()],
     }
 }
 

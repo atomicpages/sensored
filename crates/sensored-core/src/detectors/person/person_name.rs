@@ -108,9 +108,9 @@ impl Detector for PersonName {
             candidates.push(Detection {
                 start,
                 end,
-                rule_id: ID.to_owned(),
-                entity_type: ID.to_owned(),
-                reasons: vec![format!("{ID}.ner")],
+                rule_id: ID.into(),
+                entity_type: ID.into(),
+                reasons: vec!["person_name.ner".into()],
             });
         }
 

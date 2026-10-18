@@ -69,13 +69,13 @@ pub fn register(registry: &mut Registry) {
 }
 
 /// A detection whose rule id and entity type are both `id`.
-fn detection(id: &str, start: usize, end: usize, reasons: &[&str]) -> Detection {
+fn detection(id: &'static str, start: usize, end: usize, reasons: &[&'static str]) -> Detection {
     Detection {
         start,
         end,
-        rule_id: id.to_owned(),
-        entity_type: id.to_owned(),
-        reasons: reasons.iter().map(|reason| (*reason).to_owned()).collect(),
+        rule_id: id.into(),
+        entity_type: id.into(),
+        reasons: reasons.iter().map(|reason| (*reason).into()).collect(),
     }
 }
 

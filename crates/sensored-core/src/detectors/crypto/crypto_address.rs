@@ -67,9 +67,9 @@ impl Detector for CryptoAddressDetector {
             .map(|found| Detection {
                 start: found.start(),
                 end: found.end(),
-                rule_id: ID.to_owned(),
-                entity_type: ID.to_owned(),
-                reasons: vec!["crypto_address.format".to_owned()],
+                rule_id: ID.into(),
+                entity_type: ID.into(),
+                reasons: vec!["crypto_address.format".into()],
             })
             .collect();
 

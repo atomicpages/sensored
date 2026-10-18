@@ -58,7 +58,7 @@ impl Detector for UrlQueryKeyDetector {
                 continue;
             }
 
-            candidates.push(format_detection(ID, start, end));
+            candidates.push(format_detection(ID, "url_query_key.format", start, end));
         }
 
         push_aligned(text, candidates, out);

@@ -236,8 +236,8 @@ mod tests {
         Detection {
             start,
             end,
-            rule_id: "email".to_owned(),
-            entity_type: "email".to_owned(),
+            rule_id: "email".into(),
+            entity_type: "email".into(),
             reasons: Vec::new(),
         }
     }
@@ -267,7 +267,7 @@ mod tests {
             .expect("redactor");
 
         let mut unknown = detection(0, 1);
-        unknown.rule_id = "phone".to_owned();
+        unknown.rule_id = "phone".into();
 
         let error = redactor.filter("a", vec![unknown]).expect_err("contract");
 

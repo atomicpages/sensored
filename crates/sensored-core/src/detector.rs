@@ -6,14 +6,15 @@
 //! `[A-Za-z0-9_]` and `(?-u:\b)`. JS `\s` also matches U+FEFF; Rust does not.
 
 use std::cell::OnceCell;
-use std::sync::LazyLock;
+use std::collections::HashSet;
+use std::sync::{LazyLock, Mutex, PoisonError};
 
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use crate::grapheme;
 use crate::text::{window_after, window_before};
-use crate::types::Detection;
+use crate::types::{Detection, Label};
 
 /// How much text a detector needs around a match to decide it, so a stream
 /// knows what it may flush. All values are UTF-16 code units, as in TS.
@@ -188,8 +189,35 @@ pub fn push_aligned(text: &str, candidates: Vec<Detection>, out: &mut Vec<Detect
     }));
 }
 
-fn reasons(list: &[&str]) -> Vec<String> {
-    list.iter().map(|reason| (*reason).to_owned()).collect()
+fn reasons(list: &[&'static str]) -> Vec<Label> {
+    list.iter().map(|&reason| reason.into()).collect()
+}
+
+/// `label` as a `&'static str`, leaked once per distinct value, for reasons
+/// derived from a built-in id (`<id>.format`). Built-ins are finite, so the
+/// set is bounded; callers intern once per `detect_in`, not per match.
+pub fn intern(label: String) -> &'static str {
+    static LABELS: LazyLock<Mutex<HashSet<&'static str>>> = LazyLock::new(Mutex::default);
+
+    let mut labels = LABELS.lock().unwrap_or_else(PoisonError::into_inner);
+
+    if let Some(&known) = labels.get(label.as_str()) {
+        return known;
+    }
+
+    let leaked: &'static str = Box::leak(label.into_boxed_str());
+    labels.insert(leaked);
+
+    leaked
+}
+
+/// `[<id>.<a>, <id>.<b>]`, interned on first use in one `detect_in` call.
+fn derived_reasons<'c>(
+    cell: &'c OnceCell<[&'static str; 2]>,
+    id: &str,
+    [a, b]: [&str; 2],
+) -> &'c [&'static str; 2] {
+    cell.get_or_init(|| [intern(format!("{id}.{a}")), intern(format!("{id}.{b}"))])
 }
 
 // ---------------------------------------------------------------------------
@@ -457,7 +485,7 @@ impl Detector for ContextDetector {
     fn context_hint(&self) -> Option<ContextHint> {
         Some(ContextHint {
             required: true,
-            labels: reasons(self.labels),
+            labels: self.labels.iter().map(|&label| label.to_owned()).collect(),
             position: HintPosition::Both,
             window: HintWindow {
                 before: self.window.0,
@@ -477,6 +505,7 @@ impl Detector for ContextDetector {
         }
 
         let mut candidates = Vec::new();
+        let derived = OnceCell::new();
 
         for found in self.pattern.find_iter(text) {
             let (start, end) = (found.start(), found.end());
@@ -498,16 +527,16 @@ impl Detector for ContextDetector {
                 continue;
             }
 
-            let mut accepted =
-                validated.map_or_else(|| vec![format!("{}.format", self.id)], reasons);
+            let [format, context] = *derived_reasons(&derived, self.id, ["format", "context"]);
+            let mut accepted = validated.map_or_else(|| vec![format.into()], reasons);
 
-            accepted.push(format!("{}.context", self.id));
+            accepted.push(context.into());
 
             candidates.push(Detection {
                 start,
                 end,
-                rule_id: self.id.to_owned(),
-                entity_type: self.entity_type.to_owned(),
+                rule_id: self.id.into(),
+                entity_type: self.entity_type.into(),
                 reasons: accepted,
             });
         }
@@ -567,8 +596,8 @@ impl Detector for ChecksumDetector {
             candidates.push(Detection {
                 start,
                 end,
-                rule_id: self.id.to_owned(),
-                entity_type: self.entity_type.to_owned(),
+                rule_id: self.id.into(),
+                entity_type: self.entity_type.into(),
                 reasons: reasons(list),
             });
         }
@@ -616,6 +645,7 @@ impl Detector for KeywordDetector {
         let text = input.text();
 
         let mut candidates = Vec::new();
+        let derived = OnceCell::new();
 
         for found in self.pattern.find_iter(text) {
             let (start, end) = (found.start(), found.end());
@@ -644,12 +674,12 @@ impl Detector for KeywordDetector {
             candidates.push(Detection {
                 start,
                 end,
-                rule_id: self.id.to_owned(),
-                entity_type: self.entity_type.to_owned(),
-                reasons: vec![
-                    format!("{}.format", self.id),
-                    format!("{}.keyword", self.id),
-                ],
+                rule_id: self.id.into(),
+                entity_type: self.entity_type.into(),
+                reasons: derived_reasons(&derived, self.id, ["format", "keyword"])
+                    .iter()
+                    .map(|&reason| reason.into())
+                    .collect(),
             });
         }
 

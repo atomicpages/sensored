@@ -151,9 +151,9 @@ pub(crate) fn to_core(text: &str, detections: Vec<Detection>) -> Option<Vec<core
             .map(|d| core::Detection {
                 start: offsets.get(d.start as usize),
                 end: offsets.get(d.end as usize),
-                rule_id: d.rule_id,
-                entity_type: d.entity_type,
-                reasons: d.reasons,
+                rule_id: d.rule_id.into(),
+                entity_type: d.entity_type.into(),
+                reasons: d.reasons.into_iter().map(Into::into).collect(),
             })
             .collect(),
     )

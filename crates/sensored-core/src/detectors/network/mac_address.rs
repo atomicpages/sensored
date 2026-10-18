@@ -46,7 +46,7 @@ impl Detector for MacAddressDetector {
                     continue;
                 }
 
-                candidates.push(format_detection(ID, start, end));
+                candidates.push(format_detection(ID, "mac_address.format", start, end));
             }
         }
 

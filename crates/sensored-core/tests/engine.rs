@@ -56,9 +56,9 @@ fn recorded(case: &support::RenderCase) -> Vec<Detection> {
             Detection {
                 start: bytes[0],
                 end: bytes[1],
-                rule_id: m.rule_id.clone(),
-                entity_type: m.entity_type.clone(),
-                reasons: m.reasons.clone(),
+                rule_id: m.rule_id.clone().into(),
+                entity_type: m.entity_type.clone().into(),
+                reasons: m.reasons.iter().cloned().map(Into::into).collect(),
             }
         })
         .collect()

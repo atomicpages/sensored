@@ -71,7 +71,7 @@ pub(super) fn parse_descriptor(value: &Value) -> Result<ExternalDetector> {
 
     Ok(ExternalDetector {
         id: id.to_owned(),
-        entity_type: entity_type.to_owned(),
+        entity_type: entity_type.into(),
         replacement: replacement.to_owned(),
         stream,
         context_hint,
