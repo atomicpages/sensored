@@ -34,9 +34,10 @@ The root `package.json` is private and orchestrates the workspace. Shared
 devDependencies live at the root. Each package has its own `tsconfig.json`
 extending `tsconfig.base.json` at the root.
 
-The package is published as `sensored` on npm. Versioning is automated via
-semantic-release (`.releaserc.json`) triggered on push to main by
-`.github/workflows/release.yml`. Conventional commits are enforced by commitlint
+The package is published as `sensored` on npm, with `@sensored/native` and its
+`@sensored/native-<platform>` addons (`crates/sensored-napi`). Versioning
+uses changesets; `.github/workflows/release.yml` builds the 7 native targets
+and publishes (procedure: `.github/RELEASING.md`). Conventional commits are enforced by commitlint
 (`commitlint.config.ts`) via a `.husky/commit-msg` hook. Interactive commit
 prompts are available via `bun run cz` (commitizen with
 `cz-conventional-changelog` adapter, configured in `.czrc`).

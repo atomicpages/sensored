@@ -1,7 +1,7 @@
 {
   "changelog": ["@changesets/changelog-github", { "repo": "atomicpages/sensored" }],
   "commit": false,
-  "fixed": [],
+  "fixed": [["sensored", "@sensored/native"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

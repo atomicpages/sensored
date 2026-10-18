@@ -14,8 +14,14 @@ conditions, with the same API and the same output.
 | Browser                         | Wasm, loaded by URL          | `browser`              |
 | Cloudflare Workers, Vercel Edge | Wasm, imported as a module   | `worker`, `edge-light` |
 
+- The native addon is prebuilt for macOS (arm64, x64), Linux (x64, arm64;
+  glibc 2.17+ and musl) and Windows x64, as `@sensored/native-<platform>`
+  optional dependencies that your package manager installs for your platform
+  only.
 - Node and Bun load Wasm synchronously when the native addon for the platform
   is missing or fails to load. `SENSORED_ENGINE=wasm` forces it.
+- The standalone CLI binaries on GitHub Releases embed the native addon for
+  their platform.
 - Deno loads Wasm rather than the native addon, which would need
   `--allow-ffi`.
 - The Wasm entries load the engine with top-level await, so `createRedactor`

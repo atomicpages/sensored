@@ -1,8 +1,24 @@
 name: Release
 
+# Two ways in (see .github/RELEASING.md):
+# - push to main: changesets opens the version PR. Once it merges (no pending
+#   changesets) and the version is not on npm yet, everything publishes as `latest`.
+# - workflow_dispatch: publish the checked-out versions under a dist-tag
+#   (`next` for prereleases) and, optionally, sensored-core to crates.io.
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: npm dist-tag (`next` needs a prerelease version, `latest` a stable one)
+        type: choice
+        options: [next, latest]
+        default: next
+      crate:
+        description: Also publish sensored-core to crates.io
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,17 +27,15 @@ concurrency:
 permissions: {}
 
 jobs:
-  release:
-    name: Release
+  version:
+    name: Version PR
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    environment: npm
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
     outputs:
-      published: ${{ steps.changesets.outputs.published }}
-      published-packages: ${{ steps.changesets.outputs.published-packages }}
+      has-changesets: ${{ steps.changesets.outputs.has-changesets }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -29,20 +43,13 @@ jobs:
 
       - uses: ./.github/actions/setup
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
-
-      - run: bun run --filter sensored build
-      - run: bun run --filter @sensored/enterprise build
-
-      - name: Create Release Pull Request or Publish
+      # No publish-script: publishing waits for the native matrix below.
+      # `napi version` keeps crates/sensored-napi/npm/* in step.
+      - name: Create or update the version PR
         id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51
         with:
-          version-script: bunx changeset version && bun install
-          publish-script: bun run scripts/changeset-publish.ts
+          version-script: bunx changeset version && bun install && bunx napi version --cwd crates/sensored-napi
           commit-message: "chore: version packages"
           pr-title: "chore: version packages"
         env:
@@ -52,46 +59,283 @@ jobs:
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
 
+  plan:
+    name: Plan
+    needs: version
+    if: ${{ !cancelled() && needs.version.result != 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      publish: ${{ steps.plan.outputs.publish }}
+      tag: ${{ steps.plan.outputs.tag }}
+      version: ${{ steps.plan.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Decide what to publish
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+          HAS_CHANGESETS: ${{ needs.version.outputs.has-changesets }}
+        run: |
+          VERSION=$(jq -r .version packages/sensored/package.json)
+          NATIVE=$(jq -r .version crates/sensored-napi/package.json)
+          TAG=latest
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            TAG="$INPUT_TAG"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          if [ "$EVENT" = "push" ] && [ "$HAS_CHANGESETS" = "true" ]; then
+            echo "Pending changesets: the version PR is open, nothing to publish."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$VERSION" != "$NATIVE" ]; then
+            echo "::error::sensored@$VERSION and @sensored/native@$NATIVE must match (changesets fixed group)."
+            exit 1
+          fi
+
+          case "$VERSION" in
+            *-*) PRERELEASE=true ;;
+            *) PRERELEASE=false ;;
+          esac
+          if [ "$TAG" = "latest" ] && [ "$PRERELEASE" = "true" ]; then
+            if [ "$EVENT" = "push" ]; then
+              echo "sensored@$VERSION is a prerelease: publish it with workflow_dispatch (tag next)."
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "::error::sensored@$VERSION is a prerelease and cannot be tagged latest."
+            exit 1
+          fi
+          if [ "$TAG" != "latest" ] && [ "$PRERELEASE" = "false" ]; then
+            echo "::error::sensored@$VERSION is stable: tag $TAG needs a prerelease version."
+            exit 1
+          fi
+
+          if [ "$(npm view "sensored@$VERSION" version 2>/dev/null)" = "$VERSION" ]; then
+            echo "sensored@$VERSION is already on npm."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+
+  native:
+    name: Native ${{ matrix.target }}
+    needs: plan
+    if: needs.plan.outputs.publish == 'true'
+    runs-on: ${{ matrix.host }}
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            host: macos-latest
+            test: true
+          - target: x86_64-apple-darwin
+            host: macos-latest
+          # glibc 2.17 sysroot from @napi-rs/cross-toolchain.
+          - target: x86_64-unknown-linux-gnu
+            host: ubuntu-latest
+            flags: --use-napi-cross
+            test: true
+          - target: aarch64-unknown-linux-gnu
+            host: ubuntu-latest
+            flags: --use-napi-cross
+          # musl through zig (cargo-zigbuild).
+          - target: x86_64-unknown-linux-musl
+            host: ubuntu-latest
+            flags: -x
+          - target: aarch64-unknown-linux-musl
+            host: ubuntu-latest
+            flags: -x
+          - target: x86_64-pc-windows-msvc
+            host: windows-latest
+            test: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup
+
+      - uses: ./.github/actions/setup-rust
+        with:
+          targets: ${{ matrix.target }}
+          cache-key: ${{ matrix.target }}
+
+      - uses: mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29 # v2.2.1
+        if: matrix.flags == '-x'
+        with:
+          version: 0.15.2
+
+      - uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
+        if: matrix.flags == '-x'
+        with:
+          tool: cargo-zigbuild
+
+      - name: Build
+        shell: bash
+        working-directory: crates/sensored-napi
+        run: bun run build --target ${{ matrix.target }} ${{ matrix.flags }}
+
+      - name: Test
+        if: matrix.test
+        shell: bash
+        working-directory: crates/sensored-napi
+        run: bun test
+
+      # index.js is the same universal loader on every target.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: bindings-${{ matrix.target }}
+          path: |
+            crates/sensored-napi/sensored.*.node
+            crates/sensored-napi/index.js
+          if-no-files-found: error
+
+  publish:
+    name: Publish to npm
+    needs: [plan, native]
+    if: needs.plan.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      TAG: ${{ needs.plan.outputs.tag }}
+      VERSION: ${{ needs.plan.outputs.version }}
+      # Optional: a token only for the first publish of a new package, before
+      # its trusted publisher can be set up on npmjs.com. Unset, npm uses OIDC.
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup
+
+      - uses: ./.github/actions/setup-rust
+        with:
+          wasm: "true"
+          cache-key: build
+
+      # Node 24 ships npm 11, which publishes through trusted publishing (OIDC).
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: bindings-*
+          path: crates/sensored-napi/artifacts
+          merge-multiple: true
+
+      - name: Stage the addons
+        working-directory: crates/sensored-napi
+        run: |
+          mv artifacts/index.js index.js
+          bunx napi version
+          bunx napi artifacts --output-dir artifacts
+          COUNT=$(find npm -name "*.node" | wc -l)
+          if [ "$COUNT" -ne 7 ]; then
+            echo "::error::expected 7 addons in npm/, found $COUNT"
+            exit 1
+          fi
+
+      - run: bun run --filter sensored build
+      - run: bun run --filter @sensored/enterprise build
+
+      # Publishes @sensored/native-<platform> and writes their versions into
+      # @sensored/native's optionalDependencies before it is packed.
+      - name: Publish the platform packages
+        working-directory: crates/sensored-napi
+        env:
+          npm_config_tag: ${{ env.TAG }}
+          npm_config_provenance: "true"
+          npm_config_access: public
+        run: bunx napi pre-publish -t npm --no-gh-release
+
+      - name: Publish @sensored/native, sensored and the rest of packages/
+        run: bun scripts/publish.ts --tag "$TAG"
+
+      - name: Create the GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          FLAGS=()
+          if [ "$TAG" != "latest" ]; then
+            FLAGS+=(--prerelease)
+          fi
+          gh release create "sensored@$VERSION" --target "$GITHUB_SHA" \
+            --title "sensored@$VERSION" --generate-notes "${FLAGS[@]}"
+
   binaries:
-    name: Build binaries
-    needs: release
-    if: needs.release.outputs.published == 'true'
+    name: CLI binary ${{ matrix.bun }}
+    needs: [plan, publish]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     strategy:
       matrix:
         include:
-          - target: bun-linux-x64
+          - bun: bun-linux-x64
+            native: x86_64-unknown-linux-gnu
             artifact: sensored-linux-x64
-          - target: bun-linux-arm64
+            smoke: true
+          - bun: bun-linux-arm64
+            native: aarch64-unknown-linux-gnu
             artifact: sensored-linux-arm64
-          - target: bun-darwin-arm64
+          - bun: bun-darwin-arm64
+            native: aarch64-apple-darwin
             artifact: sensored-darwin-arm64
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: ./.github/actions/setup
 
-      - name: Get sensored version
-        id: version
-        run: |
-          PUBLISHED='${{ needs.release.outputs.published-packages }}'
-          VERSION=$(echo "$PUBLISHED" | jq -r '.[] | select(.name == "sensored") | .version')
-          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: bindings-${{ matrix.native }}
+          path: ${{ runner.temp }}/addon
 
+      # Embeds the target's addon through a static require, the only way Bun
+      # embeds an N-API addon in a compiled binary.
       - name: Build binary
-        if: steps.version.outputs.skip != 'true'
-        run: bun build --compile --target=${{ matrix.target }} ./packages/sensored/cli/index.ts --outfile ${{ matrix.artifact }}
+        run: |
+          ADDON=$(find "$RUNNER_TEMP/addon" -name "*.node")
+          bun packages/sensored/scripts/build-cli.ts --target ${{ matrix.bun }} \
+            --addon "$ADDON" --outfile ${{ matrix.artifact }}
+
+      - name: Smoke
+        if: matrix.smoke
+        run: echo "a@b.co" | ./${{ matrix.artifact }} --rule email:redact --no-config | grep -Fx "[EMAIL]"
 
       - name: Upload to release
-        if: steps.version.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release upload "sensored@${{ steps.version.outputs.version }}" "${{ matrix.artifact }}" --clobber
+        run: gh release upload "sensored@${{ needs.plan.outputs.version }}" "${{ matrix.artifact }}" --clobber
+
+  crate:
+    name: Publish sensored-core to crates.io
+    needs: publish
+    if: github.event_name == 'workflow_dispatch' && inputs.crate
+    runs-on: ubuntu-latest
+    environment: crates-io
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup-rust
+        with:
+          cache-key: crate
+
+      - run: cargo publish -p sensored-core --locked
+        working-directory: crates
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
