@@ -1,5 +1,60 @@
 //! Built-in `cloud` detectors. Mirrors `packages/sensored/src/detectors/cloud/`.
+//!
+//! Each TS `detect` is the checksum pipeline with no check (match, adjacency,
+//! push), so every detector is a `ChecksumDetector` whose `validate` always
+//! returns the TS `<id>.format` reason. See `CONTEXT.md`.
+
+use std::sync::Arc;
+
+use regex::Regex;
 
 use super::Registry;
 
-pub fn register(_registry: &mut Registry) {}
+mod aws_access_key;
+mod cloudflare_api_token;
+mod digitalocean_token;
+mod google_api_key;
+mod slack_token;
+mod stripe_api_key;
+
+pub fn register(registry: &mut Registry) {
+    registry.insert(Arc::new(aws_access_key::detector()));
+    registry.insert(Arc::new(cloudflare_api_token::detector()));
+    registry.insert(Arc::new(digitalocean_token::detector()));
+    registry.insert(Arc::new(google_api_key::detector()));
+    registry.insert(Arc::new(slack_token::detector()));
+    registry.insert(Arc::new(stripe_api_key::detector()));
+}
+
+/// Compiles a static detector pattern.
+///
+/// # Panics
+/// If `pattern` does not compile; patterns are static detector data.
+fn regex(pattern: &str) -> Regex {
+    Regex::new(pattern).expect("valid pattern")
+}
+
+#[cfg(test)]
+mod test_support {
+    use crate::detector::Detector;
+
+    /// The matched substrings, in order.
+    pub fn values<'a>(detector: &dyn Detector, text: &'a str) -> Vec<&'a str> {
+        let mut out = Vec::new();
+        detector.detect(text, &mut out);
+
+        out.iter().map(|d| &text[d.start..d.end]).collect()
+    }
+
+    /// Every `rejected` input yields nothing; every `found` input yields
+    /// exactly its expected value.
+    pub fn assert_cases(detector: &dyn Detector, found: &[(&str, &str)], rejected: &[&str]) {
+        for (input, expected) in found {
+            assert_eq!(values(detector, input), [*expected], "{input}");
+        }
+
+        for input in rejected {
+            assert!(values(detector, input).is_empty(), "{input}");
+        }
+    }
+}
