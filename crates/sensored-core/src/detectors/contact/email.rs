@@ -13,6 +13,7 @@ use regex::Regex;
 
 use super::detection;
 use crate::detector::{Detector, StreamMeta, push_aligned};
+use crate::text::is_js_space;
 use crate::types::Detection;
 
 const ID: &str = "email";
@@ -205,11 +206,6 @@ fn domain_end(text: &str, at: usize) -> Option<usize> {
     }
 
     Some(end)
-}
-
-/// JS `\s`: Unicode `White_Space` plus U+FEFF, minus U+0085.
-fn is_js_space(ch: char) -> bool {
-    ch == '\u{feff}' || (ch != '\u{85}' && ch.is_whitespace())
 }
 
 fn is_atext(byte: &u8) -> bool {

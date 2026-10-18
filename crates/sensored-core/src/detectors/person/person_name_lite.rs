@@ -13,6 +13,7 @@
 
 use super::bloom::{has_name, is_stopword};
 use crate::detector::{Detector, StreamMeta, is_adjacent_forbidden, push_aligned};
+use crate::text::is_js_space;
 use crate::types::Detection;
 
 const ID: &str = "person_name_lite";
@@ -177,15 +178,6 @@ fn skip_space(text: &str, start: usize) -> Option<usize> {
         .sum();
 
     (run > 0).then_some(start + run)
-}
-
-/// JS `\s`: Unicode `White_Space` without U+0085, plus U+FEFF.
-fn is_js_space(ch: char) -> bool {
-    match ch {
-        '\u{85}' => false,
-        '\u{FEFF}' => true,
-        _ => ch.is_whitespace(),
-    }
 }
 
 // ---------------------------------------------------------------------------

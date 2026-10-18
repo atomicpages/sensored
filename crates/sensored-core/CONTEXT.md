@@ -62,7 +62,10 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 
 JS `\d`, `\w` and `\b` are ASCII even with the `u` flag; the `regex` crate's are
 Unicode. Port them as `[0-9]`, `[A-Za-z0-9_]` and `(?-u:\b)`. JS `\s` also
-matches U+FEFF. The `regex` crate has no lookaround; replace it with code.
+matches U+FEFF and not U+0085: use `text::JS_SPACE_CLASS` in patterns and
+`text::is_js_space` in code. JS `i` without `u` folds ASCII only, so spell
+out `[A-Za-z]` (or `(?i-u:...)`) instead of `(?i)`. The `regex` crate has no
+lookaround; replace it with code.
 
 ## Tests
 

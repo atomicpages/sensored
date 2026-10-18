@@ -4,8 +4,8 @@ use std::sync::LazyLock;
 
 use regex::Regex;
 
-use super::JS_SPACE;
 use crate::detector::{ContextDetector, ContextMatcher, StreamMeta};
+use crate::text::JS_SPACE_CLASS;
 
 const LABELS: &str = "(?:Insurance|Claim|Medical|Health|Policy|Plan|Beneficiary|Member)";
 const WINDOW: (usize, usize) = (40, 20);
@@ -19,7 +19,7 @@ fn pattern() -> Regex {
     let source = format!(
         "(?i)(?:CLAIM|CLM)[-{s}]?(?:NO|NUM(?:BER)?|REF|ID)?[-{s}]?[:#]?[{s}]*{id}{{8,16}}\
          |(?:HEALTH[-{s}]?PLAN|BENEFICIARY|MEMBER)[-{s}]?(?:NO|NUM(?:BER)?|ID)?[-{s}]?[:#]?[{s}]*{id}{{8,15}}",
-        s = JS_SPACE,
+        s = JS_SPACE_CLASS,
     );
 
     Regex::new(&source).expect("valid pattern")
