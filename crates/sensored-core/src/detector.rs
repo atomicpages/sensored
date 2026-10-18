@@ -5,6 +5,7 @@
 //! `u` flag, but Unicode in the `regex` crate. Port them as `[0-9]`,
 //! `[A-Za-z0-9_]` and `(?-u:\b)`. JS `\s` also matches U+FEFF; Rust does not.
 
+use std::cell::OnceCell;
 use std::sync::LazyLock;
 
 use regex::Regex;
@@ -86,6 +87,10 @@ fn is_forbidden_adjacent(ch: char) -> bool {
     static FORBIDDEN: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"^[\p{L}\p{M}\p{N}_]$").expect("valid pattern"));
 
+    if ch.is_ascii() {
+        return ch.is_ascii_alphanumeric() || ch == '_';
+    }
+
     let mut buffer = [0; 4];
 
     FORBIDDEN.is_match(ch.encode_utf8(&mut buffer))
@@ -130,7 +135,12 @@ fn reasons(list: &[&str]) -> Vec<String> {
 
 /// Label checks either side of a match. `labels` is the raw alternation the
 /// TS detector passes as `contextLabels`, inserted verbatim as TS does.
+///
+/// For many candidates in one text, use [`ContextMatcher::scan`]: it finds
+/// label occurrences once and skips the exact checks where none is near.
 pub struct ContextMatcher {
+    /// The labels alone, for the pre-check in [`ContextScan`].
+    label: Regex,
     preceding: Regex,
     following: Regex,
     following_no_paren: Regex,
@@ -142,9 +152,17 @@ impl ContextMatcher {
     /// # Panics
     /// If `labels` does not compile; labels are static detector data.
     pub fn new(labels: &str, left: usize, right: usize) -> Self {
+        // `ContextScan` relies on a label match in a window also being a match
+        // in the full text, which anchors and word boundaries would break.
+        debug_assert!(
+            !labels.contains(['^', '$']) && !labels.contains(r"\b") && !labels.contains("(?<"),
+            "context labels must not use anchors, word boundaries or lookbehind"
+        );
+
         let compile = |pattern: String| Regex::new(&pattern).expect("valid context pattern");
 
         Self {
+            label: compile(format!("(?i){labels}")),
             preceding: compile(format!(
                 r"(?i)(?:^|[^\p{{L}}\p{{M}}\p{{N}}_]){labels}[ \t]{{0,8}}[:#]?[ \t]{{0,8}}$"
             )),
@@ -170,6 +188,84 @@ impl ContextMatcher {
 
     pub fn has_context(&self, text: &str, start: usize, end: usize) -> bool {
         self.has_preceding(text, start) || self.has_following(text, end)
+    }
+
+    /// Context checks over many candidates in `text`, with a label pre-check.
+    pub fn scan<'m, 't>(&'m self, text: &'t str) -> ContextScan<'m, 't> {
+        ContextScan {
+            matcher: self,
+            text,
+            labels: OnceCell::new(),
+        }
+    }
+}
+
+/// A UTF-16 unit takes at most 3 UTF-8 bytes, so `n` units span at most
+/// `3n` bytes: a byte bound that contains every UTF-16 window.
+const MAX_BYTES_PER_UTF16_UNIT: usize = 3;
+
+/// [`ContextMatcher`] checks for one text. Label occurrences are found once,
+/// on first use; the exact window regexes run only when an occurrence
+/// overlaps the window. Results are identical to the matcher's own methods:
+/// a label inside a window is a label in the text (labels have no anchors),
+/// and leftmost-first matching reports every label position inside some
+/// reported occurrence.
+pub struct ContextScan<'m, 't> {
+    matcher: &'m ContextMatcher,
+    text: &'t str,
+    labels: OnceCell<Vec<(usize, usize)>>,
+}
+
+impl ContextScan<'_, '_> {
+    pub fn has_preceding(&self, start: usize) -> bool {
+        self.label_before(start) && self.matcher.has_preceding(self.text, start)
+    }
+
+    pub fn has_following(&self, end: usize) -> bool {
+        self.label_after(end) && self.matcher.has_following(self.text, end)
+    }
+
+    pub fn has_context(&self, start: usize, end: usize) -> bool {
+        self.has_preceding(start) || self.has_following(end)
+    }
+
+    /// Whether the text has any label at all. When it has none, no
+    /// candidate can have context, so a detector may skip its pattern scan.
+    pub fn any_label(&self) -> bool {
+        !self.labels().is_empty()
+    }
+
+    /// Whether a label occurrence overlaps the left window of `start`.
+    pub fn label_before(&self, start: usize) -> bool {
+        let reach = MAX_BYTES_PER_UTF16_UNIT * self.matcher.left;
+
+        self.label_overlaps(start.saturating_sub(reach), start)
+    }
+
+    /// Whether a label occurrence overlaps the right window of `end`.
+    pub fn label_after(&self, end: usize) -> bool {
+        let reach = MAX_BYTES_PER_UTF16_UNIT * self.matcher.right;
+
+        self.label_overlaps(end, end.saturating_add(reach))
+    }
+
+    /// Occurrences are sorted and disjoint, so the first one ending after
+    /// `lo` is the only candidate.
+    fn label_overlaps(&self, lo: usize, hi: usize) -> bool {
+        let labels = self.labels();
+        let first = labels.partition_point(|&(_, end)| end <= lo);
+
+        labels.get(first).is_some_and(|&(start, _)| start < hi)
+    }
+
+    fn labels(&self) -> &[(usize, usize)] {
+        self.labels.get_or_init(|| {
+            self.matcher
+                .label
+                .find_iter(self.text)
+                .map(|found| (found.start(), found.end()))
+                .collect()
+        })
     }
 }
 
@@ -248,6 +344,12 @@ impl Detector for ContextDetector {
     }
 
     fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+        let context = self.context.scan(text);
+
+        if !context.any_label() {
+            return;
+        }
+
         let mut candidates = Vec::new();
 
         for found in self.pattern.find_iter(text) {
@@ -257,17 +359,21 @@ impl Detector for ContextDetector {
                 continue;
             }
 
-            let mut accepted = match self.validate {
+            // `None` means no validator; reasons are built only for survivors.
+            let validated = match self.validate {
                 Some(validate) => match validate(found.as_str()) {
-                    Some(list) => reasons(list),
+                    Some(list) => Some(list),
                     None => continue,
                 },
-                None => vec![format!("{}.format", self.id)],
+                None => None,
             };
 
-            if !self.context.has_context(text, start, end) {
+            if !context.has_context(start, end) {
                 continue;
             }
+
+            let mut accepted =
+                validated.map_or_else(|| vec![format!("{}.format", self.id)], reasons);
 
             accepted.push(format!("{}.context", self.id));
 

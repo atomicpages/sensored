@@ -1,0 +1,88 @@
+{
+  "rules": [
+    "email",
+    "digital_identity",
+    "license_plate",
+    "to_id",
+    "crypto_address",
+    "fj_id",
+    "png_id",
+    "drivers_license",
+    "postal_code",
+    "address",
+    "vin",
+    "uk_nino",
+    "payment_card",
+    "phone",
+    "person_name_lite",
+    "au_tfn",
+    "uz_stir",
+    "tracking_number",
+    "health_insurance_id",
+    "ma_id"
+  ],
+  "rows": {
+    "chatAscii": {
+      "ts": {
+        "p50": 0.202583,
+        "p99": 0.408917,
+        "avg": 0.2109162279314888
+      },
+      "native": {
+        "p50": 0.05545795703125,
+        "p99": 0.05692879223632812,
+        "avg": 0.05583637316894531
+      }
+    },
+    "chatAsciiHigh": {
+      "ts": {
+        "p50": 0.340875,
+        "p99": 0.684041,
+        "avg": 0.35859237577117214
+      },
+      "native": {
+        "p50": 0.102917,
+        "p99": 0.134292,
+        "avg": 0.10598148578982154
+      }
+    },
+    "chatUnicode": {
+      "ts": {
+        "p50": 0.37825,
+        "p99": 0.716916,
+        "avg": 0.3968882551210428
+      },
+      "native": {
+        "p50": 0.1115,
+        "p99": 0.139542,
+        "avg": 0.1143692515162326
+      }
+    },
+    "docAscii": {
+      "ts": {
+        "p50": 99.902333,
+        "p99": 100.953542,
+        "avg": 100.31639933333332
+      },
+      "native": {
+        "p50": 13.837833,
+        "p99": 14.132292,
+        "avg": 13.854300441860465
+      }
+    },
+    "docUnicode": {
+      "ts": {
+        "p50": 1434.700333,
+        "p99": 1475.99925,
+        "avg": 1443.0897950833332
+      },
+      "native": {
+        "p50": 32.031291,
+        "p99": 32.504417,
+        "avg": 32.1586041875
+      }
+    }
+  },
+  "throughputOk": true,
+  "p99Ok": true
+}

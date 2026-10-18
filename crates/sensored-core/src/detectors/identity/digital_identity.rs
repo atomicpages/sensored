@@ -5,7 +5,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 
 use crate::detector::{
-    ContextHint, ContextMatcher, Detector, HintPosition, HintWindow, StreamMeta,
+    ContextHint, ContextMatcher, ContextScan, Detector, HintPosition, HintWindow, StreamMeta,
     is_adjacent_forbidden, push_aligned,
 };
 use crate::text::window_after;
@@ -99,13 +99,21 @@ fn is_blocklisted(value: &str) -> bool {
         .any(|word| word.eq_ignore_ascii_case(value))
 }
 
-fn has_context(text: &str, value: &str, start: usize, end: usize) -> bool {
+fn has_context(
+    context: &ContextScan<'_, '_>,
+    text: &str,
+    value: &str,
+    start: usize,
+    end: usize,
+) -> bool {
     if is_distinctive(value) {
-        return CONTEXT.has_context(text, start, end);
+        return context.has_context(start, end);
     }
 
-    CONTEXT.has_preceding(text, start)
-        || FOLLOWING_PAREN.is_match(window_after(text, end, RIGHT_CONTEXT))
+    // The parenthesized form also needs a label, so the scan's pre-check holds.
+    context.has_preceding(start)
+        || (context.label_after(end)
+            && FOLLOWING_PAREN.is_match(window_after(text, end, RIGHT_CONTEXT)))
 }
 
 pub struct DigitalIdentity;
@@ -144,6 +152,13 @@ impl Detector for DigitalIdentity {
     }
 
     fn detect(&self, text: &str, out: &mut Vec<Detection>) {
+        let context = CONTEXT.scan(text);
+
+        // Every branch needs a label nearby.
+        if !context.any_label() {
+            return;
+        }
+
         let mut candidates = Vec::new();
 
         for found in PATTERN.find_iter(text) {
@@ -164,7 +179,7 @@ impl Detector for DigitalIdentity {
                 continue;
             }
 
-            if !has_context(text, value, start, end) {
+            if !has_context(&context, text, value, start, end) {
                 continue;
             }
 

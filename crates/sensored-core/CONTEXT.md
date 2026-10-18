@@ -19,7 +19,10 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 - `grapheme.rs`: grapheme boundaries via `unicode-segmentation`. Keeps the TS
   quirk that a position between two ASCII bytes is a boundary.
 - `detector.rs`: the `Detector` trait, `StreamMeta`, adjacency and grapheme
-  filters, `ContextMatcher`, and the table-driven `ContextDetector`,
+  filters, `ContextMatcher` (with `ContextScan`: label occurrences are found
+  once per text, exact window regexes run only where a label overlaps the
+  window, and a text with no label skips the pattern scan; detectors with
+  required context should use it), and the table-driven `ContextDetector`,
   `ChecksumDetector` and `KeywordDetector`. `ExternalDetector` carries the
   metadata of a caller's JS detector; its matches arrive via collect/render.
 - `checksum.rs`: Luhn and NPI.
@@ -83,3 +86,5 @@ against recorded matches before detectors are ported. Run `cargo test` from
   `SENSORED_DETECTORS=email,phone` narrows the run.
 - `tests/stream.rs`: stream fixtures whose rules are all ported, at every
   two-chunk split and one chunk per char.
+- `examples/detector_profile.rs`: per-detector time on a text file
+  (`cargo run --release --example detector_profile -- <file>`).
