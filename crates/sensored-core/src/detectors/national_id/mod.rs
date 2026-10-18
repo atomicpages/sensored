@@ -12,18 +12,64 @@ mod au_tfn;
 mod fj_id;
 mod ma_id;
 mod png_id;
+mod ro_cnp;
+mod rs_jmbg;
+mod ru_passport;
+mod ru_snils;
+mod sa_id;
+mod th_id;
+mod tj_id;
+mod tm_passport;
 mod to_id;
+mod tr_id;
+mod ua_inn;
+mod ua_passport;
+mod uae_id;
+mod uk_nhs;
 mod uk_nino;
+mod us_ein;
+mod us_itin;
+mod us_ssn;
+mod uy_cedula;
+mod uz_passport;
 mod uz_stir;
+mod ve_cedula;
+mod ve_rif;
+mod vn_cccd;
+mod ws_id;
+mod za_id;
 
 pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(au_tfn::detector()));
     registry.insert(Arc::new(fj_id::detector()));
     registry.insert(Arc::new(ma_id::detector()));
     registry.insert(Arc::new(png_id::detector()));
+    registry.insert(Arc::new(ro_cnp::detector()));
+    registry.insert(Arc::new(rs_jmbg::detector()));
+    registry.insert(Arc::new(ru_passport::detector()));
+    registry.insert(Arc::new(ru_snils::detector()));
+    registry.insert(Arc::new(sa_id::detector()));
+    registry.insert(Arc::new(th_id::detector()));
+    registry.insert(Arc::new(tj_id::detector()));
+    registry.insert(Arc::new(tm_passport::detector()));
     registry.insert(Arc::new(to_id::detector()));
+    registry.insert(Arc::new(tr_id::detector()));
+    registry.insert(Arc::new(ua_inn::detector()));
+    registry.insert(Arc::new(ua_passport::detector()));
+    registry.insert(Arc::new(uae_id::detector()));
+    registry.insert(Arc::new(uk_nhs::detector()));
     registry.insert(Arc::new(uk_nino::detector()));
+    registry.insert(Arc::new(us_ein::detector()));
+    registry.insert(Arc::new(us_itin::detector()));
+    registry.insert(Arc::new(us_ssn::detector()));
+    registry.insert(Arc::new(uy_cedula::detector()));
+    registry.insert(Arc::new(uz_passport::detector()));
     registry.insert(Arc::new(uz_stir::detector()));
+    registry.insert(Arc::new(ve_cedula::detector()));
+    registry.insert(Arc::new(ve_rif::detector()));
+    registry.insert(Arc::new(vn_cccd::detector()));
+    registry.insert(Arc::new(ws_id::detector()));
+    registry.insert(Arc::new(za_id::detector()));
 }
 
 /// Compiles a static detector pattern.
@@ -32,6 +78,12 @@ pub fn register(registry: &mut Registry) {
 /// If `pattern` does not compile; patterns are static detector data.
 fn regex(pattern: &str) -> Regex {
     Regex::new(pattern).expect("valid pattern")
+}
+
+/// The two ASCII digits at `at` as a number, as `Number.parseInt(s.slice(at,
+/// at + 2), 10)` reads them. Callers check the length; patterns guarantee digits.
+fn two_digits(bytes: &[u8], at: usize) -> u8 {
+    (bytes[at] - b'0') * 10 + (bytes[at + 1] - b'0')
 }
 
 #[cfg(test)]
