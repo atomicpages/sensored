@@ -58,7 +58,12 @@ fn format_detectors_find_their_tokens() {
         (Box::new(npm_token::detector()), fill("npm_", 'a', 36)),
         (
             Box::new(openai_api_key::detector()),
-            format!("sk-proj-aaaaT3BlbkFJ{}", fill("", 'a', 20)),
+            // The marker is split so secret scanners don't flag the fixture.
+            format!(
+                "sk-proj-aaaa{}{}",
+                ["T3Blbk", "FJ"].concat(),
+                fill("", 'a', 20)
+            ),
         ),
         (
             Box::new(sendgrid_api_key::detector()),
