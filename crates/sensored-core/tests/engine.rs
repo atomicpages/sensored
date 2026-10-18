@@ -13,7 +13,6 @@ use std::sync::Arc;
 use sensored_core::Redactor;
 use sensored_core::detector::{Detector, StreamMeta};
 use sensored_core::types::Detection;
-use serde_json::{Value, json};
 
 struct Oracle {
     id: String,
@@ -91,50 +90,6 @@ fn oracle_redactor(case: &support::RenderCase) -> Redactor {
         .unwrap_or_else(|e| panic!("{}: config rejected: {e:?}", case.id))
 }
 
-/// The expected inspection with offsets converted to bytes.
-fn expected_json(case: &support::RenderCase) -> Value {
-    let groups: Vec<Value> = case
-        .expected
-        .groups
-        .iter()
-        .map(|group| {
-            let span = support::to_bytes(&case.input, &[group.start, group.end]);
-
-            let matches: Vec<Value> = group
-                .matches
-                .iter()
-                .map(|m| {
-                    let bytes = support::to_bytes(&case.input, &[m.start, m.end]);
-
-                    json!({
-                        "start": bytes[0],
-                        "end": bytes[1],
-                        "ruleId": m.rule_id,
-                        "entityType": m.entity_type,
-                        "reasons": m.reasons,
-                        "value": m.value,
-                    })
-                })
-                .collect();
-
-            json!({
-                "start": span[0],
-                "end": span[1],
-                "replacement": group.replacement,
-                "matches": matches,
-            })
-        })
-        .collect();
-
-    let mut expected = json!({ "text": case.expected.text, "groups": groups });
-
-    if let Some(map) = &case.expected.map {
-        expected["map"] = serde_json::to_value(map).expect("map");
-    }
-
-    expected
-}
-
 fn check(file: &str) {
     let cases: Vec<support::RenderCase> = support::golden(file);
     let mut failures = Vec::new();
@@ -146,7 +101,7 @@ fn check(file: &str) {
             .unwrap_or_else(|e| panic!("{}: {e:?}", case.id));
 
         let actual = serde_json::to_value(&actual).expect("inspection");
-        let expected = expected_json(case);
+        let expected = support::expected_inspection(case);
 
         // Compared as text: `Value` equality ignores key order (map order matters).
         let (actual, expected) = (actual.to_string(), expected.to_string());

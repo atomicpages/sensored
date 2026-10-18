@@ -17,7 +17,7 @@ use sensored_core::text::utf16_to_utf8;
 use sensored_core::types::{MaskPreserve, RuleSetting};
 use serde::Deserialize;
 use serde::de::DeserializeOwned;
-use serde_json::Value;
+use serde_json::{Value, json};
 
 pub const GOLDEN_VERSION: u64 = 1;
 
@@ -216,4 +216,63 @@ pub fn setting_from_json(value: &Value) -> RuleSetting {
         "remove" => RuleSetting::Remove,
         other => panic!("unknown action {other}"),
     }
+}
+
+/// A render case's expected inspection as JSON, offsets converted to bytes,
+/// in the field order the core serializes.
+pub fn expected_inspection(case: &RenderCase) -> Value {
+    let bytes = |start: usize, end: usize| {
+        let converted = to_bytes(&case.input, &[start, end]);
+
+        (converted[0], converted[1])
+    };
+
+    let groups: Vec<Value> = case
+        .expected
+        .groups
+        .iter()
+        .map(|group| {
+            let (start, end) = bytes(group.start, group.end);
+
+            let matches: Vec<Value> = group
+                .matches
+                .iter()
+                .map(|m| {
+                    let (start, end) = bytes(m.start, m.end);
+
+                    json!({
+                        "start": start,
+                        "end": end,
+                        "ruleId": m.rule_id,
+                        "entityType": m.entity_type,
+                        "reasons": m.reasons,
+                        "value": m.value,
+                    })
+                })
+                .collect();
+
+            json!({
+                "start": start,
+                "end": end,
+                "replacement": group.replacement,
+                "matches": matches,
+            })
+        })
+        .collect();
+
+    let mut expected = json!({ "text": case.expected.text, "groups": groups });
+
+    if let Some(map) = &case.expected.map {
+        expected["map"] = serde_json::to_value(map).expect("map");
+    }
+
+    expected
+}
+
+/// Loads a golden file as raw JSON, keeping key order.
+pub fn golden_raw(file: &str) -> Value {
+    let path = repo_root().join("conformance/golden").join(file);
+    let raw = std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
+
+    serde_json::from_str(&raw).unwrap_or_else(|e| panic!("{file}: {e}"))
 }

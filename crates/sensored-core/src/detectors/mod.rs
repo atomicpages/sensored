@@ -3,11 +3,25 @@
 //! Each detector family owns a module with a `register` function; `builtins`
 //! wires them in once, so parallel family ports never edit the same lines.
 
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 
 use indexmap::IndexMap;
 
 use crate::detector::Detector;
+
+pub mod cloud;
+pub mod contact;
+pub mod crypto;
+pub mod financial;
+pub mod healthcare;
+pub mod hr;
+pub mod identity;
+pub mod legal;
+pub mod logistics;
+pub mod national_id;
+pub mod network;
+pub mod person;
+pub mod token;
 
 /// Detectors by rule id, in registration order.
 #[derive(Clone, Default)]
@@ -42,7 +56,30 @@ impl Registry {
     }
 }
 
-/// All built-in detectors. Families are wired in during phases 2 and 3.
+/// All built-in detectors, built once and shared.
+///
+/// Order only affects listing (rules follow policy order); matching the TS
+/// `listDetectors()` order is a phase 4 task.
 pub fn builtins() -> Registry {
-    Registry::default()
+    static BUILTINS: LazyLock<Registry> = LazyLock::new(|| {
+        let mut registry = Registry::default();
+
+        contact::register(&mut registry);
+        financial::register(&mut registry);
+        national_id::register(&mut registry);
+        identity::register(&mut registry);
+        person::register(&mut registry);
+        network::register(&mut registry);
+        cloud::register(&mut registry);
+        token::register(&mut registry);
+        logistics::register(&mut registry);
+        healthcare::register(&mut registry);
+        hr::register(&mut registry);
+        legal::register(&mut registry);
+        crypto::register(&mut registry);
+
+        registry
+    });
+
+    BUILTINS.clone()
 }

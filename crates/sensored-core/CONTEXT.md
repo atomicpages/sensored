@@ -23,8 +23,10 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
   `ChecksumDetector` and `KeywordDetector`. `ExternalDetector` carries the
   metadata of a caller's JS detector; its matches arrive via collect/render.
 - `checksum.rs`: Luhn and NPI.
-- `detectors/`: the `Registry`. Each family module exposes `register`;
-  `builtins()` wires the families in.
+- `detectors/`: the `Registry` and one module per family (`contact/`,
+  `national_id/`, ...). Each family's `mod.rs` exposes `register`;
+  `builtins()` wires every family in once and caches the result. A detector
+  port touches only its family's directory.
 - `policy.rs`: `resolve_policy`, ported check for check from `policy.ts`, so
   every error has the TS code and path. Children: `validate.rs` (config shape,
   rule settings, limits), `presets.rs` (built-in preset table, all `redact`;
@@ -69,3 +71,12 @@ built-in's metadata (`tests/data/detectors.json`, exported from the TS
 registry) as detectors that find nothing, so policy and rendering are tested
 against recorded matches before detectors are ported. Run `cargo test` from
 `crates/`.
+
+- `tests/engine.rs`: render fixtures through `Redactor` with oracle detectors.
+- `tests/detectors.rs`: every ported built-in against
+  `conformance/golden/detectors/<id>.json` (gitignored; run
+  `bun run eval:generate` in `packages/sensored`, then
+  `bun run conformance:generate`), plus metadata parity with TS.
+  `SENSORED_DETECTORS=email,phone` narrows the run.
+- `tests/stream.rs`: stream fixtures whose rules are all ported, at every
+  two-chunk split and one chunk per char.
