@@ -90,8 +90,13 @@ against recorded matches before detectors are ported. Run `cargo test` from
   `SENSORED_DETECTORS=email,phone` narrows the run. Also runs the committed
   `render.json`, `offsets.json` and `presets.json` cases (incl.
   `detector-edge/*`) through the real detectors once all their rules are
-  ported.
+  ported. `person_name` is excluded from its golden fixtures (`NOT_GOLDEN`):
+  TS wraps `compromise`, while the Rust detector is a rule-based NER judged
+  by quality, not parity.
 - `tests/stream.rs`: stream fixtures whose rules are all ported, at every
   two-chunk split and one chunk per char.
 - `examples/detector_profile.rs`: per-detector time on a text file
   (`cargo run --release --example detector_profile -- <file>`).
+- `examples/person_name_eval.rs`: scores `person_name` on the eval corpus
+  (official labels and true names only; results in
+  `packages/sensored/eval/person-name-baseline.json`).
