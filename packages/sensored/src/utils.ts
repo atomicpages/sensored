@@ -16,3 +16,16 @@ export function hasOnlyKeys(
 export function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+/** Freezes `value` and every object reachable from it. */
+export function deepFreeze<T>(value: T): T {
+  if (typeof value === "object" && value !== null && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) {
+      deepFreeze(child);
+    }
+
+    Object.freeze(value);
+  }
+
+  return value;
+}

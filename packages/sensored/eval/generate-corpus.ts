@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { EVAL_RULES } from "./evaluator";
-import { createRedactor } from "../src/index.ts";
+import { createRedactor } from "../src/reference.ts";
 
 interface Tuple {
   ruleId: string;

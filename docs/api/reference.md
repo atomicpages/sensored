@@ -440,8 +440,8 @@ function listDetectors(): readonly DetectorDescription[];
 
 ### preloadPersonNameDetector
 
-Loads the optional `compromise` dependency for the `person_name` NER detector.
-Concurrent and repeated calls share one import.
+Kept for compatibility: the `person_name` NER needs no loading, so this
+resolves immediately.
 
 ```ts
 import { preloadPersonNameDetector } from "sensored";

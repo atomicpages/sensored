@@ -3,8 +3,10 @@ import llmstxt, {
   copyOrDownloadAsMarkdownButtons,
 } from "vitepress-plugin-llms";
 
+// The TS reference engine: the browser (Wasm) entry lands in phase 4b of the
+// Rust core rewrite; `src/index.ts` loads the napi addon, which needs Node.
 const sensoredEntry = new URL(
-  "../../packages/sensored/src/index.ts",
+  "../../packages/sensored/src/reference.ts",
   import.meta.url,
 ).pathname;
 

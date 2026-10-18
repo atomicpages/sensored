@@ -11,7 +11,8 @@
  */
 import { createRequire } from "node:module";
 import { do_not_optimize, measure } from "mitata";
-import { createRedactor, type RedactorConfig } from "../src/index.ts";
+import { createRedactor } from "../src/reference.ts";
+import type { RedactorConfig } from "../src/types.ts";
 import {
   CHAT_SIZE,
   DOC_SIZE,

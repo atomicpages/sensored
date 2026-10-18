@@ -1,15 +1,9 @@
-import type { RestorationContext } from "../engine";
-import {
-  collectMatches,
-  createRestorationContext,
-  renderMatches,
-} from "../engine";
 import { createRedactor } from "../index";
 import { PLACEHOLDER_TEST } from "../placeholders";
 import type { Session } from "../session";
 import { SESSION_BRAND } from "../symbols";
 import { redactValue } from "../traverse";
-import type { ActiveRule, RedactorConfig, RestorationMap } from "../types";
+import type { RedactorConfig, RestorationMap } from "../types";
 
 export { SESSION_BRAND } from "../symbols";
 
@@ -33,16 +27,29 @@ export interface SharedRedactor {
   reset(): void;
 }
 
-function hydrateContext(
-  ctx: RestorationContext,
-  initialMap: RestorationMap,
-): void {
-  for (const [placeholder, original] of Object.entries(initialMap)) {
+/** Session numbering: placeholder to original, per-base counters, dedup. */
+interface Numbering {
+  readonly map: Map<string, string>;
+  readonly counters: Map<string, number>;
+  readonly reverseMap?: Map<string, string>;
+}
+
+function createNumbering(
+  dedup: boolean,
+  initialMap: RestorationMap | undefined,
+): Numbering {
+  const numbering: Numbering = {
+    map: new Map(),
+    counters: new Map(),
+    reverseMap: dedup ? new Map() : undefined,
+  };
+
+  for (const [placeholder, original] of Object.entries(initialMap ?? {})) {
     if (!PLACEHOLDER_TEST.test(placeholder)) {
       continue;
     }
 
-    ctx.map.set(placeholder, original);
+    numbering.map.set(placeholder, original);
 
     const lastUnderscore = placeholder.lastIndexOf("_");
     if (lastUnderscore > 0) {
@@ -52,49 +59,86 @@ function hydrateContext(
         10,
       );
       if (Number.isInteger(num)) {
-        const current = ctx.counters.get(base) ?? 0;
-        ctx.counters.set(base, Math.max(current, num));
+        const current = numbering.counters.get(base) ?? 0;
+        numbering.counters.set(base, Math.max(current, num));
       }
     }
 
-    if (ctx.reverseMap) {
-      ctx.reverseMap.set(original, placeholder);
-    }
+    numbering.reverseMap?.set(original, placeholder);
   }
+
+  return numbering;
 }
 
+/**
+ * The session placeholder for `original`. `replacement` is the engine's
+ * per-call placeholder (`[EMAIL_1]`); only its base is kept, and the number
+ * continues the session's counter.
+ */
+function placeholderFor(
+  numbering: Numbering,
+  replacement: string,
+  original: string,
+): string {
+  const existing = numbering.reverseMap?.get(original);
+
+  if (existing) {
+    return existing;
+  }
+
+  const base = replacement.slice(1, replacement.lastIndexOf("_"));
+  const counter = (numbering.counters.get(base) ?? 0) + 1;
+  const placeholder = `[${base}_${counter}]`;
+
+  numbering.counters.set(base, counter);
+  numbering.map.set(placeholder, original);
+  numbering.reverseMap?.set(original, placeholder);
+
+  return placeholder;
+}
+
+/**
+ * A redactor whose placeholders number across calls. The engine renders each
+ * call with restoration on; its groups are renumbered against the session.
+ * `detectOnly` configs keep their flag (adapters skip redaction for them).
+ */
 export function createSharedRedactor(
-  rules: readonly ActiveRule[],
-  allowlist: Set<string>,
+  config: RedactorConfig,
   options?: {
     dedup?: boolean;
     initialMap?: RestorationMap;
   },
 ): SharedRedactor {
-  let restoration = createRestorationContext(options?.dedup);
+  const redactor = createRedactor(
+    config.detectOnly ? config : { ...config, restore: true },
+  );
+  const dedup = options?.dedup ?? false;
 
-  if (options?.initialMap) {
-    hydrateContext(restoration, options.initialMap);
-  }
+  let numbering = createNumbering(dedup, options?.initialMap);
 
   return {
     redact(text: string): string {
-      const matches = collectMatches(text, rules, allowlist);
-      const { segments } = renderMatches(
-        text,
-        matches,
-        text.length,
-        false,
-        0,
-        restoration,
-      );
-      return segments.map((s) => s.text).join("");
+      const { groups } = redactor.inspect(text);
+      let output = "";
+      let cursor = 0;
+
+      for (const { start, end, replacement } of groups) {
+        output += text.slice(cursor, start);
+        output += placeholderFor(
+          numbering,
+          replacement,
+          text.slice(start, end),
+        );
+        cursor = end;
+      }
+
+      return output + text.slice(cursor);
     },
     get map(): RestorationMap {
-      return Object.fromEntries(restoration.map.entries());
+      return Object.fromEntries(numbering.map.entries());
     },
     reset(): void {
-      restoration = createRestorationContext(options?.dedup);
+      numbering = createNumbering(dedup, undefined);
     },
   };
 }

@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "crates/sensored-napi"
   ],
   "scripts": {
     "build": "bun run --filter sensored build",

@@ -2,15 +2,15 @@
  * Runs the TS reference engine through its public API and shapes the results
  * into the fixture contract in `types.ts`.
  */
-import {
-  createRedactor,
-  type RestorationMap,
-  restore,
-  SensoredError,
-  type StreamOptions,
-} from "../packages/sensored/src/index";
+import { SensoredError } from "../packages/sensored/src/errors";
 import { resolvePolicy } from "../packages/sensored/src/policy";
+import { createRedactor } from "../packages/sensored/src/reference";
+import { restore } from "../packages/sensored/src/restore";
 import { StreamRestorer } from "../packages/sensored/src/stream-restore";
+import type {
+  RestorationMap,
+  StreamOptions,
+} from "../packages/sensored/src/types";
 import type {
   ErrorCase,
   JsonRedactorConfig,

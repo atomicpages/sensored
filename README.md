@@ -30,25 +30,17 @@ compatibility on every push.
 
 > **Note:** The CLI requires Bun. The core library and adapters work everywhere.
 
-For higher-recall person name detection via NER:
-
-```bash
-bun add compromise
-```
-
 For AI-powered semantic confirmation that eliminates false positives:
 
 ```bash
 bun add @typesafe-ai/sdk
 ```
 
-The default `person_name_lite` detector uses a lightweight regex + bloom filter
-with zero runtime dependencies. Use `person_name` to opt into compromise.js NER:
+The default `person_name_lite` detector uses a lightweight regex + bloom filter.
+Use `person_name` to opt into the rule-based NER (no extra dependency):
 
 ```ts
-import { createRedactor, preloadPersonNameDetector } from "sensored";
-
-await preloadPersonNameDetector();
+import { createRedactor } from "sensored";
 
 const redactor = createRedactor({
   rules: { person_name: { action: "redact" } },
@@ -325,7 +317,7 @@ Presets are documented rule selections, not compliance guarantees.
 | Financial     | payment_card, iban, eu_vat, swift_bic, uk_sort_code, us_routing, uk_bank_account, card_data, financial_reference, investment_account, payment_gateway_id |
 | National ID   | us_ssn, uk_nino, ca_sin, au_tfn, jp_my_number, uk_nhs, us_itin, us_ein, nz_ird, + 56 more across Europe, Asia, Africa, Middle East, Americas, Oceania    |
 | Identity      | passport, drivers_license, digital_identity, license_plate, vin, imei, imsi                                                                              |
-| Person        | person_name (requires `compromise`), person_name_lite (lightweight regex + bloom filter)                                                                 |
+| Person        | person_name (rule-based NER), person_name_lite (lightweight regex + bloom filter)                                                                 |
 | Network       | ipv4, ipv6, mac_address, url_with_auth, url_query_key                                                                                                    |
 | Cloud Keys    | aws_access_key, google_api_key, stripe_api_key, slack_token, cloudflare_api_token, digitalocean_token                                                     |
 | Tokens & Keys | github_token, jwt_token, private_key, generic_api_key, http_auth_header, + 18 more (sendgrid, huggingface, slack_webhook, telegram, gitlab, npm, openai, anthropic, shopify, twilio_sid, mailchimp, notion, sentry, heroku, linear, mailgun, okta, square, discord_bot, datadog, pagerduty, scaleway) |

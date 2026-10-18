@@ -82,5 +82,6 @@ Run these from this directory, with bun:
 Committed: `index.d.ts` (the generated API contract, so API changes show up in
 review) and `bun.lock`. Ignored: `*.node` (platform binaries) and `index.js`
 (the generated platform loader, rebuilt on every build). The package is
-private and outside the root Bun workspaces. `package.json` lists the 7 plan
+private and a root Bun workspace, so `packages/sensored` resolves
+`@sensored/native` (`workspace:*`). `package.json` lists the 7 plan
 targets; local builds are darwin-arm64 only.

@@ -1,4 +1,5 @@
 import { fnv1a32 } from "../../hash";
+import { personNameQuestion } from "../../semantic/questions";
 import type { SemanticQuestion } from "../../semantic/types";
 import type { Detection } from "../../types";
 import { Detector } from "../base";
@@ -128,19 +129,7 @@ export class PersonNameLiteDetector extends Detector {
     readonly before: string;
     readonly after: string;
   }): SemanticQuestion | undefined {
-    return {
-      instructions: {
-        task: "Determine whether the candidate text refers to a specific individual person.",
-        candidate: candidate.value,
-        before: candidate.before,
-        after: candidate.after,
-      },
-      criteria: {
-        true: "The candidate is the name of a specific individual person (e.g. 'John Smith', 'Dr. Jane Doe').",
-        false:
-          "The candidate is a place, organization, product, title, or sentence-start word (e.g. 'New York', 'Apple Inc').",
-      },
-    };
+    return personNameQuestion(candidate);
   }
 
   override detect(text: string): Detection[] {
