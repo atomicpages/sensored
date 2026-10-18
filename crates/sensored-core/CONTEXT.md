@@ -42,8 +42,8 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
     stream?, contextHint? }`. The wrapper strips and checks `pattern`,
     `validate` and `semanticConfirm`; here they are unknown keys. Each
     descriptor becomes an `ExternalDetector` on a copy of the registry.
-  - `customHeaders` are validated (strings only) but not applied until
-    `http_auth_header` is ported (`TODO(phase 3)`).
+  - `customHeaders` are validated (strings only) and replace
+    `http_auth_header` with `token::http_auth_header::with_custom_headers`.
   - Key order follows the caller's JSON, as in TS; `serde_json` is built
     with `preserve_order` for this.
 - `render/`: `resolve_replacement` picks the winning action (remove > redact

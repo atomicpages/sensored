@@ -14,6 +14,7 @@ use indexmap::IndexMap;
 use serde_json::Value;
 
 use crate::detectors::Registry;
+use crate::detectors::token::http_auth_header;
 use crate::errors::{ErrorCode, Result, SensoredError};
 use crate::types::{ActiveRule, RuleSetting};
 
@@ -74,9 +75,10 @@ fn with_config_detectors<'r>(
 ) -> Result<Cow<'r, Registry>> {
     let mut registry = Cow::Borrowed(registry);
 
-    if let Some(_custom_headers) = &config.custom_headers {
-        // TODO(phase 3): replace `http_auth_header` with a detector built from
-        // `_custom_headers`, as `policy.ts` does with `buildHttpAuthHeaderPattern`.
+    if let Some(custom_headers) = &config.custom_headers {
+        let detector = http_auth_header::with_custom_headers(custom_headers);
+
+        registry.to_mut().insert(Arc::new(detector));
     }
 
     let Some(detectors) = config.detectors else {
