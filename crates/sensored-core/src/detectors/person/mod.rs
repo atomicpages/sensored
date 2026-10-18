@@ -1,5 +1,13 @@
 //! Built-in `person` detectors. Mirrors `packages/sensored/src/detectors/person/`.
 
+use std::sync::Arc;
+
 use super::Registry;
 
-pub fn register(_registry: &mut Registry) {}
+mod bloom;
+mod data;
+mod person_name_lite;
+
+pub fn register(registry: &mut Registry) {
+    registry.insert(Arc::new(person_name_lite::PersonNameLite));
+}
