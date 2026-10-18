@@ -18,7 +18,10 @@ or the Wasm build (`crates/sensored-wasm`). Plan:
     addon cannot load. `SENSORED_ENGINE=wasm` forces Wasm.
   - `../index.wasm-url.ts` (browser, Deno) and `../index.wasm-module.ts`
     (Workers, Vercel Edge): Wasm, initialised with top-level await.
-- `node.ts`: `loadNodeBinding()` for `../index.ts`.
+- `node.ts`: `loadNodeBinding()` for `../index.ts`. The compiled CLI
+  (`scripts/build-cli.ts`) replaces this module at build time with a static
+  `require` of one target's `.node` file, so the binary embeds the addon
+  (Bun embeds addons only through static requires) and needs no Wasm file.
 
 ## Modules
 
