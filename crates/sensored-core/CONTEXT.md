@@ -25,8 +25,22 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 - `checksum.rs`: Luhn and NPI.
 - `detectors/`: the `Registry`. Each family module exposes `register`;
   `builtins()` wires the families in.
-- `policy.rs`: config validation and policy resolution (presets, overrides,
-  external detector descriptors).
+- `policy.rs`: `resolve_policy`, ported check for check from `policy.ts`, so
+  every error has the TS code and path. Children: `validate.rs` (config shape,
+  rule settings, limits), `presets.rs` (built-in preset table, all `redact`;
+  `name@N` refs; merge conflicts unless the rule is in `config.rules`),
+  `descriptor.rs` (external detector descriptors), `json.rs` (JS semantics:
+  safe integers, `null` counts as defined, `Object.entries` key order).
+  - The config is JSON only. `semantic` is TS-only: the TS wrapper strips it,
+    so here it is an unknown key (`INVALID_CONFIG` at `rules`).
+  - `detectors` holds descriptors `{ id, entityType, replacement, context?,
+    stream?, contextHint? }`. The wrapper strips and checks `pattern`,
+    `validate` and `semanticConfirm`; here they are unknown keys. Each
+    descriptor becomes an `ExternalDetector` on a copy of the registry.
+  - `customHeaders` are validated (strings only) but not applied until
+    `http_auth_header` is ported (`TODO(phase 3)`).
+  - Key order follows the `serde_json::Map`, which is sorted unless the
+    `preserve_order` feature is on; TS order needs it on.
 - `render/`: `resolve_replacement` (redact, mask, format-preserve,
   token-replace, remove, numbered restoration placeholders).
 - `hash.rs`: FNV-1a over UTF-16 code units, as TS hashes `charCodeAt`.
