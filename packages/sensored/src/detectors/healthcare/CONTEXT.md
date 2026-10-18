@@ -1,5 +1,9 @@
 # Healthcare detectors
 
+TS reference implementations, frozen (bug fixes only). The shipped detectors
+are the Rust ports in `crates/sensored-core/src/detectors/healthcare/`, the source
+of truth; new detectors go there.
+
 All built-in healthcare detectors live under `detectors/healthcare/` and extend
 the `Detector` base class directly. Each is exported as a singleton and
 registered in `detectors/registry.ts`.

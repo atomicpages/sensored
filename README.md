@@ -31,6 +31,10 @@ Node.js, Deno, and browser/edge compatibility on every push.
 
 > **Note:** The CLI requires Bun. The core library and adapters work everywhere.
 
+> **Upgrading from 1.x?** See the
+> [migration guide](https://atomicpages.github.io/sensored/guide/migrating-to-v2).
+> The engine is also a Rust crate, [`sensored-core`](https://atomicpages.github.io/sensored/guide/rust).
+
 For AI-powered semantic confirmation that eliminates false positives:
 
 ```bash
@@ -48,8 +52,8 @@ const redactor = createRedactor({
 });
 ```
 
-The dependency loads only when preloaded. Alternatively, add
-`@typesafe-ai/sdk` to let Jev confirm detections before redacting.
+Alternatively, add `@typesafe-ai/sdk` to let Jev confirm detections before
+redacting.
 
 ## Quick start
 
