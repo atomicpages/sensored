@@ -107,12 +107,17 @@ const redactor = createRedactor({
     http_auth_header: {
       customHeaders: [
         "X-My-Service-Key", // string: escaped as literal
-        /X-Custom-Auth\s*:\s*(\S+)/, // RegExp: source used directly
+        /X-Custom-Auth\s*:\s*(\S+)/, // RegExp: source used, value in a capture group
       ],
     },
   },
 });
 ```
+
+RegExp headers are matched case-insensitively by their `source` (their own
+flags are ignored), and the first capture group that matched is redacted; a
+RegExp without a capture group redacts nothing. Where a RegExp header and a
+built-in header match overlapping text, both are redacted as one span.
 
 - **ID**: `http_auth_header`
 - **Entity type**: `http_auth_header`

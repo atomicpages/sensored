@@ -97,6 +97,9 @@ function placeholderFor(
   return placeholder;
 }
 
+/** Longer than any JS string, and within the Wasm core's 32-bit lengths. */
+const UNLIMITED_INPUT = 2 ** 31 - 1;
+
 /**
  * A redactor whose placeholders number across calls. The engine renders each
  * call with restoration on; its groups are renumbered against the session.
@@ -109,9 +112,12 @@ export function createSharedRedactor(
     initialMap?: RestorationMap;
   },
 ): SharedRedactor {
-  const redactor = createRedactor(
-    config.detectOnly ? config : { ...config, restore: true },
-  );
+  const redactor = createRedactor({
+    ...config,
+    ...(config.detectOnly ? {} : { restore: true }),
+    // Sessions never enforced the input limit; keep that unless asked.
+    limits: { maxInputLength: UNLIMITED_INPUT, ...config.limits },
+  });
   const dedup = options?.dedup ?? false;
 
   let numbering = createNumbering(dedup, options?.initialMap);
