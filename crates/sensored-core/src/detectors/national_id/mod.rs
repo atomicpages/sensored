@@ -8,8 +8,30 @@ use regex::Regex;
 
 use super::Registry;
 
+mod ar_cuit;
+mod ar_dni;
 mod au_tfn;
+mod bg_egn;
+mod bh_cpr;
+mod ca_sin;
+mod cl_rut;
+mod co_cedula;
+mod co_nit;
+mod cz_id;
+mod de_id;
+mod ec_cedula;
+mod eg_id;
+mod es_dni;
 mod fj_id;
+mod fr_insee;
+mod gh_card;
+mod hu_id;
+mod hu_tax_id;
+mod id_nik;
+mod id_npwp;
+mod il_id;
+mod it_codice_fiscale;
+mod jo_id;
 mod jp_my_number;
 mod ke_id;
 mod ke_kra_pin;
@@ -62,8 +84,30 @@ mod ws_id;
 mod za_id;
 
 pub fn register(registry: &mut Registry) {
+    registry.insert(Arc::new(ar_cuit::detector()));
+    registry.insert(Arc::new(ar_dni::detector()));
     registry.insert(Arc::new(au_tfn::detector()));
+    registry.insert(Arc::new(bg_egn::detector()));
+    registry.insert(Arc::new(bh_cpr::detector()));
+    registry.insert(Arc::new(ca_sin::detector()));
+    registry.insert(Arc::new(cl_rut::detector()));
+    registry.insert(Arc::new(co_cedula::detector()));
+    registry.insert(Arc::new(co_nit::detector()));
+    registry.insert(Arc::new(cz_id::detector()));
+    registry.insert(Arc::new(de_id::detector()));
+    registry.insert(Arc::new(ec_cedula::detector()));
+    registry.insert(Arc::new(eg_id::detector()));
+    registry.insert(Arc::new(es_dni::detector()));
     registry.insert(Arc::new(fj_id::detector()));
+    registry.insert(Arc::new(fr_insee::detector()));
+    registry.insert(Arc::new(gh_card::detector()));
+    registry.insert(Arc::new(hu_id::detector()));
+    registry.insert(Arc::new(hu_tax_id::detector()));
+    registry.insert(Arc::new(id_nik::detector()));
+    registry.insert(Arc::new(id_npwp::detector()));
+    registry.insert(Arc::new(il_id::detector()));
+    registry.insert(Arc::new(it_codice_fiscale::detector()));
+    registry.insert(Arc::new(jo_id::detector()));
     registry.insert(Arc::new(jp_my_number::detector()));
     registry.insert(Arc::new(ke_id::detector()));
     registry.insert(Arc::new(ke_kra_pin::detector()));
@@ -145,6 +189,14 @@ fn month_day_valid(candidate: &str) -> bool {
     let bytes = candidate.as_bytes();
 
     (1..=12).contains(&two_digits(bytes, 2)) && (1..=31).contains(&two_digits(bytes, 4))
+}
+
+/// The value of ASCII digits, as `Number.parseInt(slice, 10)` reads the
+/// digit-only slices the detector patterns guarantee.
+fn number(digits: &[u8]) -> u64 {
+    digits
+        .iter()
+        .fold(0, |value, digit| value * 10 + u64::from(digit - b'0'))
 }
 
 #[cfg(test)]
