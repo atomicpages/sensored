@@ -2921,6 +2921,461 @@
           }
         ]
       }
+    },
+    {
+      "id": "detector-edge/uk-nino/hmrc-rules",
+      "config": {
+        "rules": {
+          "uk_nino": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Valid AB123456A CE123456D; invalid QA123456C AD123456C BG123456C ZZ123456C AB123456E.",
+      "expected": {
+        "text": "Valid [UK_NINO] [UK_NINO]; invalid QA123456C AD123456C BG123456C ZZ123456C AB123456E.",
+        "groups": [
+          {
+            "start": 6,
+            "end": 15,
+            "replacement": "[UK_NINO]",
+            "matches": [
+              {
+                "start": 6,
+                "end": 15,
+                "ruleId": "uk_nino",
+                "entityType": "uk_nino",
+                "reasons": [
+                  "uk_nino.format"
+                ],
+                "value": "AB123456A"
+              }
+            ]
+          },
+          {
+            "start": 16,
+            "end": 25,
+            "replacement": "[UK_NINO]",
+            "matches": [
+              {
+                "start": 16,
+                "end": 25,
+                "ruleId": "uk_nino",
+                "entityType": "uk_nino",
+                "reasons": [
+                  "uk_nino.format"
+                ],
+                "value": "CE123456D"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/national-id/letters-only",
+      "config": {
+        "rules": {
+          "to_id": {
+            "action": "redact"
+          },
+          "fj_id": {
+            "action": "redact"
+          },
+          "png_id": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "National ID: passport\nNational ID: AB12CD34\nFiji Identity: verified",
+      "expected": {
+        "text": "National ID: passport\nNational ID: [REDACTED]\nFiji Identity: verified",
+        "groups": [
+          {
+            "start": 35,
+            "end": 43,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 35,
+                "end": 43,
+                "ruleId": "fj_id",
+                "entityType": "fj_id",
+                "reasons": [
+                  "fj_id.format",
+                  "fj_id.context"
+                ],
+                "value": "AB12CD34"
+              },
+              {
+                "start": 35,
+                "end": 43,
+                "ruleId": "png_id",
+                "entityType": "png_id",
+                "reasons": [
+                  "png_id.format",
+                  "png_id.context"
+                ],
+                "value": "AB12CD34"
+              },
+              {
+                "start": 35,
+                "end": 43,
+                "ruleId": "to_id",
+                "entityType": "to_id",
+                "reasons": [
+                  "to_id.format",
+                  "to_id.context"
+                ],
+                "value": "AB12CD34"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/vin/case",
+      "config": {
+        "rules": {
+          "vin": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "VIN 1HGCM82633A004352 and 1hgcm82633a004352.",
+      "expected": {
+        "text": "VIN [VIN] and [VIN].",
+        "groups": [
+          {
+            "start": 4,
+            "end": 21,
+            "replacement": "[VIN]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 21,
+                "ruleId": "vin",
+                "entityType": "vin",
+                "reasons": [
+                  "vin.checksum",
+                  "vin.format"
+                ],
+                "value": "1HGCM82633A004352"
+              }
+            ]
+          },
+          {
+            "start": 26,
+            "end": 43,
+            "replacement": "[VIN]",
+            "matches": [
+              {
+                "start": 26,
+                "end": 43,
+                "ruleId": "vin",
+                "entityType": "vin",
+                "reasons": [
+                  "vin.checksum",
+                  "vin.format"
+                ],
+                "value": "1hgcm82633a004352"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/digital-identity/steam-case",
+      "config": {
+        "rules": {
+          "digital_identity": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "STEAM_0:1:12345 Steam ID\nsteam_0:1:67890 Steam ID",
+      "expected": {
+        "text": "[DIGITAL_IDENTITY] Steam ID\n[DIGITAL_IDENTITY] Steam ID",
+        "groups": [
+          {
+            "start": 0,
+            "end": 15,
+            "replacement": "[DIGITAL_IDENTITY]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 15,
+                "ruleId": "digital_identity",
+                "entityType": "digital_identity",
+                "reasons": [
+                  "digital_identity.format",
+                  "digital_identity.context"
+                ],
+                "value": "STEAM_0:1:12345"
+              }
+            ]
+          },
+          {
+            "start": 25,
+            "end": 40,
+            "replacement": "[DIGITAL_IDENTITY]",
+            "matches": [
+              {
+                "start": 25,
+                "end": 40,
+                "ruleId": "digital_identity",
+                "entityType": "digital_identity",
+                "reasons": [
+                  "digital_identity.format",
+                  "digital_identity.context"
+                ],
+                "value": "steam_0:1:67890"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/payment-card/last-group",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "card 4242 424242424242 or 4242 4242 4242 4242 or 4242424242424242",
+      "expected": {
+        "text": "card 4242 424242424242 or [PAYMENT_CARD] or [PAYMENT_CARD]",
+        "groups": [
+          {
+            "start": 26,
+            "end": 45,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 26,
+                "end": 45,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4242 4242 4242 4242"
+              }
+            ]
+          },
+          {
+            "start": 49,
+            "end": 65,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 49,
+                "end": 65,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4242424242424242"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/person-name-lite/roman-suffix",
+      "config": {
+        "rules": {
+          "person_name_lite": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Signed by John Smith III and Jane Doe II today.",
+      "expected": {
+        "text": "Signed by [PERSON_NAME] and [PERSON_NAME] today.",
+        "groups": [
+          {
+            "start": 10,
+            "end": 24,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 10,
+                "end": 24,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "John Smith III"
+              }
+            ]
+          },
+          {
+            "start": 29,
+            "end": 40,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 29,
+                "end": 40,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Doe II"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/email/url-and-unspaced-scripts",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "https://example.com/?email=jane@example.com /users/jane@example.com/profile 联系jane.doe@example.com谢谢 éjane@example.com",
+      "expected": {
+        "text": "https://example.com/?email=[EMAIL] /users/[EMAIL]/profile 联系[EMAIL]谢谢 éjane@example.com",
+        "groups": [
+          {
+            "start": 27,
+            "end": 43,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 27,
+                "end": 43,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane@example.com"
+              }
+            ]
+          },
+          {
+            "start": 51,
+            "end": 67,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 51,
+                "end": 67,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane@example.com"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 98,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 98,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detector-edge/postal-code/digit-runs",
+      "config": {
+        "rules": {
+          "postal_code": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Card 4111 1111 1111 1111, SSN 123-45-6789, call 555.123.4567; Berlin, 10115 and K1A 1A1 2000.",
+      "expected": {
+        "text": "Card 4111 1111 1111 1111, SSN 123-45-6789, call 555.123.4567; Berlin, [POSTAL_CODE] and [POSTAL_CODE] [POSTAL_CODE].",
+        "groups": [
+          {
+            "start": 70,
+            "end": 75,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 70,
+                "end": 75,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "10115"
+              }
+            ]
+          },
+          {
+            "start": 80,
+            "end": 87,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 80,
+                "end": 87,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "K1A 1A1"
+              }
+            ]
+          },
+          {
+            "start": 88,
+            "end": 92,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 88,
+                "end": 92,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2000"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

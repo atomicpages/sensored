@@ -7,8 +7,8 @@
 
 mod support;
 
-use sensored_core::Redactor;
 use sensored_core::detectors::builtins;
+use sensored_core::{ErrorCode, Redactor};
 
 fn selected() -> Vec<String> {
     let filter = std::env::var("SENSORED_DETECTORS").ok();
@@ -86,5 +86,50 @@ fn ported_detectors_match_golden_fixtures() {
             .map(|s| s.as_str())
             .collect::<Vec<_>>()
             .join("\n")
+    );
+}
+
+/// The committed render fixtures (incl. `detector-edge/*`) through the real
+/// detectors, for every case whose rules are all ported. These cover edge
+/// cases the corpus-derived fixtures never produce.
+#[test]
+fn ported_detectors_match_committed_render_fixtures() {
+    let mut failures = Vec::new();
+    let mut ran = 0;
+
+    for file in ["render.json", "offsets.json", "presets.json"] {
+        let cases: Vec<support::RenderCase> = support::golden(file);
+
+        for case in &cases {
+            let redactor = match Redactor::new(&case.config) {
+                Ok(redactor) => redactor,
+                Err(e) if e.code == ErrorCode::UnknownRule => continue,
+                Err(e) => panic!("{}: {e:?}", case.id),
+            };
+
+            let actual = redactor.inspect(&case.input).expect("inspect");
+            let actual = serde_json::to_value(&actual)
+                .expect("inspection")
+                .to_string();
+            let expected = support::expected_inspection(case).to_string();
+
+            if actual != expected {
+                failures.push(format!(
+                    "{file} {}\n  expected {expected}\n  actual   {actual}",
+                    case.id
+                ));
+            }
+
+            ran += 1;
+        }
+    }
+
+    eprintln!("committed render fixtures through real detectors: {ran}");
+
+    assert!(
+        failures.is_empty(),
+        "{} cases failed:\n{}",
+        failures.len(),
+        failures.join("\n")
     );
 }

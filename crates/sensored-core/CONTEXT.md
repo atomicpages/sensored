@@ -83,7 +83,10 @@ against recorded matches before detectors are ported. Run `cargo test` from
   `conformance/golden/detectors/<id>.json` (gitignored; run
   `bun run eval:generate` in `packages/sensored`, then
   `bun run conformance:generate`), plus metadata parity with TS.
-  `SENSORED_DETECTORS=email,phone` narrows the run.
+  `SENSORED_DETECTORS=email,phone` narrows the run. Also runs the committed
+  `render.json`, `offsets.json` and `presets.json` cases (incl.
+  `detector-edge/*`) through the real detectors once all their rules are
+  ported.
 - `tests/stream.rs`: stream fixtures whose rules are all ported, at every
   two-chunk split and one chunk per char.
 - `examples/detector_profile.rs`: per-detector time on a text file

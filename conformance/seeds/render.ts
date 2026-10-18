@@ -506,4 +506,57 @@ export const renderSeeds: readonly RenderSeed[] = [
     },
     input: `${BASIC_AUTH}\nX-Example-Auth: example-value-1\nSession.Id: abc123\nSessionXId: abc123\n`,
   },
+
+  // Detector edge cases: rules the eval corpus never exercises, so a port
+  // that misses one fails here rather than in production.
+  {
+    id: "detector-edge/uk-nino/hmrc-rules",
+    config: { rules: { uk_nino: { action: "redact" } } },
+    input:
+      "Valid AB123456A CE123456D; invalid QA123456C AD123456C BG123456C ZZ123456C AB123456E.",
+  },
+  {
+    id: "detector-edge/national-id/letters-only",
+    config: {
+      rules: {
+        to_id: { action: "redact" },
+        fj_id: { action: "redact" },
+        png_id: { action: "redact" },
+      },
+    },
+    input:
+      "National ID: passport\nNational ID: AB12CD34\nFiji Identity: verified",
+  },
+  {
+    id: "detector-edge/vin/case",
+    config: { rules: { vin: { action: "redact" } } },
+    input: "VIN 1HGCM82633A004352 and 1hgcm82633a004352.",
+  },
+  {
+    id: "detector-edge/digital-identity/steam-case",
+    config: { rules: { digital_identity: { action: "redact" } } },
+    input: "STEAM_0:1:12345 Steam ID\nsteam_0:1:67890 Steam ID",
+  },
+  {
+    id: "detector-edge/payment-card/last-group",
+    config: { rules: { payment_card: { action: "redact" } } },
+    input: "card 4242 424242424242 or 4242 4242 4242 4242 or 4242424242424242",
+  },
+  {
+    id: "detector-edge/person-name-lite/roman-suffix",
+    config: { rules: { person_name_lite: { action: "redact" } } },
+    input: "Signed by John Smith III and Jane Doe II today.",
+  },
+  {
+    id: "detector-edge/email/url-and-unspaced-scripts",
+    config: { rules: { email: { action: "redact" } } },
+    input:
+      "https://example.com/?email=jane@example.com /users/jane@example.com/profile 联系jane.doe@example.com谢谢 éjane@example.com",
+  },
+  {
+    id: "detector-edge/postal-code/digit-runs",
+    config: { rules: { postal_code: { action: "redact" } } },
+    input:
+      "Card 4111 1111 1111 1111, SSN 123-45-6789, call 555.123.4567; Berlin, 10115 and K1A 1A1 2000.",
+  },
 ];

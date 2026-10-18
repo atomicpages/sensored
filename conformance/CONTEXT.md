@@ -29,6 +29,10 @@ See `docs/internal/plans/rust-core-rewrite.md`.
   `{ rules: { [rule]: { action: "redact" } } }`. Without the corpus, generate
   and check skip these files with a notice.
 - `golden/*.json` are committed. Their inputs are hand-written and safe to push.
+  `render.json` includes `detector-edge/*` cases: detector rules the eval
+  corpus never exercises (HMRC NINO rules, digit-required IDs, case folding,
+  card group bounds, email and postal boundaries). Add one whenever a
+  detector rule is fixed or a port could plausibly miss it.
 - `golden/detectors/*.json` are derived from the eval corpus and gitignored,
   because synthetic tokens trip secret scanners. `golden/detectors.manifest.json`
   (committed) holds their SHA-256 digests and the corpus digest, so drift is
