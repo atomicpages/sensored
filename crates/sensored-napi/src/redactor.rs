@@ -1,26 +1,22 @@
 //! The `Redactor` class. Fast path: `redact`, `redactWithMap`, `inspect` and
 //! `stream` go straight to the core `Redactor`, one FFI call each. The hybrid
-//! seam (`collect`, `render`) runs through `Seam`.
+//! seam (`collect`, `render`) goes to the core's seam methods.
 
 use napi::Env;
 use napi_derive::napi;
 use sensored_core::StreamSettings;
-use sensored_core::detectors::builtins;
 use sensored_core::errors::ErrorCode;
-use sensored_core::policy::resolve_policy;
 use sensored_core::stream::OffsetUnit;
 use sensored_core::types as core;
 
 use crate::error::{OrThrow, throw};
 use crate::js::{Detection, Inspection, RedactResult, js_offset};
 use crate::offsets::OffsetMap;
-use crate::seam::Seam;
 use crate::stream::Stream;
 
 #[napi]
 pub struct Redactor {
     core: sensored_core::Redactor,
-    seam: Seam,
 }
 
 #[napi]
@@ -33,17 +29,9 @@ impl Redactor {
             return throw(env, ErrorCode::InvalidConfig);
         };
 
-        let registry = builtins();
-        let core = sensored_core::Redactor::with_registry(&config, &registry).or_throw(env)?;
+        let core = sensored_core::Redactor::new(&config).or_throw(env)?;
 
-        // TODO(core): resolves twice because the core `Redactor` does not
-        // expose its resolved rules. Drop once it does.
-        let resolved = resolve_policy(&config, &registry).or_throw(env)?;
-
-        Ok(Self {
-            core,
-            seam: Seam::new(resolved),
-        })
+        Ok(Self { core })
     }
 
     #[napi]
@@ -89,7 +77,7 @@ impl Redactor {
     /// Raw core detections, before allowlist and placeholder filtering.
     #[napi]
     pub fn collect(&self, env: &Env, text: String) -> napi::Result<Vec<Detection>> {
-        let detections = self.seam.collect(&text).or_throw(env)?;
+        let detections = self.core.collect(&text).or_throw(env)?;
 
         let bounds = detections.iter().flat_map(|d| [d.start, d.end]);
         let offsets = OffsetMap::utf8_to_utf16(&text, bounds);
@@ -129,7 +117,7 @@ impl Redactor {
             })
             .collect();
 
-        let inspection = self.seam.render(&text, detections, report).or_throw(env)?;
+        let inspection = self.core.render(&text, detections, report).or_throw(env)?;
 
         Ok(Inspection::from_core(&text, inspection))
     }

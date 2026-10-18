@@ -113,6 +113,22 @@ fn check(file: &str) {
             ));
         }
 
+        // The hybrid seam with no caller detections must equal `inspect`.
+        let collected = redactor.collect(&case.input).expect("collect");
+        let rendered = redactor
+            .render(&case.input, collected, true)
+            .expect("render");
+        let rendered = serde_json::to_value(&rendered)
+            .expect("rendered")
+            .to_string();
+
+        if rendered != actual {
+            failures.push(format!(
+                "{}: collect + render differs from inspect()",
+                case.id
+            ));
+        }
+
         let redacted = redactor.redact(&case.input).expect("redact");
 
         if redacted.text != case.expected.text {

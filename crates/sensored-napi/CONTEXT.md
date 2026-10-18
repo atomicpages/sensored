@@ -53,11 +53,8 @@ these as `SensoredError`.
 
 ## Modules
 
-- `redactor.rs`: the `Redactor` class. Holds the core `Redactor` (fast path)
-  and a `Seam`.
-- `seam.rs`: collect/render over a `ResolvedPolicy`, with a rule-id index.
-  The config is resolved twice at create time because the core `Redactor`
-  does not expose its resolved rules (`TODO(core)`).
+- `redactor.rs`: the `Redactor` class over the core `Redactor`, including
+  the seam (`collect`/`render` live in the core so Wasm shares them).
 - `stream.rs`: the `Stream` class over `StreamCore`.
 - `js.rs`: JS object types and moves from core types.
 - `error.rs`: `OrThrow` and the error shape above.

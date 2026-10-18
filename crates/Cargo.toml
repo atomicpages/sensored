@@ -7,3 +7,7 @@ edition = "2024"
 license = "MIT"
 repository = "https://github.com/atomicpages/sensored"
 rust-version = "1.85"
+
+[profile.release]
+lto = true
+codegen-units = 1
