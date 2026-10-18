@@ -44,7 +44,8 @@ Differences from napi, none visible through `NativeBinding`:
   `cargo build --target wasm32-unknown-unknown --release -p sensored-wasm`,
   `wasm-bindgen --target web` and `wasm-opt -O3` (skipped when missing) into
   `packages/sensored/wasm/` (gitignored). `bun run build` runs it first.
-- Tools: `rustup target add wasm32-unknown-unknown`;
+- Tools (CI: `.github/actions/setup-rust` with `wasm: "true"`, which reads
+  the pin below): `rustup target add wasm32-unknown-unknown`;
   `cargo install wasm-bindgen-cli --version <x>`, matching the `=` pin on
   `wasm-bindgen` in `Cargo.toml` exactly; optionally binaryen's `wasm-opt`.
   `-O3` over `-Oz`: `-Oz` saves under 2% and costs speed.
