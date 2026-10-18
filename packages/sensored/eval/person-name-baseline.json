@@ -1,0 +1,22 @@
+{
+  "revision": "independent",
+  "label": "person_name_lite",
+  "detectors": {
+    "person_name": {
+      "tp": 233,
+      "fp": 220,
+      "fn": 706,
+      "precision": 0.5143487858719646,
+      "recall": 0.24813631522896698,
+      "f1": 0.33477011494252873
+    },
+    "person_name_lite": {
+      "tp": 937,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1,
+      "recall": 0.9978700745473909,
+      "f1": 0.9989339019189766
+    }
+  }
+}

@@ -63,6 +63,7 @@
     "eval:gate": "bun eval/cli.ts gate eval/corpus.json eval/after.json eval/baseline.json",
     "eval:generate": "bun eval/generate-corpus.ts",
     "eval:score": "bun eval/cli.ts score eval/corpus.json eval/report.json eval/baseline.json",
+    "eval:person-baseline": "bun eval/person-name-baseline.ts eval/corpus.json eval/person-name-baseline.json",
     "generate:bloom": "bun scripts/generate-bloom-filter.ts",
     "test": "bun test --randomize",
     "typecheck": "tsc --noEmit --incremental -p tsconfig.src.json",

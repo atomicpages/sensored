@@ -50,3 +50,4 @@ docs/.vitepress/cache
 .envrc
 keys
 .agents/handoff
+conformance/golden/detectors/

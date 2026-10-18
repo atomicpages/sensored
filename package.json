@@ -8,6 +8,8 @@
   "scripts": {
     "build": "bun run --filter sensored build",
     "changeset": "changeset",
+    "conformance:generate": "bun conformance/generate.ts",
+    "conformance:schema": "ts-json-schema-generator --path conformance/types.ts --type JsonRedactorConfig --tsconfig tsconfig.base.json --no-top-ref -o packages/sensored/schema/redactor-config.schema.json",
     "changeset:version": "changeset version",
     "lint": "biome check . --diagnostic-level error",
     "format": "biome format . --write --unsafe",
@@ -42,6 +44,7 @@
     "mitata": "^1.0.34",
     "prettier": "3.9.10",
     "publint": "^0.3.25",
+    "ts-json-schema-generator": "^2.9.0",
     "tsdown": "^0.23.1",
     "vitepress": "^2.0.0-alpha.20",
     "vitepress-plugin-llms": "^1.14.0",
