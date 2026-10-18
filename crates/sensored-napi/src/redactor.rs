@@ -1,0 +1,136 @@
+//! The `Redactor` class. Fast path: `redact`, `redactWithMap`, `inspect` and
+//! `stream` go straight to the core `Redactor`, one FFI call each. The hybrid
+//! seam (`collect`, `render`) runs through `Seam`.
+
+use napi::Env;
+use napi_derive::napi;
+use sensored_core::StreamSettings;
+use sensored_core::detectors::builtins;
+use sensored_core::errors::ErrorCode;
+use sensored_core::policy::resolve_policy;
+use sensored_core::stream::OffsetUnit;
+use sensored_core::types as core;
+
+use crate::error::{OrThrow, throw};
+use crate::js::{Detection, Inspection, RedactResult, js_offset};
+use crate::offsets::OffsetMap;
+use crate::seam::Seam;
+use crate::stream::Stream;
+
+#[napi]
+pub struct Redactor {
+    core: sensored_core::Redactor,
+    seam: Seam,
+}
+
+#[napi]
+impl Redactor {
+    /// Builds a redactor from a JSON `RedactorConfig` (functions and RegExps
+    /// stripped by the TS wrapper; JS detectors as descriptors).
+    #[napi(factory)]
+    pub fn create(env: &Env, config_json: String) -> napi::Result<Self> {
+        let Ok(config) = serde_json::from_str(&config_json) else {
+            return throw(env, ErrorCode::InvalidConfig);
+        };
+
+        let registry = builtins();
+        let core = sensored_core::Redactor::with_registry(&config, &registry).or_throw(env)?;
+
+        // TODO(core): resolves twice because the core `Redactor` does not
+        // expose its resolved rules. Drop once it does.
+        let resolved = resolve_policy(&config, &registry).or_throw(env)?;
+
+        Ok(Self {
+            core,
+            seam: Seam::new(resolved),
+        })
+    }
+
+    #[napi]
+    pub fn redact(&self, env: &Env, text: String) -> napi::Result<String> {
+        Ok(self.core.redact(&text).or_throw(env)?.text)
+    }
+
+    #[napi]
+    pub fn redact_with_map(&self, env: &Env, text: String) -> napi::Result<RedactResult> {
+        let redacted = self.core.redact(&text).or_throw(env)?;
+
+        Ok(RedactResult {
+            text: redacted.text,
+            map: redacted.map,
+        })
+    }
+
+    #[napi]
+    pub fn inspect(&self, env: &Env, text: String) -> napi::Result<Inspection> {
+        let inspection = self.core.inspect(&text).or_throw(env)?;
+
+        Ok(Inspection::from_core(&text, inspection))
+    }
+
+    /// The effective policy (rule id to setting) as JSON.
+    #[napi]
+    pub fn policy_json(&self) -> napi::Result<String> {
+        serde_json::to_string(self.core.policy()).map_err(napi::Error::from)
+    }
+
+    /// `restore` overrides the config's setting for this stream.
+    #[napi]
+    pub fn stream(&self, env: &Env, report: bool, restore: Option<bool>) -> napi::Result<Stream> {
+        let settings = StreamSettings {
+            report,
+            restore,
+            offsets: OffsetUnit::Utf16,
+        };
+
+        Ok(Stream::new(self.core.stream(settings).or_throw(env)?))
+    }
+
+    /// Raw core detections, before allowlist and placeholder filtering.
+    #[napi]
+    pub fn collect(&self, env: &Env, text: String) -> napi::Result<Vec<Detection>> {
+        let detections = self.seam.collect(&text).or_throw(env)?;
+
+        let bounds = detections.iter().flat_map(|d| [d.start, d.end]);
+        let offsets = OffsetMap::utf8_to_utf16(&text, bounds);
+
+        Ok(detections
+            .into_iter()
+            .map(|d| Detection::from_core(d, |bytes| js_offset(offsets.get(bytes))))
+            .collect())
+    }
+
+    /// Filters, groups and renders `detections` (core plus JS). Groups are
+    /// reported only when `report` is set.
+    #[napi]
+    pub fn render(
+        &self,
+        env: &Env,
+        text: String,
+        detections: Vec<Detection>,
+        report: bool,
+    ) -> napi::Result<Inspection> {
+        let bounds = detections
+            .iter()
+            .flat_map(|d| [d.start as usize, d.end as usize]);
+
+        let Some(offsets) = OffsetMap::utf16_to_utf8(&text, bounds) else {
+            return throw(env, ErrorCode::DetectorContract);
+        };
+
+        let detections = detections
+            .into_iter()
+            .map(|d| core::Detection {
+                start: offsets.get(d.start as usize),
+                end: offsets.get(d.end as usize),
+                rule_id: d.rule_id,
+                entity_type: d.entity_type,
+                reasons: d.reasons,
+            })
+            .collect();
+
+        let inspection = self.seam.render(&text, detections, report).or_throw(env)?;
+
+        Ok(Inspection::from_core(&text, inspection))
+    }
+}
