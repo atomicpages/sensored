@@ -1,6 +1,4 @@
 //! Replacement rendering. Mirrors `render/*.ts`.
-//!
-//! Owner: phase 1 agent (b). Signatures are the contract; do not change them.
 
 mod format_preserve;
 mod mask;

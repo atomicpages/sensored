@@ -148,6 +148,9 @@ fn check(file: &str) {
         let actual = serde_json::to_value(&actual).expect("inspection");
         let expected = expected_json(case);
 
+        // Compared as text: `Value` equality ignores key order (map order matters).
+        let (actual, expected) = (actual.to_string(), expected.to_string());
+
         if actual != expected {
             failures.push(format!(
                 "{}\n  expected {expected}\n  actual   {actual}",
