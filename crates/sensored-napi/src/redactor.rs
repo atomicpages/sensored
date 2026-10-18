@@ -139,7 +139,7 @@ fn to_js(text: &str, detections: Vec<core::Detection>) -> Vec<Detection> {
 
 /// JS detections with byte offsets; `None` if an offset is out of bounds or
 /// inside a surrogate pair.
-fn to_core(text: &str, detections: Vec<Detection>) -> Option<Vec<core::Detection>> {
+pub(crate) fn to_core(text: &str, detections: Vec<Detection>) -> Option<Vec<core::Detection>> {
     let bounds = detections
         .iter()
         .flat_map(|d| [d.start as usize, d.end as usize]);

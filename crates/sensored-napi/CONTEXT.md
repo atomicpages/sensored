@@ -39,7 +39,11 @@ ASCII text. Streams need no conversion: the core reports
   returning `{ type: "text", text }`, `{ type: "detection", group }` or
   `{ type: "complete", map? }` events. `finish` consumes the stream: later
   `push`/`finish` calls throw a plain `Error("Stream is already finished.")`
-  with no core `code`.
+  with no core `code`. Hybrid seam: `pushWith(chunk, detect)` and
+  `finishWith(detect)` call `detect(buffer): Detection[]` synchronously
+  whenever text may flush; its detections (UTF-16 offsets into the buffer)
+  render with the core's, under one restoration map. What `detect` throws is
+  rethrown as is.
 - `restore(text, map): string`, a free function.
 
 ## Errors

@@ -5,6 +5,7 @@
 mod support;
 
 use sensored_core::stream::{OffsetUnit, StreamEvent};
+use sensored_core::types::Detection;
 use sensored_core::{ErrorCode, Redactor, StreamSettings};
 use serde_json::{Value, json};
 
@@ -105,4 +106,103 @@ fn ported_stream_fixtures() {
         failures.len(),
         failures.join("\n")
     );
+}
+
+/// Every `T-` followed by digits: a stand-in for a caller's JS detector.
+fn tickets(text: &str) -> Vec<Detection> {
+    let mut found = Vec::new();
+    let bytes = text.as_bytes();
+    let mut i = 0;
+
+    while let Some(at) = text[i..].find("T-").map(|at| at + i) {
+        let end = (at + 2..=bytes.len())
+            .take_while(|&e| e == at + 2 || bytes[e - 1].is_ascii_digit())
+            .last()
+            .unwrap_or(at + 2);
+
+        if end > at + 2 {
+            found.push(Detection {
+                start: at,
+                end,
+                rule_id: "ticket_id".to_owned(),
+                entity_type: "ticket".to_owned(),
+                reasons: Vec::new(),
+            });
+        }
+
+        i = at + 2;
+    }
+
+    found
+}
+
+/// Caller detections stream like core ones: at every split, the output equals
+/// a one-shot `render`, restoration numbering included.
+#[test]
+fn caller_detections_stream_at_every_split() {
+    let redactor = Redactor::new(&json!({
+        "rules": { "ticket_id": { "action": "redact" }, "email": { "action": "redact" } },
+        "detectors": [{
+            "id": "ticket_id",
+            "entityType": "ticket",
+            "replacement": "[TICKET]",
+            "stream": { "maxMatchLength": 12, "leftContext": 0, "rightContext": 0, "boundaryLookaround": 1 },
+        }],
+        "restore": true,
+    }))
+    .expect("redactor");
+
+    let input = "😀 T-123 then a@b.co, T-123 again and T-4567.";
+    let mut detections = redactor.collect(input).expect("collect");
+    detections.extend(tickets(input));
+    let expected = redactor.render(input, detections, false).expect("render");
+
+    let splits = input.char_indices().map(|(i, _)| i).skip(1);
+
+    for split in splits {
+        let (head, tail) = input.split_at(split);
+        let mut core = redactor.stream(StreamSettings::default()).expect("stream");
+        let mut events = Vec::new();
+
+        for chunk in [head, tail] {
+            events.extend(
+                core.push_with(chunk, |buffer| Ok(tickets(buffer)))
+                    .expect("push"),
+            );
+        }
+
+        events.extend(
+            core.finish_with(|buffer| Ok(tickets(buffer)))
+                .expect("finish"),
+        );
+
+        let mut text = String::new();
+        let mut map = None;
+
+        for event in events {
+            match event {
+                StreamEvent::Text(t) => text.push_str(&t),
+                StreamEvent::Detection(_) => {}
+                StreamEvent::Complete(m) => map = m,
+            }
+        }
+
+        assert_eq!(text, expected.text, "split at {split}");
+        assert_eq!(map, expected.map, "split at {split}");
+    }
+}
+
+#[test]
+fn caller_detections_must_name_a_stream_rule() {
+    let redactor =
+        Redactor::new(&json!({ "rules": { "email": { "action": "redact" } } })).expect("redactor");
+    let mut core = redactor.stream(StreamSettings::default()).expect("stream");
+
+    core.push("T-1").expect("push");
+
+    let error = core
+        .finish_with(|buffer| Ok(tickets(buffer)))
+        .expect_err("contract");
+
+    assert_eq!(error.code, ErrorCode::DetectorContract);
 }

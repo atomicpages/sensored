@@ -61,7 +61,8 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 - `engine.rs`: collect, filter (placeholders, allowlist), hold the flush back
   from every detected span, group overlaps, render. `render_detected` is the
   hybrid seam: core plus caller detections in, rendered segments out.
-- `stream.rs`: `StreamCore` (sync push/finish). Flush math, buffer limit and
+- `stream.rs`: `StreamCore` (sync push/finish; `push_with`/`finish_with`
+  take a callback for caller detections in the buffer). Flush math, buffer limit and
   trimming in UTF-16 units; reported offsets in the caller's `OffsetUnit`.
 - `redactor.rs`: `Redactor` (new, inspect, redact, stream, policy, describe)
   and the seam (`collect`, `filter`, `render`); `list_detectors()` lists the

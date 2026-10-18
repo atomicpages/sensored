@@ -11,7 +11,7 @@ use indexmap::IndexMap;
 use crate::detector::DetectorDescription;
 use crate::detectors::{Registry, builtins};
 use crate::engine::{
-    RenderOptions, detect_matches, filter_detected, process_text, render_detected,
+    RenderOptions, detect_matches, filter_detected, is_valid_span, process_text, render_detected,
 };
 use crate::errors::{ErrorCode, Result, SensoredError};
 use crate::policy::{ResolvedPolicy, resolve_policy};
@@ -171,10 +171,7 @@ impl Redactor {
     }
 
     fn apply(&self, text: &str, detection: Detection) -> Result<AppliedMatch<'_>> {
-        let in_bounds = detection.start < detection.end
-            && detection.end <= text.len()
-            && text.is_char_boundary(detection.start)
-            && text.is_char_boundary(detection.end);
+        let in_bounds = is_valid_span(text, &detection);
 
         let rule = self.rule(&detection.rule_id);
 

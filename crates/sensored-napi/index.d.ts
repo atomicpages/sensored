@@ -42,10 +42,21 @@ export declare class Stream {
   /** Events for the text that can be emitted so far. Throws `BUFFER_LIMIT`. */
   push(chunk: string): Array<StreamEvent>
   /**
+   * `push` plus JS detections: `detect` gets the buffer whenever text may
+   * flush and returns its detections (UTF-16 offsets into the buffer).
+   * Throws what `detect` throws, or `DETECTOR_CONTRACT` for bad detections.
+   */
+  pushWith(chunk: string, detect: (buffer: string) => Array<Detection>): Array<StreamEvent>
+  /**
    * Flushes the rest; the last event is `complete`. The stream is spent
    * afterwards: later `push` or `finish` calls throw.
    */
   finish(): Array<StreamEvent>
+  /**
+   * `finish` plus JS detections; see `pushWith`. The stream is spent
+   * afterwards, even if `detect` throws.
+   */
+  finishWith(detect: (buffer: string) => Array<Detection>): Array<StreamEvent>
 }
 
 export interface Detection {

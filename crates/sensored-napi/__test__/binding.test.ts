@@ -237,6 +237,46 @@ describe("stream", () => {
     expect(() => stream.push("more")).toThrow("Stream is already finished.");
   });
 
+  test("pushWith renders JS detections with one restoration map", () => {
+    const text = "😀 T-123, T-123 and T-999.";
+    const stream = Redactor.create(config({ restore: true })).stream(false);
+    const detect = (buffer: string): Detection[] =>
+      [...buffer.matchAll(/T-\d+/g)].map((m) => ({
+        start: m.index,
+        end: m.index + m[0].length,
+        ruleId: "ticket_id",
+        entityType: "ticket",
+        reasons: [],
+      }));
+
+    const events = [
+      ...stream.pushWith(text.slice(0, 9), detect),
+      ...stream.pushWith(text.slice(9), detect),
+      ...stream.finishWith(detect),
+    ];
+
+    expect(streamText(events)).toBe("😀 [TICKET_1], [TICKET_2] and [TICKET_3].");
+    expect(events.at(-1)).toEqual({
+      type: "complete",
+      map: { "[TICKET_1]": "T-123", "[TICKET_2]": "T-123", "[TICKET_3]": "T-999" },
+    });
+  });
+
+  test("pushWith rethrows what detect throws", () => {
+    const stream = Redactor.create(config()).stream(false);
+    const boom = new Error("boom");
+
+    stream.push("T-1");
+
+    expect(
+      caught(() =>
+        stream.finishWith(() => {
+          throw boom;
+        }),
+      ),
+    ).toBe(boom);
+  });
+
   test("throws STREAM_UNSUPPORTED for rules without stream metadata", () => {
     const { stream: _, ...descriptor } = ticket;
     const redactor = Redactor.create(config({ detectors: [descriptor] }));

@@ -6,11 +6,13 @@
 
 use std::collections::HashSet;
 
-use crate::engine::{RenderOptions, Segment, detect_and_render};
+use crate::engine::{RenderOptions, Segment, detect_matches, is_valid_span, render_detected};
 use crate::errors::{ErrorCode, Result, SensoredError};
 use crate::grapheme;
 use crate::text::{utf8_to_utf16, utf16_len};
-use crate::types::{ActiveRule, InspectionGroup, RestorationContext, RestorationMap};
+use crate::types::{
+    ActiveRule, AppliedMatch, Detection, InspectionGroup, RestorationContext, RestorationMap,
+};
 
 /// Streaming buffer limit, in UTF-16 code units.
 pub const BUFFER_LIMIT: usize = 65_536;
@@ -96,6 +98,19 @@ impl StreamCore {
     }
 
     pub fn push(&mut self, chunk: &str) -> Result<Vec<StreamEvent>> {
+        self.push_with(chunk, no_extra)
+    }
+
+    /// `push` for callers with their own detectors (the hybrid seam).
+    /// `extra` gets the buffer whenever something may flush and returns the
+    /// caller's detections in it (byte offsets); they render with the core's.
+    /// A rule id outside the stream's rules, an empty span or a span off char
+    /// boundaries is a `DETECTOR_CONTRACT` error.
+    pub fn push_with(
+        &mut self,
+        chunk: &str,
+        extra: impl FnOnce(&str) -> Result<Vec<Detection>>,
+    ) -> Result<Vec<StreamEvent>> {
         self.buffer.push_str(chunk);
         self.buffer_units += utf16_len(chunk);
 
@@ -109,7 +124,7 @@ impl StreamCore {
             return Ok(events);
         };
 
-        let consumed = self.render(flush_point, &mut events);
+        let consumed = self.render(flush_point, extra, &mut events)?;
 
         if consumed <= self.consumed {
             return Ok(events);
@@ -121,18 +136,27 @@ impl StreamCore {
         Ok(events)
     }
 
-    pub fn finish(mut self) -> Vec<StreamEvent> {
+    pub fn finish(self) -> Vec<StreamEvent> {
+        self.finish_with(no_extra)
+            .expect("core detections always satisfy the contract")
+    }
+
+    /// `finish` with the caller's detections; see `push_with`.
+    pub fn finish_with(
+        mut self,
+        extra: impl FnOnce(&str) -> Result<Vec<Detection>>,
+    ) -> Result<Vec<StreamEvent>> {
         let mut events = Vec::new();
 
         if !self.buffer.is_empty() {
-            self.render(self.buffer.len(), &mut events);
+            self.render(self.buffer.len(), extra, &mut events)?;
         }
 
         events.push(StreamEvent::Complete(
             self.restoration.map(|context| context.map),
         ));
 
-        events
+        Ok(events)
     }
 
     /// The safe flush byte offset, or `None` when nothing may flush yet.
@@ -152,16 +176,34 @@ impl StreamCore {
     }
 
     /// Renders up to `flush_point`, appends events, returns bytes consumed.
-    fn render(&mut self, flush_point: usize, events: &mut Vec<StreamEvent>) -> usize {
+    fn render(
+        &mut self,
+        flush_point: usize,
+        extra: impl FnOnce(&str) -> Result<Vec<Detection>>,
+        events: &mut Vec<StreamEvent>,
+    ) -> Result<usize> {
+        let mut detected = detect_matches(&self.buffer, &self.rules);
+
+        for detection in extra(&self.buffer)? {
+            let rule = self
+                .rules
+                .iter()
+                .find(|rule| rule.detector.id() == detection.rule_id)
+                .filter(|_| is_valid_span(&self.buffer, &detection))
+                .ok_or_else(|| SensoredError::new(ErrorCode::DetectorContract))?;
+
+            detected.push(AppliedMatch { detection, rule });
+        }
+
         let options = RenderOptions {
             report: self.options.report,
             detect_only: self.options.detect_only,
             allowlist: &self.options.allowlist,
         };
 
-        let rendered = detect_and_render(
+        let rendered = render_detected(
             &self.buffer,
-            &self.rules,
+            detected,
             flush_point,
             self.consumed,
             self.restoration.as_mut(),
@@ -174,7 +216,7 @@ impl StreamCore {
             }
         }
 
-        rendered.consumed
+        Ok(rendered.consumed)
     }
 
     fn emit(&self, segment: Segment<'_>, events: &mut Vec<StreamEvent>) {
@@ -259,6 +301,10 @@ impl StreamCore {
         self.absolute_bytes += trim;
         self.absolute_units += trimmed_units;
     }
+}
+
+fn no_extra(_: &str) -> Result<Vec<Detection>> {
+    Ok(Vec::new())
 }
 
 /// Byte offset of UTF-16 position `units`; inside a surrogate pair, the

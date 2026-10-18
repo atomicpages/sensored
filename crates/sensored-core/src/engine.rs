@@ -78,6 +78,15 @@ pub fn collect_matches<'r>(
     filter_detected(text, detect_matches(text, rules), allowlist)
 }
 
+/// A non-empty span of `text` on char boundaries: the contract for
+/// caller detections.
+pub fn is_valid_span(text: &str, detection: &Detection) -> bool {
+    detection.start < detection.end
+        && detection.end <= text.len()
+        && text.is_char_boundary(detection.start)
+        && text.is_char_boundary(detection.end)
+}
+
 /// Drops matches that overlap existing placeholders or are allowlisted.
 /// Mirrors `filterMatches`.
 pub fn filter_detected<'r>(
