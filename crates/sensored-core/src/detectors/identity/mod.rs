@@ -6,7 +6,10 @@ use super::Registry;
 
 mod digital_identity;
 mod drivers_license;
+mod imei;
+mod imsi;
 mod license_plate;
+mod passport;
 mod vin;
 
 pub fn register(registry: &mut Registry) {
@@ -14,6 +17,9 @@ pub fn register(registry: &mut Registry) {
     registry.insert(Arc::new(license_plate::detector()));
     registry.insert(Arc::new(drivers_license::detector()));
     registry.insert(Arc::new(vin::detector()));
+    registry.insert(Arc::new(imei::detector()));
+    registry.insert(Arc::new(imsi::detector()));
+    registry.insert(Arc::new(passport::detector()));
 }
 
 #[cfg(test)]
