@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import {
   existsSync,
-  mkdirSync,
+  mkdtempSync,
   readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const CLI = join(__dirname, "..", "..", "dist", "cli", "index.mjs");
@@ -32,19 +33,16 @@ function runCli(
   };
 }
 
-const TMP = "/tmp/sensored-cli-test";
+// A fresh directory per test, so parallel runs (e.g. several worktrees'
+// pre-commit hooks) never share files.
+let TMP = "";
 
 beforeEach(() => {
-  if (existsSync(TMP)) {
-    rmSync(TMP, { recursive: true });
-  }
-  mkdirSync(TMP, { recursive: true });
+  TMP = mkdtempSync(join(tmpdir(), "sensored-cli-test-"));
 });
 
 afterEach(() => {
-  if (existsSync(TMP)) {
-    rmSync(TMP, { recursive: true });
-  }
+  rmSync(TMP, { recursive: true, force: true });
 });
 
 describe("CLI integration", () => {
