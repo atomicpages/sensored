@@ -17,7 +17,12 @@ export declare class Redactor {
   static create(configJson: string): Redactor
   redact(text: string): string
   redactWithMap(text: string): RedactResult
-  inspect(text: string): Inspection
+  /**
+   * The `Inspection` as JSON: one string crosses the boundary instead of
+   * an object per group and match, which costs more than the scan on
+   * PII-dense text.
+   */
+  inspectJson(text: string): string
   /** The effective policy (rule id to setting) as JSON. */
   policyJson(): string
   /** `restore` overrides the config's setting for this stream. */
@@ -30,10 +35,10 @@ export declare class Redactor {
    */
   filter(text: string, detections: Array<Detection>): Array<Detection>
   /**
-   * Filters, groups and renders `detections` (core plus JS). Groups are
-   * reported only when `report` is set.
+   * Filters, groups and renders `detections` (core plus JS), as
+   * `inspectJson` does. Groups are reported only when `report` is set.
    */
-  render(text: string, detections: Array<Detection>, report: boolean): Inspection
+  renderJson(text: string, detections: Array<Detection>, report: boolean): string
   /** The enabled rules' `DetectorDescription`s, in policy order, as JSON. */
   describeJson(): string
 }
@@ -74,13 +79,6 @@ export interface InspectedMatch {
   entityType: string
   reasons: Array<string>
   value: string
-}
-
-/** `map` is set when restoration is enabled. */
-export interface Inspection {
-  text: string
-  groups: Array<InspectionGroup>
-  map?: Record<string, string>
 }
 
 export interface InspectionGroup {

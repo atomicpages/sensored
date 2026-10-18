@@ -1,12 +1,12 @@
-//! Offset conversion between the core's UTF-8 bytes and JS UTF-16 units.
+//! Offset conversion between the core's UTF-8 bytes and UTF-16 units, for
+//! bindings whose callers count UTF-16 (napi, Wasm).
 //!
-//! The core converters walk the text once but need sorted offsets, while a
+//! The `text` converters walk the text once but need sorted offsets, while a
 //! call's offsets (group and match bounds) are not sorted. `OffsetMap` sorts
 //! and dedups them, converts in one pass, then answers lookups.
-//!
-//! Same as `sensored-napi/src/offsets.rs`; keep the two in sync.
 
-use sensored_core::text::{utf8_to_utf16, utf16_to_utf8};
+use crate::text::{utf8_to_utf16, utf16_to_utf8};
+use crate::types::Inspection;
 
 pub struct OffsetMap {
     from: Vec<usize>,
@@ -51,6 +51,30 @@ impl OffsetMap {
             .expect("offset was registered with the map");
 
         self.to[index]
+    }
+}
+
+/// Rewrites every group and match bound of `inspection` (of `text`) from
+/// bytes to UTF-16 units.
+pub fn inspection_to_utf16(text: &str, inspection: &mut Inspection) {
+    let bounds = inspection.groups.iter().flat_map(|group| {
+        let matches = group
+            .matches
+            .iter()
+            .flat_map(|m| [m.detection.start, m.detection.end]);
+
+        [group.start, group.end].into_iter().chain(matches)
+    });
+    let offsets = OffsetMap::utf8_to_utf16(text, bounds);
+
+    for group in &mut inspection.groups {
+        group.start = offsets.get(group.start);
+        group.end = offsets.get(group.end);
+
+        for inspected in &mut group.matches {
+            inspected.detection.start = offsets.get(inspected.detection.start);
+            inspected.detection.end = offsets.get(inspected.detection.end);
+        }
     }
 }
 

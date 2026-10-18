@@ -60,18 +60,19 @@ typecheck that touch these files.
 
 Rules whose detectors are JS (`DetectorDefinition`s, `Detector` subclasses)
 reach the core as descriptors (metadata only). The wrapper runs them in JS and
-merges their matches: `collect` + JS detections + `render` for strings,
+merges their matches: `collect` + JS detections + `renderJson` for strings,
 `filter` before semantic confirmation, `pushWith`/`finishWith` for streams.
 JS rules are the enabled `config.detectors` (`registerDetector`, as in TS) and
 the `customHeaders` RegExps when `http_auth_header` is on.
 
-- Fast path (no JS rules): `redact`, `redactWithMap`, `inspect`, `push` and
+- Fast path (no JS rules): `redact`, `redactWithMap`, `inspectJson`, `push` and
   `finish`, one FFI call each, whatever `semantic` says.
 - Hybrid path: JS detections are appended to `collect` and sorted into policy
   order (the order TS collects in, which `redactAsync` reports).
 - `redactAsync` always runs `collect` + JS, `filter`, the questions (a JS
   rule's `semanticConfirm`, else `semantic/questions.ts` by rule id), the
-  provider, then `render` of the confirmed matches.
+  provider, then `renderJson` of the confirmed matches. Inspections cross as
+  JSON and are parsed here (`inspectCore`, `renderCore`).
 - Streams go through `../stream.ts` `createStream`. The wrapper holds back a
   trailing high surrogate until the next chunk, because the binding takes
   UTF-8 strings and would replace a split pair with U+FFFD.

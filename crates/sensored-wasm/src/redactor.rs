@@ -46,11 +46,12 @@ impl Redactor {
         })
     }
 
-    #[wasm_bindgen(unchecked_return_type = "Inspection")]
-    pub fn inspect(&self, text: &str) -> Result<JsValue, JsValue> {
+    /// The `Inspection` as JSON; see the napi binding.
+    #[wasm_bindgen(js_name = inspectJson)]
+    pub fn inspect_json(&self, text: &str) -> Result<String, JsValue> {
         let inspection = self.core.inspect(text).or_throw()?;
 
-        js::inspection_to_js(text, inspection)
+        js::inspection_json(text, inspection)
     }
 
     /// The effective policy (rule id to setting) as JSON.
@@ -92,19 +93,19 @@ impl Redactor {
         js::detections_to_js(text, kept)
     }
 
-    /// Filters, groups and renders `detections` (core plus JS). Groups are
-    /// reported only when `report` is set.
-    #[wasm_bindgen(unchecked_return_type = "Inspection")]
-    pub fn render(
+    /// Filters, groups and renders `detections` (core plus JS), as
+    /// `inspectJson` does. Groups are reported only when `report` is set.
+    #[wasm_bindgen(js_name = renderJson)]
+    pub fn render_json(
         &self,
         text: &str,
         #[wasm_bindgen(unchecked_param_type = "Array<Detection>")] detections: JsValue,
         report: bool,
-    ) -> Result<JsValue, JsValue> {
+    ) -> Result<String, JsValue> {
         let detections = core_detections(text, detections)?;
         let inspection = self.core.render(text, detections, report).or_throw()?;
 
-        js::inspection_to_js(text, inspection)
+        js::inspection_json(text, inspection)
     }
 
     /// The enabled rules' `DetectorDescription`s, in policy order, as JSON.

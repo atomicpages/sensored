@@ -132,8 +132,15 @@ describe.each(engines)(
 
         expect(plain.redactWithMap(text)).toEqual({ text });
         expect(restoring.redactWithMap(text)).toEqual({ text, map: {} });
-        expect(plain.inspect(text)).toEqual({ text, groups: [] });
-        expect(restoring.inspect(text)).toEqual({ text, groups: [], map: {} });
+        expect(JSON.parse(plain.inspectJson(text))).toEqual({
+          text,
+          groups: [],
+        });
+        expect(JSON.parse(restoring.inspectJson(text))).toEqual({
+          text,
+          groups: [],
+          map: {},
+        });
       });
 
       test("throws INPUT_LIMIT past maxInputLength", () => {
@@ -157,7 +164,7 @@ describe.each(engines)(
         const redactor = Redactor.create(config({ restore: true }));
         const detection = ticketAt(text, "T-999");
 
-        const result = redactor.render(text, [detection], true);
+        const result = JSON.parse(redactor.renderJson(text, [detection], true));
 
         expect(result.text).toBe("😀 ticket T-123, 🎉 and [TICKET_1].");
         expect(result.map).toEqual({ "[TICKET_1]": "T-999" });
@@ -177,7 +184,9 @@ describe.each(engines)(
         const redactor = Redactor.create(config({ allowlist: ["T-123"] }));
         const detections = [ticketAt(text, "T-123"), ticketAt(text, "T-999")];
 
-        expect(redactor.render(text, detections, false)).toEqual({
+        expect(
+          JSON.parse(redactor.renderJson(text, detections, false)),
+        ).toEqual({
           text: "😀 ticket T-123, 🎉 and [TICKET].",
           groups: [],
         });
@@ -207,7 +216,9 @@ describe.each(engines)(
         ];
 
         for (const detection of bad) {
-          const error = caught(() => redactor.render(text, [detection], true));
+          const error = caught(() =>
+            JSON.parse(redactor.renderJson(text, [detection], true)),
+          );
 
           expect(error.code).toBe("DETECTOR_CONTRACT");
         }
@@ -348,7 +359,7 @@ test("offsets coerce like napi's u32 (ToUint32)", () => {
       const detection = { ...ticketAt(text, "T-1"), start };
 
       try {
-        return redactor.render(text, [detection], true);
+        return JSON.parse(redactor.renderJson(text, [detection], true));
       } catch (error) {
         return error instanceof Error ? Reflect.get(error, "code") : error;
       }

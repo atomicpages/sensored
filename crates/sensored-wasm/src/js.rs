@@ -4,6 +4,7 @@
 //! (maps as objects, key order kept), after their offsets are moved to UTF-16
 //! units in place. Incoming detections deserialize into `Detection`.
 
+use sensored_core::offsets::{OffsetMap, inspection_to_utf16};
 use sensored_core::stream as core_stream;
 use sensored_core::types::{self as core, RestorationMap};
 use serde::de::DeserializeOwned;
@@ -12,7 +13,7 @@ use serde_wasm_bindgen::Serializer;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use crate::offsets::OffsetMap;
+use crate::error::plain;
 
 #[wasm_bindgen(typescript_custom_section)]
 const TYPES: &str = r#"
@@ -147,32 +148,11 @@ pub fn detections_to_js(
     to_js(&detections)
 }
 
-/// A core inspection of `source` as a JS one.
-pub fn inspection_to_js(
-    source: &str,
-    mut inspection: core::Inspection,
-) -> Result<JsValue, JsValue> {
-    let bounds = inspection.groups.iter().flat_map(|group| {
-        let matches = group
-            .matches
-            .iter()
-            .flat_map(|m| [m.detection.start, m.detection.end]);
+/// A core inspection of `source` as JSON with UTF-16 offsets.
+pub fn inspection_json(source: &str, mut inspection: core::Inspection) -> Result<String, JsValue> {
+    inspection_to_utf16(source, &mut inspection);
 
-        [group.start, group.end].into_iter().chain(matches)
-    });
-    let offsets = OffsetMap::utf8_to_utf16(source, bounds);
-
-    for group in &mut inspection.groups {
-        group.start = offsets.get(group.start);
-        group.end = offsets.get(group.end);
-
-        for inspected in &mut group.matches {
-            inspected.detection.start = offsets.get(inspected.detection.start);
-            inspected.detection.end = offsets.get(inspected.detection.end);
-        }
-    }
-
-    to_js(&inspection)
+    serde_json::to_string(&inspection).map_err(|error| plain(&error.to_string()))
 }
 
 /// JS detections with byte offsets; `None` if an offset is out of bounds or

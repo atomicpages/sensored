@@ -8,7 +8,6 @@
 
 mod error;
 mod js;
-mod offsets;
 mod redactor;
 mod stream;
 

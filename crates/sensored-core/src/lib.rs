@@ -10,6 +10,7 @@ pub mod engine;
 pub mod errors;
 pub mod grapheme;
 pub mod hash;
+pub mod offsets;
 pub mod policy;
 pub mod redactor;
 pub mod render;

@@ -67,6 +67,8 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
 - `token_generators.rs`: static default token per entity type.
 - `hash.rs`: FNV-1a over UTF-16 code units, as TS hashes `charCodeAt`.
 - `restore.rs`, `stream_restore.rs`: placeholder restoration.
+- `offsets.rs`: `OffsetMap` and `inspection_to_utf16`, for bindings whose
+  callers count UTF-16 (napi, Wasm).
 - `engine.rs`: collect, filter (placeholders, allowlist), hold the flush back
   from every detected span, group overlaps, render. `render_detected` is the
   hybrid seam: core plus caller detections in, rendered segments out.

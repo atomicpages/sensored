@@ -33,10 +33,9 @@ Differences from napi, none visible through `NativeBinding`:
   core, `OffsetUnit::Utf16`).
 - `js.rs`: values to and from JS via `serde-wasm-bindgen`, maps as plain
   objects in insertion order. Outgoing core values have their offsets moved
-  to UTF-16 in place and are serialized as is. Also the TS types emitted into
+  to UTF-16 in place (`sensored_core::offsets`) and are serialized as is;
+  inspections go out as JSON strings (`inspectJson`, `renderJson`), like napi. Also the TS types emitted into
   the glue's `.d.ts`.
-- `offsets.rs`: `OffsetMap`, a copy of `sensored-napi/src/offsets.rs`. Keep
-  the two in sync (or move it into the core).
 - `error.rs`: `OrThrow` and the error shape.
 
 ## Build and test

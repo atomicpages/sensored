@@ -10,9 +10,9 @@ use sensored_core::stream::OffsetUnit;
 use sensored_core::types as core;
 
 use crate::error::{OrThrow, throw};
-use crate::js::{Detection, Inspection, RedactResult, js_offset};
-use crate::offsets::OffsetMap;
+use crate::js::{Detection, RedactResult, js_offset};
 use crate::stream::Stream;
+use sensored_core::offsets::{OffsetMap, inspection_to_utf16};
 
 #[napi]
 pub struct Redactor {
@@ -49,11 +49,14 @@ impl Redactor {
         })
     }
 
+    /// The `Inspection` as JSON: one string crosses the boundary instead of
+    /// an object per group and match, which costs more than the scan on
+    /// PII-dense text.
     #[napi]
-    pub fn inspect(&self, env: &Env, text: String) -> napi::Result<Inspection> {
+    pub fn inspect_json(&self, env: &Env, text: String) -> napi::Result<String> {
         let inspection = self.core.inspect(&text).or_throw(env)?;
 
-        Ok(Inspection::from_core(&text, inspection))
+        inspection_json(&text, inspection)
     }
 
     /// The effective policy (rule id to setting) as JSON.
@@ -100,23 +103,23 @@ impl Redactor {
         Ok(to_js(&text, kept))
     }
 
-    /// Filters, groups and renders `detections` (core plus JS). Groups are
-    /// reported only when `report` is set.
+    /// Filters, groups and renders `detections` (core plus JS), as
+    /// `inspectJson` does. Groups are reported only when `report` is set.
     #[napi]
-    pub fn render(
+    pub fn render_json(
         &self,
         env: &Env,
         text: String,
         detections: Vec<Detection>,
         report: bool,
-    ) -> napi::Result<Inspection> {
+    ) -> napi::Result<String> {
         let Some(detections) = to_core(&text, detections) else {
             return throw(env, ErrorCode::DetectorContract);
         };
 
         let inspection = self.core.render(&text, detections, report).or_throw(env)?;
 
-        Ok(Inspection::from_core(&text, inspection))
+        inspection_json(&text, inspection)
     }
 
     /// The enabled rules' `DetectorDescription`s, in policy order, as JSON.
@@ -124,6 +127,12 @@ impl Redactor {
     pub fn describe_json(&self) -> napi::Result<String> {
         serde_json::to_string(&self.core.describe()).map_err(napi::Error::from)
     }
+}
+
+fn inspection_json(text: &str, mut inspection: core::Inspection) -> napi::Result<String> {
+    inspection_to_utf16(text, &mut inspection);
+
+    serde_json::to_string(&inspection).map_err(napi::Error::from)
 }
 
 /// Core detections with UTF-16 offsets.

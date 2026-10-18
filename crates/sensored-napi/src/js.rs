@@ -7,8 +7,6 @@ use indexmap::IndexMap;
 use napi_derive::napi;
 use sensored_core::types as core;
 
-use crate::offsets::OffsetMap;
-
 #[napi(object)]
 pub struct Detection {
     pub start: u32,
@@ -34,14 +32,6 @@ pub struct InspectionGroup {
     pub end: u32,
     pub replacement: String,
     pub matches: Vec<InspectedMatch>,
-}
-
-/// `map` is set when restoration is enabled.
-#[napi(object)]
-pub struct Inspection {
-    pub text: String,
-    pub groups: Vec<InspectionGroup>,
-    pub map: Option<IndexMap<String, String>>,
 }
 
 /// `map` is set when restoration is enabled.
@@ -101,33 +91,6 @@ impl InspectionGroup {
             end: offset(group.end),
             replacement: group.replacement,
             matches,
-        }
-    }
-}
-
-impl Inspection {
-    /// `source` is the text that was inspected: core offsets point into it.
-    pub fn from_core(source: &str, inspection: core::Inspection) -> Self {
-        let bounds = inspection.groups.iter().flat_map(|group| {
-            let matches = group
-                .matches
-                .iter()
-                .flat_map(|m| [m.detection.start, m.detection.end]);
-
-            [group.start, group.end].into_iter().chain(matches)
-        });
-
-        let offsets = OffsetMap::utf8_to_utf16(source, bounds);
-        let offset = |bytes| js_offset(offsets.get(bytes));
-
-        Self {
-            text: inspection.text,
-            groups: inspection
-                .groups
-                .into_iter()
-                .map(|group| InspectionGroup::from_core(group, offset))
-                .collect(),
-            map: inspection.map,
         }
     }
 }

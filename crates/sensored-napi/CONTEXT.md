@@ -8,10 +8,9 @@ napi-rs binding over `sensored-core` for Node and Bun, published (phase 5) as
 ## Units
 
 Every offset crossing the boundary is a UTF-16 code unit, as the JS
-`Detection` type reports. The core works in UTF-8 bytes; `offsets.rs`
-(`OffsetMap`) sorts a call's offsets, converts them in one pass with
-`sensored_core::text::{utf8_to_utf16, utf16_to_utf8}` and skips the walk for
-ASCII text. Streams need no conversion: the core reports
+`Detection` type reports. The core works in UTF-8 bytes; `sensored_core::offsets`
+(`OffsetMap`, `inspection_to_utf16`) sorts a call's offsets, converts them in
+one pass and skips the walk for ASCII text. Streams need no conversion: the core reports
 `OffsetUnit::Utf16` itself.
 
 ## API (`index.d.ts`)
@@ -20,15 +19,17 @@ ASCII text. Streams need no conversion: the core reports
   JSON-only `RedactorConfig`; JS detectors arrive as descriptors in
   `detectors`.
 - Fast path, one FFI call each: `redact(text): string`,
-  `redactWithMap(text): { text, map? }`, `inspect(text): Inspection` (same
-  shape as TS, plus `map` when `restore` is on), `policyJson(): string`.
+  `redactWithMap(text): { text, map? }`, `inspectJson(text): string` (an
+  `Inspection`, same shape as TS, plus `map` when `restore` is on),
+  `policyJson(): string`. Inspections cross as JSON: one string costs far less
+  than an engine-built object per group and match on PII-dense text.
 - Hybrid seam: `collect(text): Detection[]` returns raw core detections
-  (no allowlist or placeholder filtering). `render(text, detections, report):
-  Inspection` filters, groups and renders core plus JS detections; `groups` is
+  (no allowlist or placeholder filtering). `renderJson(text, detections,
+  report): string` (an `Inspection`) filters, groups and renders core plus JS detections; `groups` is
   empty unless `report`. A rule id outside the enabled rules, an offset out
   of bounds or inside a surrogate pair, or `start >= end` throws
   `DETECTOR_CONTRACT`. `filter(text, detections): Detection[]` drops what
-  `render` would (matches inside existing placeholders, allowlisted values)
+  `renderJson` would (matches inside existing placeholders, allowlisted values)
   with the same checks, for callers that act on matches before rendering
   (`redactAsync`'s semantic confirmation).
 - `describeJson(): string`: the enabled rules' `DetectorDescription`s in

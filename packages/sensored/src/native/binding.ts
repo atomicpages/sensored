@@ -60,7 +60,8 @@ export interface NativeStream {
 export interface NativeRedactor {
   redact(text: string): string;
   redactWithMap(text: string): NativeRedactResult;
-  inspect(text: string): NativeInspection;
+  /** The `NativeInspection` as JSON. */
+  inspectJson(text: string): string;
   /** The effective policy (rule id to setting). */
   policyJson(): string;
   /** `DetectorDescription[]` for the enabled rules, in policy order. */
@@ -68,13 +69,14 @@ export interface NativeRedactor {
   stream(report: boolean, restore?: boolean | null): NativeStream;
   /** Raw core detections, before allowlist and placeholder filtering. */
   collect(text: string): NativeDetection[];
-  /** What `render` keeps of `detections` (core plus JS). */
+  /** What `renderJson` keeps of `detections` (core plus JS). */
   filter(text: string, detections: NativeDetection[]): NativeDetection[];
-  render(
+  /** Renders `detections` (core plus JS); a `NativeInspection` as JSON. */
+  renderJson(
     text: string,
     detections: NativeDetection[],
     report: boolean,
-  ): NativeInspection;
+  ): string;
 }
 
 export interface NativeBinding {

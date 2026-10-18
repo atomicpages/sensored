@@ -52,7 +52,9 @@ describe.each(["render.json", "offsets.json", "presets.json"])("%s", (file) => {
     )) {
       const run = (engine: NativeBinding) =>
         outcome(() =>
-          engine.Redactor.create(JSON.stringify(config)).inspect(input),
+          JSON.parse(
+            engine.Redactor.create(JSON.stringify(config)).inspectJson(input),
+          ),
         );
 
       const actual = run(wasm);

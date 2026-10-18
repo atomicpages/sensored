@@ -22,6 +22,7 @@ import { deepFreeze } from "../utils";
 import {
   getBinding,
   type NativeDetection,
+  type NativeInspection,
   type NativeStreamEvent,
 } from "./binding";
 import { engineCall, restore } from "./calls";
@@ -88,6 +89,20 @@ export function createNativeRedactor(config: unknown) {
   const ruleOrder = new Map(descriptions.map(({ id }, index) => [id, index]));
 
   const detectorsById = new Map(detectors.map((d) => [d.id, d]));
+
+  // Results cross the boundary as JSON: one string costs far less than an
+  // engine-built object per group and match.
+  function inspectCore(text: string): NativeInspection {
+    return JSON.parse(core.inspectJson(text));
+  }
+
+  function renderCore(
+    text: string,
+    detections: NativeDetection[],
+    report: boolean,
+  ): NativeInspection {
+    return JSON.parse(core.renderJson(text, detections, report));
+  }
 
   let cachedProvider: SemanticProvider | undefined;
 
@@ -275,7 +290,7 @@ export function createNativeRedactor(config: unknown) {
       });
     }
 
-    const rendered = engineCall(() => core.render(text, kept, false));
+    const rendered = engineCall(() => renderCore(text, kept, false));
 
     return {
       text: rendered.text,
@@ -297,14 +312,14 @@ export function createNativeRedactor(config: unknown) {
         return engineCall(() =>
           fast
             ? core.redact(text)
-            : core.render(text, collect(text), false).text,
+            : renderCore(text, collect(text), false).text,
         );
       }
 
       const result = engineCall(() =>
         fast
           ? core.redactWithMap(text)
-          : core.render(text, collect(text), false),
+          : renderCore(text, collect(text), false),
       );
 
       return result.map ? { text: result.text, map: result.map } : result.text;
@@ -316,7 +331,7 @@ export function createNativeRedactor(config: unknown) {
       checkInput(text);
 
       return engineCall(() =>
-        fast ? core.inspect(text) : core.render(text, collect(text), true),
+        fast ? inspectCore(text) : renderCore(text, collect(text), true),
       );
     },
     stream(

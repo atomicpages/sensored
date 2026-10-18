@@ -7,7 +7,8 @@ use std::borrow::Cow;
 use std::sync::Arc;
 
 use indexmap::IndexMap;
-use serde::Serialize;
+use serde::ser::SerializeStruct;
+use serde::{Serialize, Serializer};
 
 use crate::detector::Detector;
 
@@ -26,13 +27,36 @@ pub struct Detection {
     pub reasons: Vec<Label>,
 }
 
-/// A detection plus the original text it covers (reports only).
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-#[serde(rename_all = "camelCase")]
+/// A detection plus the original text it covers (reports only). Serializes
+/// as the detection's fields plus `value`, written out by hand: serde's
+/// `flatten` buffers every match through an intermediate map.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InspectedMatch {
-    #[serde(flatten)]
     pub detection: Detection,
     pub value: String,
+}
+
+impl Serialize for InspectedMatch {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let Detection {
+            start,
+            end,
+            rule_id,
+            entity_type,
+            reasons,
+        } = &self.detection;
+
+        let mut fields = serializer.serialize_struct("InspectedMatch", 6)?;
+
+        fields.serialize_field("start", start)?;
+        fields.serialize_field("end", end)?;
+        fields.serialize_field("ruleId", rule_id)?;
+        fields.serialize_field("entityType", entity_type)?;
+        fields.serialize_field("reasons", reasons)?;
+        fields.serialize_field("value", &self.value)?;
+
+        fields.end()
+    }
 }
 
 /// A transitive overlap group and its rendered replacement.
