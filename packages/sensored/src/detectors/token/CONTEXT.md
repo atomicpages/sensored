@@ -1,5 +1,9 @@
 # Token and key detectors
 
+TS reference implementations, frozen (bug fixes only). The shipped detectors
+are the Rust ports in `crates/sensored-core/src/detectors/token/`, the source
+of truth; new detectors go there.
+
 All built-in token/key detectors live under `detectors/token/` and extend the
 `Detector` base class directly (context-optional) or the `KeywordDetector` base
 class (keyword-dependent, requires a keyword within 40 chars of the match).

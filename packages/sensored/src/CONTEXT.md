@@ -57,7 +57,12 @@ definitions. Shared helpers (`isRecord`, `hasOnlyKeys`,
 
 ## Detector organization
 
-All built-in detectors live under `detectors/` and are grouped by domain:
+The shipped detectors are Rust: `crates/sensored-core/src/detectors/` is the
+source of truth. The TS detectors here are frozen reference implementations
+for `reference.ts` (conformance, eval, bench): bug fixes only, no new
+behavior. New detectors are written in Rust.
+
+The TS reference detectors live under `detectors/`, grouped by domain:
 
 ```
 detectors/

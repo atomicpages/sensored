@@ -1,5 +1,9 @@
 # Network detectors
 
+TS reference implementations, frozen (bug fixes only). The shipped detectors
+are the Rust ports in `crates/sensored-core/src/detectors/network/`, the source
+of truth; new detectors go there.
+
 All built-in network detectors live under `detectors/network/` and extend the
 `Detector` base class directly. Each is exported as a singleton and registered
 in `detectors/registry.ts`.
