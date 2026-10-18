@@ -17,10 +17,6 @@ const PATTERN: &str = r"[A-Za-z]{2}[0-9]{2}[A-Za-z]{3}|[0-9]{2}[A-Za-z]{3}|[A-Za
 
 /// Candidates are ASCII, so byte length equals the TS UTF-16 length.
 fn validate(candidate: &str) -> Option<&'static [&'static str]> {
-    if !(2..=15).contains(&candidate.len()) {
-        return None;
-    }
-
     if !candidate.bytes().any(|byte| byte.is_ascii_digit()) {
         return None;
     }

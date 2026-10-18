@@ -73,11 +73,15 @@ fn is_numeric_id(value: &str) -> bool {
     (17..=19).contains(&value.len()) && is_ascii_digits(value)
 }
 
-/// `/^STEAM_\d:\d:\d+$/`, case-sensitive unlike the match pattern.
+/// `/^STEAM_\d:\d:\d+$/i`.
 fn is_steam_id(value: &str) -> bool {
-    let Some(rest) = value.strip_prefix("STEAM_") else {
+    let Some((prefix, rest)) = value.split_at_checked(6) else {
         return false;
     };
+
+    if !prefix.eq_ignore_ascii_case("STEAM_") {
+        return false;
+    }
 
     let bytes = rest.as_bytes();
 
@@ -271,13 +275,15 @@ mod tests {
     }
 
     #[test]
-    fn steam_id_is_case_sensitive_but_match_is_not() {
-        // A lowercase Steam ID matches the pattern, then counts as generic.
+    fn steam_id_is_case_insensitive() {
         assert_eq!(
             values(&DigitalIdentity, "Steam ID: steam_0:1:5"),
             ["steam_0:1:5"]
         );
-        assert!(spans(&DigitalIdentity, "steam_0:1:5 Steam ID").is_empty());
+        assert_eq!(
+            values(&DigitalIdentity, "steam_0:1:5 Steam ID"),
+            ["steam_0:1:5"]
+        );
         assert_eq!(
             values(&DigitalIdentity, "STEAM_0:1:5 Steam ID"),
             ["STEAM_0:1:5"]

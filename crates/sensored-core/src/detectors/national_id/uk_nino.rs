@@ -20,18 +20,23 @@ pub(super) fn detector() -> ChecksumDetector {
     }
 }
 
-/// Mirrors `isValidNino`. The pattern guarantees ASCII letters at both ends.
+/// Mirrors `isValidNino` (HMRC NIM39110). The pattern guarantees ASCII
+/// letters at both ends.
 fn nino_valid(candidate: &str) -> Option<&'static [&'static str]> {
     let bytes = candidate.as_bytes();
     let first = bytes.first()?.to_ascii_uppercase();
     let second = bytes.get(1)?.to_ascii_uppercase();
     let suffix = bytes.last()?.to_ascii_uppercase();
 
-    if b"DFIQUV".contains(&first) || second == b'O' {
+    if b"DFIQUV".contains(&first) || b"DFIOQUV".contains(&second) {
         return None;
     }
 
-    if !b"ABCDFJHMNPRSTWXYZ".contains(&suffix) {
+    if [*b"BG", *b"GB", *b"KN", *b"NK", *b"NT", *b"TN", *b"ZZ"].contains(&[first, second]) {
+        return None;
+    }
+
+    if !b"ABCD".contains(&suffix) {
         return None;
     }
 
@@ -52,22 +57,37 @@ mod tests {
             "AB 12 34 56 C",
             "JH123456A",
             "CE123456D",
-            "BG123456F",
-            "KT123456J",
-            "NP123456H",
-            "RW123456M",
-            "SN123456N",
-            "TP123456P",
-            "WL123456R",
-            "YM123456S",
-            "ZP123456T",
-            "AC123456W",
-            "EA123456X",
-            "GH123456Y",
-            "JK123456Z",
+            "BH123456A",
+            "KT123456B",
+            "NP123456C",
+            "RW123456D",
+            "ZP123456A",
             "ab123456c",
         ] {
             assert_eq!(values(&detector, value), [value]);
+        }
+    }
+
+    #[test]
+    fn hmrc_rules() {
+        let detector = detector();
+
+        for value in [
+            "QA123456C",
+            "AD123456C",
+            "AF123456C",
+            "AQ123456C",
+            "BG123456C",
+            "GB123456C",
+            "NK123456C",
+            "KN123456C",
+            "TN123456C",
+            "NT123456C",
+            "ZZ123456C",
+            "AB123456E",
+            "AB123456M",
+        ] {
+            assert!(values(&detector, value).is_empty(), "{value}");
         }
     }
 

@@ -21,9 +21,8 @@ const ID: &str = "person_name_lite";
 /// In alternation order.
 const HONORIFICS: [&str; 5] = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."];
 
-/// In alternation order: `II` is tried before `III`, so a trailing `III`
-/// matches as `II` (and the leftover `I` then fails the adjacency check).
-const SUFFIXES: [&str; 5] = ["Jr.", "Sr.", "II", "III", "IV"];
+/// In alternation order, longest first: `III` before `II`.
+const SUFFIXES: [&str; 5] = ["Jr.", "Sr.", "III", "II", "IV"];
 
 /// Words a name may hold after the first, with and without an honorific.
 const MAX_MORE_WORDS: usize = 3;
@@ -334,9 +333,9 @@ mod tests {
     }
 
     #[test]
-    fn roman_numeral_three_matches_as_two_then_fails_adjacency() {
+    fn roman_numeral_suffixes_match_whole() {
         assert_eq!(spans("John Smith II"), ["John Smith II"]);
-        assert!(spans("John Smith III").is_empty());
+        assert_eq!(spans("John Smith III"), ["John Smith III"]);
     }
 
     #[test]

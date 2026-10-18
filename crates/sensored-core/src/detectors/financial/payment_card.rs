@@ -24,11 +24,8 @@ pub fn detector() -> ChecksumDetector {
     }
 }
 
-/// Digit groups split by one consistent separator, 13-19 digits, not all the
-/// same digit, Luhn-valid.
-///
-/// Parity quirk: only the groups before a separator are capped at six digits;
-/// the last group is not.
+/// Digit groups split by one consistent separator (each 1-6 digits when
+/// grouped), 13-19 digits, not all the same digit, Luhn-valid.
 fn validate(candidate: &str) -> Option<&'static [&'static str]> {
     // The pattern only matches ASCII, so bytes are UTF-16 units here.
     if candidate.len() > MAX_LENGTH {
@@ -62,7 +59,9 @@ fn validate(candidate: &str) -> Option<&'static [&'static str]> {
 
     let digits = &digits[..count];
 
-    if group < 1 || !DIGITS.contains(&count) || all_same(digits) {
+    let last_group_ok = group >= 1 && (separator.is_none() || group <= MAX_GROUP);
+
+    if !last_group_ok || !DIGITS.contains(&count) || all_same(digits) {
         return None;
     }
 
@@ -154,7 +153,8 @@ mod tests {
     }
 
     #[test]
-    fn last_group_is_not_capped() {
-        assert_eq!(spans("4242 424242424242"), ["4242 424242424242"]);
+    fn last_group_is_capped_when_grouped() {
+        assert!(spans("4242 424242424242").is_empty());
+        assert_eq!(spans("4242424242424242"), ["4242424242424242"]);
     }
 }

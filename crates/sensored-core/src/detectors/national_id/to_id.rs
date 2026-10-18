@@ -8,6 +8,14 @@ use crate::detector::{ContextDetector, ContextMatcher, StreamMeta};
 const LABELS: &str = "(?:Tonga|Tongan|National ID|Identity)";
 const WINDOW: (usize, usize) = (35, 20);
 
+/// A letters-only word next to a label ("National ID: passport") is prose.
+fn validate(candidate: &str) -> Option<&'static [&'static str]> {
+    candidate
+        .bytes()
+        .any(|byte| byte.is_ascii_digit())
+        .then_some(&["to_id.format"])
+}
+
 pub(super) fn detector() -> ContextDetector {
     ContextDetector {
         id: "to_id",
@@ -18,7 +26,7 @@ pub(super) fn detector() -> ContextDetector {
         context: LazyLock::new(|| ContextMatcher::new(LABELS, WINDOW.0, WINDOW.1)),
         labels: &["Tonga", "Tongan", "National ID", "Identity"],
         window: WINDOW,
-        validate: None,
+        validate: Some(validate),
         stream: StreamMeta::new(10, WINDOW.0, WINDOW.1),
     }
 }
@@ -58,5 +66,13 @@ mod tests {
             detect(&detector, text)[0].reasons,
             ["to_id.format", "to_id.context"]
         );
+    }
+
+    #[test]
+    fn requires_a_digit() {
+        let detector = detector();
+
+        assert!(values(&detector, "National ID: passport").is_empty());
+        assert!(values(&detector, "National ID: abcdefgh").is_empty());
     }
 }

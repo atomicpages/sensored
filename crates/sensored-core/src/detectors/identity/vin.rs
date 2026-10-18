@@ -11,10 +11,9 @@ const WEIGHTS: [u32; 17] = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
 /// The TS pattern has the `gi` flags without `u`: ASCII letters only.
 const PATTERN: &str = r"[A-HJ-NPR-Za-hj-npr-z0-9]{17}";
 
-/// The TS transliteration table has uppercase keys only, so a lowercase VIN
-/// matches the pattern but never passes the checksum.
+/// Transliteration is defined on uppercase; lowercase VINs fold first.
 fn transliterate(byte: u8) -> Option<u32> {
-    let value = match byte {
+    let value = match byte.to_ascii_uppercase() {
         b'0'..=b'9' => byte - b'0',
         b'A' | b'J' => 1,
         b'B' | b'K' | b'S' => 2,
@@ -47,7 +46,7 @@ fn checksum_valid(vin: &[u8]) -> bool {
         digit => b'0' + u8::try_from(digit).expect("below 11"),
     };
 
-    vin[8] == check
+    vin[8].to_ascii_uppercase() == check
 }
 
 /// Candidates are ASCII, so byte length equals the TS UTF-16 length.
@@ -118,12 +117,17 @@ mod tests {
             "11111111111111111",
             "x1HGCM82673A123456",
             "1HGCM82673A123456x",
-            "1hgcm82673a123456",
         ];
 
         for text in cases {
             assert!(spans(&detector, text).is_empty(), "{text}");
         }
+    }
+
+    #[test]
+    fn lowercase_validates_like_uppercase() {
+        assert_eq!(spans(&detector(), "1HGCM82633A004352"), [(0, 17)]);
+        assert_eq!(spans(&detector(), "1hgcm82633a004352"), [(0, 17)]);
     }
 
     #[test]
