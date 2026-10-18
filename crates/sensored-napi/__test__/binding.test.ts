@@ -183,9 +183,9 @@ describe("collect and render", () => {
     expect(redactor.filter(text, [ticketAt(text, "T-123"), kept])).toEqual([
       kept,
     ]);
-    expect(caught(() => redactor.filter(text, [{ ...kept, start: 1 }])).code).toBe(
-      "DETECTOR_CONTRACT",
-    );
+    expect(
+      caught(() => redactor.filter(text, [{ ...kept, start: 1 }])).code,
+    ).toBe("DETECTOR_CONTRACT");
   });
 
   test("throws DETECTOR_CONTRACT for bad detections", () => {
@@ -255,10 +255,16 @@ describe("stream", () => {
       ...stream.finishWith(detect),
     ];
 
-    expect(streamText(events)).toBe("😀 [TICKET_1], [TICKET_2] and [TICKET_3].");
+    expect(streamText(events)).toBe(
+      "😀 [TICKET_1], [TICKET_2] and [TICKET_3].",
+    );
     expect(events.at(-1)).toEqual({
       type: "complete",
-      map: { "[TICKET_1]": "T-123", "[TICKET_2]": "T-123", "[TICKET_3]": "T-999" },
+      map: {
+        "[TICKET_1]": "T-123",
+        "[TICKET_2]": "T-123",
+        "[TICKET_3]": "T-999",
+      },
     });
   });
 
