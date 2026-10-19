@@ -60,7 +60,8 @@ export class PaymentCardDetector extends ChecksumDetector {
       }
     }
 
-    if (valid && groupSize < 1) {
+    // The last group has the same bounds as the others when grouped.
+    if (valid && (groupSize < 1 || (separator !== null && groupSize > 6))) {
       valid = false;
     }
 

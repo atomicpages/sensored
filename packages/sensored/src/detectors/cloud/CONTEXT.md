@@ -1,5 +1,9 @@
 # Cloud provider key detectors
 
+TS reference implementations, frozen (bug fixes only). The shipped detectors
+are the Rust ports in `crates/sensored-core/src/detectors/cloud/`, the source
+of truth; new detectors go there.
+
 All built-in cloud provider key detectors live under `detectors/cloud/` and
 extend the `Detector` base class directly. Each is exported as a singleton and
 registered in `detectors/registry.ts`.

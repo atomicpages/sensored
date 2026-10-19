@@ -1,10 +1,33 @@
 import { defineConfig } from "tsdown";
 
+/** Entries that become export conditions of `.` instead of sub-paths. */
+const conditions: Record<string, string[]> = {
+  "./src/index.wasm-module": ["worker", "edge-light"],
+  "./src/index.wasm-url": ["browser", "deno"],
+};
+
+/** Remaps stripped keys like `./vault/kms/aws-kms` to clean sub-paths. */
+const kmsMap: Record<string, string> = {
+  "./vault/kms/aws-kms": "./vault/kms/aws",
+  "./vault/kms/gcp-kms": "./vault/kms/gcp",
+  "./vault/kms/azure-key-vault": "./vault/kms/azure",
+  "./vault/kms/hashicorp-vault": "./vault/kms/hashicorp",
+  "./vault/kms/workos-ekm": "./vault/kms/workos",
+};
+
 export default defineConfig({
   entry: [
     "src/index.ts",
+    "src/index.wasm-url.ts",
+    "src/index.wasm-module.ts",
     "src/session.ts",
     "src/vault/index.ts",
+    "src/vault/kms/index.ts",
+    "src/vault/kms/aws-kms.ts",
+    "src/vault/kms/gcp-kms.ts",
+    "src/vault/kms/azure-key-vault.ts",
+    "src/vault/kms/hashicorp-vault.ts",
+    "src/vault/kms/workos-ekm.ts",
     "src/adapters/openai.ts",
     "src/adapters/anthropic.ts",
     "src/loggers/bunyan.ts",
@@ -20,21 +43,44 @@ export default defineConfig({
   dts: true,
   exports: {
     customExports(generated) {
-      const clean: Record<string, string> = {};
+      const clean: Record<string, unknown> = {};
+      const root: Record<string, unknown> = {};
+      let main: unknown;
 
       for (const [key, value] of Object.entries(generated)) {
-        if (key === "./src") {
-          clean["."] = value;
+        const names = conditions[key];
+
+        if (names !== undefined) {
+          for (const name of names) {
+            root[name] = value;
+          }
+        } else if (key === "./src") {
+          main = value;
+          clean["."] = root;
         } else if (key.startsWith("./src/")) {
-          clean[`./${key.slice(6)}`] = value;
+          const stripped = `./${key.slice(6)}`;
+
+          clean[kmsMap[stripped] ?? stripped] = value;
         } else {
           clean[key] = value;
         }
       }
 
+      // Last: conditions match in order, and `default` is the catch-all.
+      root.default = main;
+
       return clean;
     },
   },
+  // The Wasm glue and binary (`bun run build:wasm`) stay files of their own:
+  // `src/native/wasm-*.ts` reach them at `../../wasm/` from `dist/src/native/`.
+  deps: { neverBundle: [/\/wasm\/sensored_wasm/] },
+  copy: [
+    {
+      from: ["wasm/sensored_wasm.js", "wasm/sensored_wasm_bg.wasm"],
+      to: "dist/wasm",
+    },
+  ],
   target: "es2022",
   unbundle: true,
   publint: true,

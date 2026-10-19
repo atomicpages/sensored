@@ -1,0 +1,622 @@
+{
+  "version": 1,
+  "corpusFingerprint": "3bbd6430fdb654500ffc7a5b78f1856314ae65e033911d71d949067388e8a82a",
+  "files": {
+    "address.json": {
+      "sha256": "d6bfd65973f33c5f2306db083dc04be68ec679d35dcefc763fd9d4ba216c5f81",
+      "cases": 320
+    },
+    "anthropic_api_key.json": {
+      "sha256": "d0f02d77fe89c21f92b5deb18b621685ed1767e5ca5748ffcf67a94d19a5104f",
+      "cases": 320
+    },
+    "ar_cuit.json": {
+      "sha256": "5a73ea8330a86a3e9d4184bc2e30b0f2632bf613d915c9422767afafea555192",
+      "cases": 320
+    },
+    "ar_dni.json": {
+      "sha256": "ffe8873d57e60a570446e82c3a93c91a0265d4353552c0a087420f7cbac0be86",
+      "cases": 455
+    },
+    "au_tfn.json": {
+      "sha256": "8ced4703b50ff8d79e5d5acd227280ee972f4194162e1c02c0c1fd9d3fb72a19",
+      "cases": 462
+    },
+    "aws_access_key.json": {
+      "sha256": "c856d8822a0dd3ed98b100170d9751ce66577cbe4acf65310ae4ccd893805f2b",
+      "cases": 320
+    },
+    "bg_egn.json": {
+      "sha256": "87f274663e9076dae1bf92eaa68bed70fe169b04c6838bb9d4528e26ecd6d937",
+      "cases": 320
+    },
+    "bh_cpr.json": {
+      "sha256": "1cf6d34fa53734559c2de1329c335d95ba76b602802e6274cf8379bdcb61c151",
+      "cases": 320
+    },
+    "ca_sin.json": {
+      "sha256": "dc354f34acd39bbc84288aebc5b1eed954e536082128da70f082e02d879ac925",
+      "cases": 452
+    },
+    "card_data.json": {
+      "sha256": "3ddccf9651465bb6f52fae1b53eb5a0dfbfb89bdc6f1e658fc50a6deef29b79c",
+      "cases": 320
+    },
+    "cl_rut.json": {
+      "sha256": "290fd30c89fe1eea81b879af877d56df5a1947eb91294db112b5a05b2b182b38",
+      "cases": 328
+    },
+    "clinical_trial_id.json": {
+      "sha256": "b7acb994b0deec8bcd92e77596f3d5cffe66b3fdb3d0d26250c165808060dd47",
+      "cases": 320
+    },
+    "cloudflare_api_token.json": {
+      "sha256": "d576a49c3daf950ccaf16ce0ae4ceadc7d5c97a33da30138e6c2f9944687b05f",
+      "cases": 320
+    },
+    "co_cedula.json": {
+      "sha256": "10c187229f98d5d8660eaee7c804a60e716e603552f1ccef6e3122323ad6cd95",
+      "cases": 468
+    },
+    "co_nit.json": {
+      "sha256": "7de17b03014bf94b04e4709aeda45929847328195c614ee02783bbec4df4dae9",
+      "cases": 320
+    },
+    "crypto_address.json": {
+      "sha256": "de9630a0a8424f0b3d3471216c34a8fa04ba3bc2ed3900d867186aaa40173559",
+      "cases": 580
+    },
+    "crypto_tx_hash.json": {
+      "sha256": "338e8cd4c6882c1ba8b45c8f857a4738b2247c3ee6ee24cfe37535a3ae7d16c5",
+      "cases": 320
+    },
+    "cz_id.json": {
+      "sha256": "b17bd001465e92c84e5b4b87d87cda096f4f4580b568a6d641f0ac4d659888ee",
+      "cases": 320
+    },
+    "datadog_api_key.json": {
+      "sha256": "81eacabad2f5092011f4b0a10cd16daee39ddad8962623e986c3b1917b46613a",
+      "cases": 337
+    },
+    "de_id.json": {
+      "sha256": "daaa4debe9c0d1b4a82c6129ee168f24359ae418fd328efbaada0b2dffa005a0",
+      "cases": 320
+    },
+    "digital_identity.json": {
+      "sha256": "609b25c464da3bcd07c595f366b58eee4ebb3d6cdb4fdd1c03b1760233997e98",
+      "cases": 320
+    },
+    "digitalocean_token.json": {
+      "sha256": "e9e7947651327b64e5249d00c5c3af6c051ee97f340716f5843c6716784c9702",
+      "cases": 320
+    },
+    "discord_bot_token.json": {
+      "sha256": "8c3b23e5af0e893570b7d478b09514053ebe4a33b244d55ee9d14d2dd2e7176e",
+      "cases": 320
+    },
+    "drivers_license.json": {
+      "sha256": "0025ea376232deb5d9b18d4152524031382caea7c46b26815c12671eaa6ae7f5",
+      "cases": 339
+    },
+    "ec_cedula.json": {
+      "sha256": "35d42e9e0a288c30eb3201543bf30b3652825978dec57a936f8caf8894a269bc",
+      "cases": 322
+    },
+    "eg_id.json": {
+      "sha256": "e2f0d6d9cee3d7f0779971b48ffbc13fb34df604ed041f4c81d68229b0b7dc58",
+      "cases": 320
+    },
+    "email.json": {
+      "sha256": "5a353ff10a1ca4dd2d86583a22c1be37cd44f565d6ca0196a81bbc74f2354712",
+      "cases": 344
+    },
+    "es_dni.json": {
+      "sha256": "cf0d0be582ff931cad76ed018177e0ba3ee8f7936d197a0d7a6048ea16036ae9",
+      "cases": 320
+    },
+    "eu_vat.json": {
+      "sha256": "17c5673bd1d37063ad30829302e5800c8263657b29381d8a16216ad2660ed529",
+      "cases": 335
+    },
+    "financial_reference.json": {
+      "sha256": "4d8963475c2b9c56aee3d78bd28893c96d11dd6bff1f27000bb9de84ef591493",
+      "cases": 320
+    },
+    "fj_id.json": {
+      "sha256": "ac29e77cd8c77da1133291bcff533e2a4936ab561b62981a778c8e7d23b02501",
+      "cases": 342
+    },
+    "fr_insee.json": {
+      "sha256": "799e2f495f3aff408a3730ef4561878796667461d60ac284ab89df9169440014",
+      "cases": 320
+    },
+    "generic_api_key.json": {
+      "sha256": "79e99b19c271db66c97e4bfadba52e4f47848ae0014ced4420909aca19ad6371",
+      "cases": 1520
+    },
+    "genetic_info.json": {
+      "sha256": "5dc5ca9708a518749ffd68543b9062a382c6e103a6ce30636398d571a4317d09",
+      "cases": 320
+    },
+    "gh_card.json": {
+      "sha256": "92a1b0a3b8527d2621b213133a0b9758d2f7722b89a5c2750e36cf20389454cd",
+      "cases": 320
+    },
+    "github_token.json": {
+      "sha256": "e1737ae6657b11240359cc267bb6294b3b723864fd16d10589fae1640f469981",
+      "cases": 320
+    },
+    "gitlab_token.json": {
+      "sha256": "08a3f74465b148910693462561df3b7c2bbb94cdedbc097656124a1f275e7fc6",
+      "cases": 320
+    },
+    "google_api_key.json": {
+      "sha256": "11740827aa199f124b24cd91d5c27aaf7dbdf09ad39bb3c8b0257c3d578da815",
+      "cases": 320
+    },
+    "health_insurance_id.json": {
+      "sha256": "07f8c4e8ae08936b59bc326a81bf1af1683a707213958bae5aceea247039154c",
+      "cases": 320
+    },
+    "heroku_api_key.json": {
+      "sha256": "58ce0ffb1c1c5d736dd14a2c7b536f423d5d5c496003997550962cf4707d897b",
+      "cases": 320
+    },
+    "hr_compensation.json": {
+      "sha256": "0455a53d96cae854bc9f4132c57e978dd5080443c84f7cab45425e0fc2c0a037",
+      "cases": 320
+    },
+    "hr_identifier.json": {
+      "sha256": "7454491a07a9d33066d5dd1d0279020ed969d5e137be6167982f1f3a45dd3d47",
+      "cases": 320
+    },
+    "hr_recruitment.json": {
+      "sha256": "1c90ab4ea6dd4c9140bc5ef86a70acb3dff8bf65fe02d943138fdc833952d658",
+      "cases": 320
+    },
+    "hr_screening.json": {
+      "sha256": "cccff4f3a4c708232d69a87d11e45e1e2cff02587c546b323a8d4f2d4b6c1d26",
+      "cases": 320
+    },
+    "http_auth_header.json": {
+      "sha256": "66f3b971faa2d88cb7ee4ccc57acefa5d467fbd96f57650ee8d414b7eaeebaa4",
+      "cases": 383
+    },
+    "hu_id.json": {
+      "sha256": "af46e53bacf2a915be0d1ab586ffa0906fc6d80f7667c4f0bf9881f34bd919c5",
+      "cases": 320
+    },
+    "hu_tax_id.json": {
+      "sha256": "22980c3aa203a2df4619313ce824979d74b5fe20278c81cb5a9d49a91e7d646f",
+      "cases": 348
+    },
+    "huggingface_token.json": {
+      "sha256": "84c94dcd6a8f798e19ac3594c607fec72808b901d22d9d4e55620d43ae14cdba",
+      "cases": 320
+    },
+    "iban.json": {
+      "sha256": "8582181d40ee898fe88767c73e09362c4152f382cece82a04414904c5f5472f6",
+      "cases": 339
+    },
+    "id_nik.json": {
+      "sha256": "efd36b378fa4bd64d5d540261afcb5d0569bfdbde58bfd7b2f1b6a6793973bec",
+      "cases": 320
+    },
+    "id_npwp.json": {
+      "sha256": "bb2e1584f5338eed9ec575c1181b555116065c86a4923c44caa94d3c569cdb89",
+      "cases": 320
+    },
+    "il_id.json": {
+      "sha256": "58f982d50573646c7c2ebb29d503b9693ac44cc75d4ea95106e587fd36b426cf",
+      "cases": 320
+    },
+    "imei.json": {
+      "sha256": "df059543693c083289fba18d2d59a950a1c3cf68f19ffc951730df78f5788ee8",
+      "cases": 374
+    },
+    "imsi.json": {
+      "sha256": "d84bcfca0637a61de3d2cdb813166eade17afe787d42467bc27d93bc2440f4aa",
+      "cases": 320
+    },
+    "investment_account.json": {
+      "sha256": "fe068b4137658a70c6de19bd008f19d73a54638bb9d0dbabf7ea69e223c4ce5e",
+      "cases": 320
+    },
+    "ipv4.json": {
+      "sha256": "0e8d40ca7b03ac7e4b3ee2b49adc6b597fbe1a5b010482a3bb7e6d8ddd3e5e9e",
+      "cases": 327
+    },
+    "ipv6.json": {
+      "sha256": "4163ac1603f19ac718f409d5df82bf85340afe7773850c802ac2d122135362e5",
+      "cases": 320
+    },
+    "it_codice_fiscale.json": {
+      "sha256": "885bfab1340728b6776eca1c56cc474ed2516c3165076fd9d3a9c747e7308199",
+      "cases": 320
+    },
+    "jo_id.json": {
+      "sha256": "58b72b5a7d7789dcaf6d55fbeb3fab1cf28a935cdec0dce6bdcc78d094421505",
+      "cases": 320
+    },
+    "jp_my_number.json": {
+      "sha256": "090a3c758733b8d3a47d5cf6141547c18e56c2557281f5f938a476ec1c3b2aa7",
+      "cases": 421
+    },
+    "jwt_token.json": {
+      "sha256": "40a622b17c0d0994966c095997c5334662a17fd8272d8f6b6d94ca22ed0258ca",
+      "cases": 320
+    },
+    "ke_id.json": {
+      "sha256": "355dff989cf9160d8787a682326af4ab6c53cb68b588033f1c3989cabcdb10a1",
+      "cases": 320
+    },
+    "ke_kra_pin.json": {
+      "sha256": "eae31c34aaac285158d59d58be4087ddb5b97a43d91073e7cb76d2399bed2633",
+      "cases": 320
+    },
+    "kg_pin.json": {
+      "sha256": "271d092fb4abb7002a5a5648042e282314d07ee90780d64d5ea79fe8cb6432bd",
+      "cases": 320
+    },
+    "kw_id.json": {
+      "sha256": "f2fca4a1e5896b9c15fdc5fef6ce947e5773410a756a8d2beeba810ee30b7521",
+      "cases": 320
+    },
+    "kz_iin.json": {
+      "sha256": "bbb41f211a8a40908d0652de3d1dc5345a9622b526a197ec1441a0ad1335c6fa",
+      "cases": 320
+    },
+    "lb_id.json": {
+      "sha256": "3da7e41c47a212e746a0838ffddfb27ca28836c6299afb856b09c14495f06f3c",
+      "cases": 320
+    },
+    "legal_case.json": {
+      "sha256": "cdc278c1e582f5f4223ede79762a4f1967433e9ada3b3b38c41055e20c760793",
+      "cases": 337
+    },
+    "legal_license.json": {
+      "sha256": "94b11aa6bba9093aa0d69ae066382adca40a760e95d0766b4d858b2fecf0d887",
+      "cases": 439
+    },
+    "legal_reference.json": {
+      "sha256": "827f19e5249f8c27ef9f458ee45ffffe09ab926271d98564ada9f99602fc170f",
+      "cases": 364
+    },
+    "license_plate.json": {
+      "sha256": "99c49b051edffc905c89037ef725485849a420459baf9fee6dd0528df7c97ffa",
+      "cases": 328
+    },
+    "linear_api_key.json": {
+      "sha256": "5a04a9396b7a4f38cd8e6dff6c4d4d74965fe165dcfcf9e3c40cff70bfb9960d",
+      "cases": 320
+    },
+    "ma_id.json": {
+      "sha256": "c2c621fa67f6b6429deb66d42a60a98cab78af5d4d55b1d4d89a0aa7182fe140",
+      "cases": 320
+    },
+    "mac_address.json": {
+      "sha256": "8609c0dbd3e124f1e2cd88194e8318185ad1f331fff2e4bf15572c05ef9afb02",
+      "cases": 321
+    },
+    "mailchimp_api_key.json": {
+      "sha256": "c5e4ec13357dbb9b13eb684a9550708761684519b31d6f7ba569a9828da624f4",
+      "cases": 320
+    },
+    "mailgun_api_key.json": {
+      "sha256": "fb300c1f9fc8b96deb8d7e295435e797d016fbaf071b4b9cab80ae71060da1f1",
+      "cases": 320
+    },
+    "medical_code.json": {
+      "sha256": "e8cb62b9bf86bd5189bd9544a0ae6f5a58cac52f588a550a5ace0e92b5a5427c",
+      "cases": 320
+    },
+    "medical_device_id.json": {
+      "sha256": "9a566e7c003ebee33a5749ee162a418299993872d8c85cd8a605162abbe993cf",
+      "cases": 320
+    },
+    "medical_record_number.json": {
+      "sha256": "9191514ed6a070a828a1fdcbdd5652649f92282cfc86bf26ed02839f66391f26",
+      "cases": 320
+    },
+    "medical_reference.json": {
+      "sha256": "6360fb4f84d24e15f0c07d853fa456e4356a71cfbf3b9ab3d90b9717246d1729",
+      "cases": 320
+    },
+    "mm_nrc.json": {
+      "sha256": "e2228d34b1b4177ad93385f7fe9b6fad563c701be3db38bf05fd65870b9218de",
+      "cases": 320
+    },
+    "my_ic.json": {
+      "sha256": "f006d1a1441e03be62e92aa802d59f6a128f2257103f41a83856d34f4e22f75e",
+      "cases": 320
+    },
+    "ng_bvn.json": {
+      "sha256": "9d32b212b0fde14eb481c141e305e9070b4a7ff30c31114f18562e017f8f2de7",
+      "cases": 403
+    },
+    "ng_nin.json": {
+      "sha256": "efdb4329cfbfc4e3df31a6ccc67965e9fbc0eac8ad75354e32579b13222a0f56",
+      "cases": 372
+    },
+    "nl_bsn.json": {
+      "sha256": "7b7dd413a13b908852294f0bc1aec0e679c3042e9f670a9a173563241c28359a",
+      "cases": 320
+    },
+    "notion_token.json": {
+      "sha256": "aaee9982129a41434396e66f887514b940d950313a2844579e8ee3153368cc4e",
+      "cases": 320
+    },
+    "npm_token.json": {
+      "sha256": "6a48853364ecce9d9aae2172a0f96acb530e36b89cb9153225c956177f1e0e54",
+      "cases": 320
+    },
+    "nz_driver_license.json": {
+      "sha256": "2c332ab0e826883d9cb79bfe4ec52810bcbe3f258db0f70b29e2d66a24983789",
+      "cases": 468
+    },
+    "nz_ird.json": {
+      "sha256": "228ab8df5c526f9c244b9d5d455866142c182a944660af4da5e1b2a93b20ad47",
+      "cases": 337
+    },
+    "nz_ird_extra.json": {
+      "sha256": "1291dc23b5c7537d3447f50a6bfce5a1434562efb97f3d4b6a52a3c8c1e34a90",
+      "cases": 538
+    },
+    "nz_passport.json": {
+      "sha256": "1ab8844e6b2185eb1c2753a65cb4d50a1c7bdb2432be26c4cec1595430dfba26",
+      "cases": 519
+    },
+    "okta_token.json": {
+      "sha256": "23f96769e541312f561f45fe23f86c31d80e97403596fb43267fcb3e73811107",
+      "cases": 320
+    },
+    "om_id.json": {
+      "sha256": "aee2c1ec15a42ff44c5643ca795e12ae19f8a773aeea9c99014affa73d1a18ef",
+      "cases": 320
+    },
+    "openai_api_key.json": {
+      "sha256": "8437c83017ad2f476aa24e431beae4da83c947622ab5ea9d68a8fa276e4be3a7",
+      "cases": 320
+    },
+    "pagerduty_token.json": {
+      "sha256": "ed72dabcc731411174f4be6e4ed29db02504fa5dc3b71730a9a439bedf4d1917",
+      "cases": 320
+    },
+    "passport.json": {
+      "sha256": "57a953ad866a9f4a4e9a31835abc56c2b5b10e78e61dbc4908fd63c71c6fe6ed",
+      "cases": 442
+    },
+    "payment_card.json": {
+      "sha256": "36a125c394ef8903903d0cf73712018b06da3027e0e7856c838e5c89c68af954",
+      "cases": 703
+    },
+    "payment_gateway_id.json": {
+      "sha256": "1a0a69a18d2f7ad11144cb9b7a4409b1de050ca744968cad98db66a9ef0ee8e2",
+      "cases": 320
+    },
+    "pe_dni.json": {
+      "sha256": "1e577db25ccebdc94b20f08282a977b183e7b3a1ad80b967dee4f8d9723bee29",
+      "cases": 393
+    },
+    "pe_ruc.json": {
+      "sha256": "4746604d6c8f2f8c1f8f4fcd4df9f696d93827872be168628a8fbb547ee21aad",
+      "cases": 320
+    },
+    "person_name_lite.json": {
+      "sha256": "b51c05f7acfc3213451929c9aa88f595f0ccf56f23438d1dc7126cdb944af017",
+      "cases": 334
+    },
+    "ph_umid.json": {
+      "sha256": "270d7da2ca65dcc46dd42624d68d6f7cd4449ad83452392b8bfdbc170c14a5be",
+      "cases": 320
+    },
+    "phone.json": {
+      "sha256": "e1354873c21be55bfa9a30afc4165b25f88a4cec83df5bf8d706506e335c8e53",
+      "cases": 2835
+    },
+    "pl_pesel.json": {
+      "sha256": "96c99ce521ac3618c0574bbbd47d88de98fd51d57e7be36efc521b3d48429578",
+      "cases": 320
+    },
+    "png_id.json": {
+      "sha256": "7e9800a3bd99574723cb6489094e39839d2e470e74ee1f46bf799f62ccc6c131",
+      "cases": 320
+    },
+    "postal_code.json": {
+      "sha256": "5454398da622e188fae697638bc8916f90caf3ef11dcc3592175e4a2bac908d9",
+      "cases": 1080
+    },
+    "private_key.json": {
+      "sha256": "07a4f2adf504e03005f64588fea98af3498c9719221fa578abdd664d1e7f1d15",
+      "cases": 320
+    },
+    "qa_id.json": {
+      "sha256": "bd716005f419ab6e40c5eb8c2325cba082fd848afc8a28b0cf0565895635b116",
+      "cases": 320
+    },
+    "ro_cnp.json": {
+      "sha256": "8ba8efd34e9ae511dc7990c2a2f75d70d9264fd46ef062df8e883d1c11003f9b",
+      "cases": 320
+    },
+    "rs_jmbg.json": {
+      "sha256": "252665f08ba48f447b1cb2dc9f3363907f50d0027335640c76f5c1ced034b55e",
+      "cases": 321
+    },
+    "ru_passport.json": {
+      "sha256": "6ffe046505f13a5cfa40d3c0bbdb557b6dad080f41c1fa25578cff5e79c2134f",
+      "cases": 320
+    },
+    "ru_snils.json": {
+      "sha256": "81b05b530dcb64e175a71b7be977ea98657ca5be10a55f0e31fe648d7f43ae47",
+      "cases": 320
+    },
+    "sa_id.json": {
+      "sha256": "82bdfbca3298d3684f11726fedbfd95ed5cf4f8e66096b0fe7c466d58986d606",
+      "cases": 320
+    },
+    "scaleway_key.json": {
+      "sha256": "245f2669ee2e62fc5a8dc5fecd7d84da8b5e2f0cb3daeb819c3b09229d7cfcc4",
+      "cases": 320
+    },
+    "sendgrid_api_key.json": {
+      "sha256": "8fd8f4ea46a3d76b74136aa0b9b0a08d418f0e4c9e9102035ea973a27484c6c0",
+      "cases": 320
+    },
+    "sentry_token.json": {
+      "sha256": "3575a6e7708ff26e11a7bd74cf4a9ed500b53b597448f65e2d23122386d34f9d",
+      "cases": 320
+    },
+    "shopify_token.json": {
+      "sha256": "c759534126fac6c1646c29b91e9463c4862d865de1e0aeb265993cef0550f8ef",
+      "cases": 320
+    },
+    "slack_token.json": {
+      "sha256": "4d21ff0b6e0aaa1cc835d30fa4b14d8d1d0a4c1f35cb5af74c48915fb269d1ed",
+      "cases": 320
+    },
+    "slack_webhook_url.json": {
+      "sha256": "1049a4aaf933fdcaa01c8de7328d609f79835b8bd56374ea840d3acd0a62f1f4",
+      "cases": 320
+    },
+    "square_token.json": {
+      "sha256": "1454b45cb4d22b0379006520bfeada81c9de17afe0249767c65e7982881bd389",
+      "cases": 320
+    },
+    "stripe_api_key.json": {
+      "sha256": "3c5d8532ad58a844cc5ec9520dd100fa2a1b58baea2eb35a908daa8e3374e963",
+      "cases": 320
+    },
+    "swift_bic.json": {
+      "sha256": "d5e14bda8b455e632b5e6905c25bedbdfc25c714b1e8f023fc347e21f88035f4",
+      "cases": 320
+    },
+    "telegram_bot_token.json": {
+      "sha256": "7bf4d162d3eb65bae31c50d81fc54b5697f226068f5741c58f526dc17caf2623",
+      "cases": 320
+    },
+    "th_id.json": {
+      "sha256": "258efd5169acf5411ad523c2dcf7328c606af9518e97a1c69d2add4bbd3c01e2",
+      "cases": 320
+    },
+    "tj_id.json": {
+      "sha256": "4151321dc3447f420d38992606c9c9463fbda27f5e9e0bdce31ec827229987b3",
+      "cases": 320
+    },
+    "tm_passport.json": {
+      "sha256": "11e4587fc8d3cf0de601364cdbd726210412a54c771cebd6812a8b80b9d730ae",
+      "cases": 320
+    },
+    "to_id.json": {
+      "sha256": "05d9d9c3a0efebb5bfe2844697ded193e2aa966460a4e29377b77a4d1c3a18a6",
+      "cases": 342
+    },
+    "tr_id.json": {
+      "sha256": "a8851411634804c5a289bb03cb495872266855c095cbb75d09880625e80b3fe7",
+      "cases": 320
+    },
+    "tracking_number.json": {
+      "sha256": "045e7522f8a973b94f7d8843fd390c36b0781a9693b915e3b916e0049d10c691",
+      "cases": 320
+    },
+    "twilio_sid.json": {
+      "sha256": "24ade2d1ac1d3896cc47b1619060e13bd45d1e43570869916600aff4854fa773",
+      "cases": 320
+    },
+    "ua_inn.json": {
+      "sha256": "876b34c9295332b6160f9cce7d2c592362c89c972265d40952da2306b242e6c2",
+      "cases": 338
+    },
+    "ua_passport.json": {
+      "sha256": "d55bbc72e2e3385f218b4af2aac2ab900b4684f04f09e34bfbff36738440ffe3",
+      "cases": 393
+    },
+    "uae_id.json": {
+      "sha256": "56e87ef2014b2a576a0c7efc682b4e80a5ed4f08c718689f106085867f50e9f5",
+      "cases": 320
+    },
+    "uk_bank_account.json": {
+      "sha256": "94468b11768576ce23235026ea2c0f309d8d9491d98596b8957f0c668244b9e8",
+      "cases": 320
+    },
+    "uk_nhs.json": {
+      "sha256": "a74d5bc821221ac2fdadd143dd2e94a70f078b0fc806937e7a13b0ddf80e996c",
+      "cases": 320
+    },
+    "uk_nino.json": {
+      "sha256": "4693b26a6c385bbb7016349e298a7b3caa784b350bdbb3195e62757729830750",
+      "cases": 335
+    },
+    "uk_sort_code.json": {
+      "sha256": "91299eb421018655aa07e3fe3e4a50e6c7c3037a7bd30513cc79658ff4cad1bd",
+      "cases": 320
+    },
+    "url_query_key.json": {
+      "sha256": "48237abda96707276fb197714396dac9b3ba29c6c5989598736c2623f4d51db1",
+      "cases": 320
+    },
+    "url_with_auth.json": {
+      "sha256": "7738d6bc324020cc4d5ddc2ec34ebbfba41332f5e1e7ea5bcfa74e20d59fa462",
+      "cases": 320
+    },
+    "us_dea.json": {
+      "sha256": "b95dec7e4d75c15d25e23f45a74b9af119fe8222c8dcf357f14cb17508513f87",
+      "cases": 320
+    },
+    "us_ein.json": {
+      "sha256": "a758140235bcad462a27a60dda44f35b0c1b8efda38ebaf4a113e17b414fcaed",
+      "cases": 320
+    },
+    "us_itin.json": {
+      "sha256": "ab60136899de21271ec4b94df0d7b679cd985f5de96ca6c0ee9572f1718dbb15",
+      "cases": 320
+    },
+    "us_npi.json": {
+      "sha256": "ed0cbd0cc8b8be22f48658f298c73bb92b0ddc1ce862a2d315b5e9d9f453e276",
+      "cases": 380
+    },
+    "us_routing.json": {
+      "sha256": "c5efa1a67af718414f298cfc39eb1ca2e01c56c2733b6083711a1f467d737fbd",
+      "cases": 320
+    },
+    "us_ssn.json": {
+      "sha256": "5e75bc32a21c285e1c3e342faddf2fa38929ca9daaafbb23e30519f0a8375386",
+      "cases": 339
+    },
+    "uy_cedula.json": {
+      "sha256": "e27081cfda906125b0b93f489f2ef39cd09d74e343558c3e823d8e75496760df",
+      "cases": 325
+    },
+    "uz_passport.json": {
+      "sha256": "690bf84ef5b87b026d132b3cc0265a2b1fe4c5a90271b3b5c9a0e62c5c2f621c",
+      "cases": 346
+    },
+    "uz_stir.json": {
+      "sha256": "22ccca5163473b36e625f205b6afce54a5f6d92075af5cc62d0a06625b678182",
+      "cases": 381
+    },
+    "ve_cedula.json": {
+      "sha256": "5ab2caaebc05a1101bf1c02f180a18ae341520f17ae933f02467daab1364dc87",
+      "cases": 328
+    },
+    "ve_rif.json": {
+      "sha256": "4e9cb0f82fec8c435c7f2cf8cf4b94586cbbdd9a499f23879c6c8a340b56531c",
+      "cases": 320
+    },
+    "vin.json": {
+      "sha256": "70994b5eb0ee68f59bede6503daf1e0b53beb7a25751fb1136d04bb498b645e9",
+      "cases": 323
+    },
+    "vn_cccd.json": {
+      "sha256": "7aacf628c72e20cfc5c8afec25026e1f5b487a6ed79fd5ce89a5012956ba95ed",
+      "cases": 320
+    },
+    "ws_id.json": {
+      "sha256": "eb75434e19588aba2ea52fab13debbfda282e12390ffdc5a38c12f580f10d105",
+      "cases": 320
+    },
+    "za_id.json": {
+      "sha256": "e1be3ef29701fda181c04e045e7c10e1f42a043a872a45013da9cc79d19b8358",
+      "cases": 320
+    }
+  }
+}

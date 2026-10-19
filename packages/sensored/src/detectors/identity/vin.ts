@@ -38,7 +38,10 @@ const VIN_TRANSLIT: Record<string, number> = {
   "9": 9,
 };
 
-function vinChecksumValid(vin: string): boolean {
+function vinChecksumValid(candidate: string): boolean {
+  // The pattern is case-insensitive; transliteration and the check digit are
+  // defined on uppercase.
+  const vin = candidate.toUpperCase();
   let sum = 0;
 
   for (let i = 0; i < 17; i++) {

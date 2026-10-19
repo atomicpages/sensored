@@ -1,0 +1,45 @@
+{
+  "revision": "independent",
+  "label": "person_name_lite",
+  "detectors": {
+    "person_name": {
+      "tp": 234,
+      "fp": 221,
+      "fn": 0,
+      "precision": 0.5142857142857142,
+      "recall": 1,
+      "f1": 0.6792452830188679
+    },
+    "person_name_lite": {
+      "tp": 231,
+      "fp": 710,
+      "fn": 3,
+      "precision": 0.2454835281615303,
+      "recall": 0.9871794871794872,
+      "f1": 0.3931914893617022
+    }
+  },
+  "rust_person_name": {
+    "command": "cd crates && cargo run --release -p sensored-core --example person_name_eval -- ../packages/sensored/eval/corpus.json",
+    "official": {
+      "tp": 234,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "true_names": {
+      "tp": 234,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "negatives": {
+      "documents": 1050,
+      "fp": 0
+    }
+  }
+}

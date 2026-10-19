@@ -1,8 +1,16 @@
 import type { Detection } from "../../types";
 import { Detector } from "../base";
 
-const leftCharacter = /[a-zA-Z0-9.!#$%&'*+\-/=?^_`{|}~@\p{L}\p{M}\p{N}]/u;
+// Characters that may join a candidate; a span holding any that the grammar
+// rejects is dropped, so adjacent letters or digits never yield a partial
+// address. URL query and path delimiters (`/ ? = &`) are boundaries instead.
+const leftCharacter = /[a-zA-Z0-9.!#$%'*+\-^_`{|}~@\p{L}\p{M}\p{N}]/u;
 const rightCharacter = /[a-zA-Z0-9._@\-\p{L}\p{M}\p{N}]/u;
+
+// Scripts written without spaces end a candidate rather than poison it, so an
+// address run straight into CJK or Thai prose is still found.
+const unspacedScript =
+  /[\p{scx=Han}\p{scx=Hiragana}\p{scx=Katakana}\p{scx=Thai}]/u;
 
 const localGrammar =
   /^[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]+(?:\.[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]+)*$/;
@@ -72,7 +80,9 @@ export class EmailDetector extends Detector {
         const width =
           previous >= 0xdc00 && previous <= 0xdfff && start > 1 ? 2 : 1;
 
-        if (!leftCharacter.test(text.slice(start - width, start))) {
+        const character = text.slice(start - width, start);
+
+        if (!leftCharacter.test(character) || unspacedScript.test(character)) {
           break;
         }
 
@@ -89,7 +99,7 @@ export class EmailDetector extends Detector {
 
         const character = String.fromCodePoint(point);
 
-        if (!rightCharacter.test(character)) {
+        if (!rightCharacter.test(character) || unspacedScript.test(character)) {
           break;
         }
 

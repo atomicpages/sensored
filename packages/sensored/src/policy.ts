@@ -7,12 +7,7 @@ import {
 import { SensoredError } from "./errors";
 import { BUILTIN_PRESETS } from "./presets";
 import type { ActiveRule, RuleSetting, SemanticConfig } from "./types";
-import {
-  validateConfigShape,
-  validateDefinition,
-  validateLimits,
-  validateSetting,
-} from "./validate";
+import { validateConfig, validateSetting } from "./validate";
 
 // ---------------------------------------------------------------------------
 // Setting snapshots
@@ -83,9 +78,14 @@ function parsePresetRef(ref: string): {
 // Preset expansion
 // ---------------------------------------------------------------------------
 
+/**
+ * Merge one preset's rules. Conflicting actions throw, unless the config sets
+ * that rule explicitly: the explicit rule wins anyway, so the conflict is moot.
+ */
 function mergePresetRules(
   merged: Record<string, RuleSetting>,
   presetRules: Readonly<Record<string, RuleSetting | "off">>,
+  explicit: ReadonlySet<string>,
 ): void {
   for (const [ruleId, ruleValue] of Object.entries(presetRules)) {
     if (ruleValue === "off") {
@@ -94,7 +94,11 @@ function mergePresetRules(
 
     const existing = merged[ruleId];
 
-    if (existing !== undefined && existing.action !== ruleValue.action) {
+    if (
+      existing !== undefined &&
+      existing.action !== ruleValue.action &&
+      !explicit.has(ruleId)
+    ) {
       throw new SensoredError("POLICY_CONFLICT", "presets");
     }
 
@@ -107,13 +111,17 @@ function resolvePresets(
   customPresets:
     | Readonly<Record<string, Readonly<Record<string, RuleSetting | "off">>>>
     | undefined,
+  explicit: ReadonlySet<string>,
 ): Record<string, RuleSetting> {
-  const merged: Record<string, RuleSetting> = {};
+  const merged: Record<string, RuleSetting> = Object.create(null);
 
   for (const ref of presetNames) {
     const { name, version } = parsePresetRef(ref);
 
-    const customPreset = customPresets?.[name];
+    const customPreset =
+      customPresets && Object.hasOwn(customPresets, name)
+        ? customPresets[name]
+        : undefined;
 
     if (customPreset !== undefined) {
       if (version !== undefined) {
@@ -123,11 +131,13 @@ function resolvePresets(
         });
       }
 
-      mergePresetRules(merged, customPreset);
+      mergePresetRules(merged, customPreset, explicit);
       continue;
     }
 
-    const versions = BUILTIN_PRESETS[name];
+    const versions = Object.hasOwn(BUILTIN_PRESETS, name)
+      ? BUILTIN_PRESETS[name]
+      : undefined;
 
     if (versions === undefined) {
       throw new SensoredError("UNKNOWN_RULE", "presets");
@@ -137,7 +147,7 @@ function resolvePresets(
 
     if (version === undefined) {
       for (const delta of versions) {
-        mergePresetRules(merged, delta);
+        mergePresetRules(merged, delta, explicit);
       }
     } else {
       const index = version - 1;
@@ -159,7 +169,7 @@ function resolvePresets(
           });
         }
 
-        mergePresetRules(merged, delta);
+        mergePresetRules(merged, delta, explicit);
       }
     }
   }
@@ -178,17 +188,9 @@ export function resolvePolicy(config: unknown): {
   semantic: SemanticConfig | undefined;
   detectOnly: boolean;
 } {
-  validateConfigShape(config);
+  validateConfig(config);
 
   const detectOnly = config.detectOnly ?? false;
-
-  if (detectOnly && config.restore === true) {
-    throw new SensoredError("INVALID_CONFIG", "detectOnly");
-  }
-
-  if (config.limits !== undefined) {
-    validateLimits(config.limits);
-  }
 
   // Start with built-ins, then register custom detectors on top.
   const detectors = builtInDetectors();
@@ -201,36 +203,35 @@ export function resolvePolicy(config: unknown): {
     detectors.set("http_auth_header", new HttpAuthHeaderDetector(pattern));
   }
 
-  if (config.detectors !== undefined) {
-    if (!Array.isArray(config.detectors)) {
+  for (const definition of config.detectors ?? []) {
+    if (detectors.has(definition.id)) {
       throw new SensoredError("INVALID_CONFIG", "detectors");
     }
 
-    for (const definition of config.detectors) {
-      validateDefinition(definition);
-
-      if (detectors.has(definition.id)) {
-        throw new SensoredError("INVALID_CONFIG", "detectors");
-      }
-
-      detectors.set(definition.id, registerDetector(definition));
-    }
+    detectors.set(definition.id, registerDetector(definition));
   }
 
   // Expand presets into a merged rule map, then apply explicit overrides.
-  const presetRules: Record<string, RuleSetting> = {};
+  // Prototype-free maps, so rule ids like `__proto__` or `constructor` are
+  // ordinary keys. Plain objects keep JS key order, which the Rust core mirrors.
+  const presetRules: Record<string, RuleSetting> = Object.create(null);
 
   if (config.presets !== undefined) {
     Object.assign(
       presetRules,
-      resolvePresets(config.presets, config.customPresets),
+      resolvePresets(
+        config.presets,
+        config.customPresets,
+        new Set(Object.keys(config.rules)),
+      ),
     );
   }
 
   // Apply explicit rules on top of presets — explicit always wins.
-  const effectiveRules: Record<string, RuleSetting | "off"> = {
-    ...presetRules,
-  };
+  const effectiveRules: Record<string, RuleSetting | "off"> = Object.assign(
+    Object.create(null),
+    presetRules,
+  );
 
   for (const [id, value] of Object.entries(config.rules)) {
     effectiveRules[id] = value;

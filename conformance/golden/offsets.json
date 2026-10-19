@@ -1,0 +1,1535 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "redact/emoji-before",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "😀 jane.doe@example.com",
+      "expected": {
+        "text": "😀 [EMAIL]",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/emoji-before",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "😀 jane.doe@example.com",
+      "expected": {
+        "text": "😀 ********************",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/emoji-after",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "jane.doe@example.com 😀",
+      "expected": {
+        "text": "[EMAIL] 😀",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/emoji-after",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "jane.doe@example.com 😀",
+      "expected": {
+        "text": "******************** 😀",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/emoji-between",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "jane.doe@example.com 😀 192.0.2.10",
+      "expected": {
+        "text": "[EMAIL] 😀 [IPV4]",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 34,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 34,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/emoji-between",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "jane.doe@example.com 😀 192.0.2.10",
+      "expected": {
+        "text": "******************** 😀 **********",
+        "groups": [
+          {
+            "start": 0,
+            "end": 20,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 0,
+                "end": 20,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 34,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 24,
+                "end": 34,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/astral-math-between",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "𝒳 jane.doe@example.com 𝒴 192.0.2.10 𝒵",
+      "expected": {
+        "text": "𝒳 [EMAIL] 𝒴 [IPV4] 𝒵",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 27,
+            "end": 37,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 27,
+                "end": 37,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/astral-math-between",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "𝒳 jane.doe@example.com 𝒴 192.0.2.10 𝒵",
+      "expected": {
+        "text": "𝒳 ******************** 𝒴 ********** 𝒵",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 27,
+            "end": 37,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 27,
+                "end": 37,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/zwj-family",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "👨‍👩‍👧 jane.doe@example.com 👩🏽‍💻 192.0.2.10",
+      "expected": {
+        "text": "👨‍👩‍👧 [EMAIL] 👩🏽‍💻 [IPV4]",
+        "groups": [
+          {
+            "start": 9,
+            "end": 29,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 9,
+                "end": 29,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 38,
+            "end": 48,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 38,
+                "end": 48,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/zwj-family",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "👨‍👩‍👧 jane.doe@example.com 👩🏽‍💻 192.0.2.10",
+      "expected": {
+        "text": "👨‍👩‍👧 ******************** 👩🏽‍💻 **********",
+        "groups": [
+          {
+            "start": 9,
+            "end": 29,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 9,
+                "end": 29,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 38,
+            "end": 48,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 38,
+                "end": 48,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/flags",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "🇺🇸🇯🇵 192.0.2.10 🏳️‍🌈",
+      "expected": {
+        "text": "🇺🇸🇯🇵 [IPV4] 🏳️‍🌈",
+        "groups": [
+          {
+            "start": 9,
+            "end": 19,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 9,
+                "end": 19,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/flags",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "🇺🇸🇯🇵 192.0.2.10 🏳️‍🌈",
+      "expected": {
+        "text": "🇺🇸🇯🇵 ********** 🏳️‍🌈",
+        "groups": [
+          {
+            "start": 9,
+            "end": 19,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 9,
+                "end": 19,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/combining-marks",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "é jane.doe@example.com ñö 192.0.2.10",
+      "expected": {
+        "text": "é [EMAIL] ñö [IPV4]",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 29,
+            "end": 39,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 29,
+                "end": 39,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/combining-marks",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "é jane.doe@example.com ñö 192.0.2.10",
+      "expected": {
+        "text": "é ******************** ñö **********",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 29,
+            "end": 39,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 29,
+                "end": 39,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/cjk-spaced",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "联系 jane.doe@example.com 谢谢 192.0.2.10",
+      "expected": {
+        "text": "联系 [EMAIL] 谢谢 [IPV4]",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 27,
+            "end": 37,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 27,
+                "end": 37,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/cjk-spaced",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "联系 jane.doe@example.com 谢谢 192.0.2.10",
+      "expected": {
+        "text": "联系 ******************** 谢谢 **********",
+        "groups": [
+          {
+            "start": 3,
+            "end": 23,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 3,
+                "end": 23,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 27,
+            "end": 37,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 27,
+                "end": 37,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/cjk-touching",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "联系jane.doe@example.com谢谢",
+      "expected": {
+        "text": "联系[EMAIL]谢谢",
+        "groups": [
+          {
+            "start": 2,
+            "end": 22,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 2,
+                "end": 22,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/cjk-touching",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "联系jane.doe@example.com谢谢",
+      "expected": {
+        "text": "联系********************谢谢",
+        "groups": [
+          {
+            "start": 2,
+            "end": 22,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 2,
+                "end": 22,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/rtl-hebrew",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "שלום jane.doe@example.com עולם",
+      "expected": {
+        "text": "שלום [EMAIL] עולם",
+        "groups": [
+          {
+            "start": 5,
+            "end": 25,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 25,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/rtl-hebrew",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "שלום jane.doe@example.com עולם",
+      "expected": {
+        "text": "שלום ******************** עולם",
+        "groups": [
+          {
+            "start": 5,
+            "end": 25,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 5,
+                "end": 25,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/rtl-arabic",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "مرحبا 192.0.2.10 شكرا",
+      "expected": {
+        "text": "مرحبا [IPV4] شكرا",
+        "groups": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/rtl-arabic",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "مرحبا 192.0.2.10 شكرا",
+      "expected": {
+        "text": "مرحبا ********** شكرا",
+        "groups": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/rtl-marks",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "‫jane.doe@example.com‬ ‏192.0.2.10‎",
+      "expected": {
+        "text": "‫[EMAIL]‬ ‏[IPV4]‎",
+        "groups": [
+          {
+            "start": 1,
+            "end": 21,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 1,
+                "end": 21,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 34,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 34,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/rtl-marks",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "‫jane.doe@example.com‬ ‏192.0.2.10‎",
+      "expected": {
+        "text": "‫********************‬ ‏**********‎",
+        "groups": [
+          {
+            "start": 1,
+            "end": 21,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 1,
+                "end": 21,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 34,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 24,
+                "end": 34,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/emoji-touching",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "😀jane.doe@example.com😀",
+      "expected": {
+        "text": "😀[EMAIL]😀",
+        "groups": [
+          {
+            "start": 2,
+            "end": 22,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 2,
+                "end": 22,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/emoji-touching",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "😀jane.doe@example.com😀",
+      "expected": {
+        "text": "😀********************😀",
+        "groups": [
+          {
+            "start": 2,
+            "end": 22,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 2,
+                "end": 22,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "redact/mixed",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "input": "Ünïcödé 😀 jane.doe@example.com 联系 👨‍👩‍👧 192.0.2.10 שלום é john@example.org 🇯🇵",
+      "expected": {
+        "text": "Ünïcödé 😀 [EMAIL] 联系 👨‍👩‍👧 [IPV4] שלום é [EMAIL] 🇯🇵",
+        "groups": [
+          {
+            "start": 11,
+            "end": 31,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 11,
+                "end": 31,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 44,
+            "end": 54,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 44,
+                "end": 54,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 63,
+            "end": 79,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 63,
+                "end": 79,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask/mixed",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "Ünïcödé 😀 jane.doe@example.com 联系 👨‍👩‍👧 192.0.2.10 שלום é john@example.org 🇯🇵",
+      "expected": {
+        "text": "Ünïcödé 😀 ******************** 联系 👨‍👩‍👧 ********** שלום é **************** 🇯🇵",
+        "groups": [
+          {
+            "start": 11,
+            "end": 31,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 11,
+                "end": 31,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 44,
+            "end": 54,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 44,
+                "end": 54,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 63,
+            "end": 79,
+            "replacement": "****************",
+            "matches": [
+              {
+                "start": 63,
+                "end": 79,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask-graphemes/url-query-key/emoji-value",
+      "config": {
+        "rules": {
+          "url_query_key": {
+            "action": "mask"
+          }
+        }
+      },
+      "input": "https://example.com/?api_key=😀👍🏽x&y=1",
+      "expected": {
+        "text": "https://example.com/?api_key=***&y=1",
+        "groups": [
+          {
+            "start": 29,
+            "end": 36,
+            "replacement": "***",
+            "matches": [
+              {
+                "start": 29,
+                "end": 36,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "😀👍🏽x"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask-graphemes/url-query-key/preserve-first-last",
+      "config": {
+        "rules": {
+          "url_query_key": {
+            "action": "mask",
+            "preserve": {
+              "first": 1,
+              "last": 1
+            }
+          }
+        }
+      },
+      "input": "https://example.com/?api_key=👨‍👩‍👧abc🇯🇵&y=1",
+      "expected": {
+        "text": "https://example.com/?api_key=👨‍👩‍👧***🇯🇵&y=1",
+        "groups": [
+          {
+            "start": 29,
+            "end": 44,
+            "replacement": "👨‍👩‍👧***🇯🇵",
+            "matches": [
+              {
+                "start": 29,
+                "end": 44,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "👨‍👩‍👧abc🇯🇵"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mask-graphemes/url-query-key/combining-marks",
+      "config": {
+        "rules": {
+          "url_query_key": {
+            "action": "mask",
+            "preserve": {
+              "first": 2
+            }
+          }
+        }
+      },
+      "input": "https://example.com/?token=ééxyz&y=1",
+      "expected": {
+        "text": "https://example.com/?token=ééxyz&y=1",
+        "groups": []
+      }
+    },
+    {
+      "id": "mask-graphemes/url-with-auth/preserve-first-last",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "mask",
+            "preserve": {
+              "first": 8,
+              "last": 2
+            }
+          }
+        }
+      },
+      "input": "https://usér:pässwörd@exämple.com/😀 x",
+      "expected": {
+        "text": "https://*************************/😀 x",
+        "groups": [
+          {
+            "start": 0,
+            "end": 36,
+            "replacement": "https://*************************/😀",
+            "matches": [
+              {
+                "start": 0,
+                "end": 36,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://usér:pässwörd@exämple.com/😀"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "format-preserve-graphemes/url-query-key",
+      "config": {
+        "rules": {
+          "url_query_key": {
+            "action": "format-preserve"
+          }
+        }
+      },
+      "input": "https://example.com/?api_key=café😀42&y=1",
+      "expected": {
+        "text": "https://example.com/?api_key=****😀XX&y=1",
+        "groups": [
+          {
+            "start": 29,
+            "end": 37,
+            "replacement": "****😀XX",
+            "matches": [
+              {
+                "start": 29,
+                "end": 37,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "café😀42"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "token-replace-graphemes/url-query-key",
+      "config": {
+        "rules": {
+          "url_query_key": {
+            "action": "token-replace"
+          }
+        }
+      },
+      "input": "😀 https://example.com/?api_key=café😀42&y=1",
+      "expected": {
+        "text": "😀 https://example.com/?api_key=cmVkYWN0ZWQ&y=1",
+        "groups": [
+          {
+            "start": 32,
+            "end": 40,
+            "replacement": "cmVkYWN0ZWQ",
+            "matches": [
+              {
+                "start": 32,
+                "end": 40,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "café😀42"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "remove-graphemes/url-query-key",
+      "config": {
+        "rules": {
+          "url_query_key": {
+            "action": "remove"
+          }
+        }
+      },
+      "input": "😀 https://example.com/?api_key=café😀42&y=1 😀",
+      "expected": {
+        "text": "😀 https://example.com/?api_key=&y=1 😀",
+        "groups": [
+          {
+            "start": 32,
+            "end": 40,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 32,
+                "end": 40,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "café😀42"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

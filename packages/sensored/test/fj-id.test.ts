@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { createRedactor } from "../src";
 import { fjIdDetector } from "../src/detectors/national-id/fj-id";
 
 describe("Fiji National ID detector", () => {
@@ -72,5 +73,18 @@ describe("Fiji National ID detector", () => {
       rightContext: 20,
       boundaryLookaround: 1,
     });
+  });
+});
+
+describe("fj_id requires a digit", () => {
+  const redactor = createRedactor({ rules: { fj_id: { action: "redact" } } });
+
+  test("a letters-only word next to a label is not an ID", () => {
+    expect(redactor.redact("National ID: passport")).toBe(
+      "National ID: passport",
+    );
+    expect(redactor.redact("Fiji Identity: verified")).toBe(
+      "Fiji Identity: verified",
+    );
   });
 });

@@ -247,3 +247,26 @@ describe("token-replace: multiple entity types", () => {
     );
   });
 });
+
+describe("token-replace: prototype-named entity types", () => {
+  it.each(["toString", "constructor"])(
+    "entity type %s gets the hash fallback",
+    (entityType) => {
+      const redactor = createRedactor({
+        rules: { odd: { action: "token-replace" } },
+        detectors: [
+          {
+            id: "odd",
+            entityType,
+            replacement: "[ODD]",
+            pattern: /odd-\d+/g,
+          },
+        ],
+      });
+
+      expect(redactor.redact("x odd-42 y")).toMatch(
+        /^x \[REDACTED_[0-9A-F]{8}\] y$/,
+      );
+    },
+  );
+});

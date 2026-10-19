@@ -1,4 +1,5 @@
-import { createRedactor } from "../src/index.ts";
+import { takeEngine, useEngine } from "../bench/engine.ts";
+import { preloadPersonNameDetector } from "../src/reference.ts";
 import {
   evaluate,
   parseBaseline,
@@ -6,7 +7,14 @@ import {
   releaseGate,
 } from "./evaluator.ts";
 
-const args = Bun.argv.slice(2);
+const { engine, rest: args } = takeEngine(Bun.argv.slice(2));
+const createRedactor = useEngine(engine);
+
+// The TS reference `person_name` (compromise) loads asynchronously.
+if (engine === "ts") {
+  await preloadPersonNameDetector();
+}
+
 const configIndex = args.indexOf("--config");
 let configPath: string | undefined;
 let remainingArgs: string[];
@@ -21,7 +29,7 @@ if (configIndex !== -1) {
 const [command, corpusPath, outputPath, baselinePath] = remainingArgs;
 if (!["score", "gate"].includes(command ?? "") || !corpusPath || !outputPath) {
   console.error(
-    "Usage: bun eval/cli.ts [--config <config.json>] <score|gate> <corpus.json> <report.json> [baseline.json]",
+    "Usage: bun eval/cli.ts [--engine ts|napi|wasm] [--config <config.json>] <score|gate> <corpus.json> <report.json> [baseline.json]",
   );
   process.exit(2);
 }

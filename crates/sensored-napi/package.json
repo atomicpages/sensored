@@ -1,0 +1,49 @@
+{
+  "name": "@sensored/native",
+  "version": "1.7.0",
+  "description": "Native (napi-rs) bindings for the sensored Rust core",
+  "homepage": "https://github.com/atomicpages/sensored",
+  "bugs": {
+    "url": "https://github.com/atomicpages/sensored/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomicpages/sensored.git",
+    "directory": "crates/sensored-napi"
+  },
+  "license": "MIT",
+  "author": "Dennis Thompson",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "napi": {
+    "binaryName": "sensored",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-unknown-linux-musl",
+      "aarch64-unknown-linux-gnu",
+      "aarch64-unknown-linux-musl",
+      "x86_64-pc-windows-msvc"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "3.10.8",
+    "@napi-rs/cross-toolchain": "1.0.3"
+  }
+}

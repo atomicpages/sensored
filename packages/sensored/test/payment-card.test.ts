@@ -142,3 +142,21 @@ describe("payment-card complete-string processing", () => {
     ).toThrow(SensoredError);
   });
 });
+
+describe("payment_card group sizes", () => {
+  const redactor = createRedactor({
+    rules: { payment_card: { action: "redact" } },
+  });
+
+  test("the last group is capped at 6 digits like the others", () => {
+    expect(redactor.redact("card 4242 424242424242")).toBe(
+      "card 4242 424242424242",
+    );
+    expect(redactor.redact("card 4242 4242 4242 4242")).toBe(
+      "card [PAYMENT_CARD]",
+    );
+    expect(redactor.redact("card 4242424242424242")).toBe(
+      "card [PAYMENT_CARD]",
+    );
+  });
+});

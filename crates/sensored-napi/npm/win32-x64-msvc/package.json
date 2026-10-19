@@ -1,0 +1,32 @@
+{
+  "name": "@sensored/native-win32-x64-msvc",
+  "version": "1.7.0",
+  "cpu": [
+    "x64"
+  ],
+  "main": "sensored.win32-x64-msvc.node",
+  "files": [
+    "sensored.win32-x64-msvc.node"
+  ],
+  "description": "Native (napi-rs) bindings for the sensored Rust core",
+  "author": "Dennis Thompson",
+  "homepage": "https://github.com/atomicpages/sensored",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomicpages/sensored.git",
+    "directory": "crates/sensored-napi"
+  },
+  "bugs": {
+    "url": "https://github.com/atomicpages/sensored/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "os": [
+    "win32"
+  ]
+}

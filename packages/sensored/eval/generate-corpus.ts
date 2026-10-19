@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { EVAL_RULES } from "./evaluator";
-import { createRedactor } from "../src/index.ts";
+import { createRedactor } from "../src/reference.ts";
 
 interface Tuple {
   ruleId: string;
@@ -16,6 +16,9 @@ interface Case {
 }
 
 const RULES = [...EVAL_RULES];
+
+/** Both name detectors are scored against the same constructed spans. */
+const NAME_RULES: readonly string[] = ["person_name_lite", "person_name"];
 
 const POSITIVES_PER_DETECTOR = 220;
 const NEGATIVE_COUNT = 1050;
@@ -120,10 +123,11 @@ function generateSSN(): { formatted: string; compact: string } {
   }
 }
 
+// HMRC NIM39110: letter, prefix and suffix rules.
 const INVALID_FIRST_NINO = new Set(["D", "F", "I", "Q", "U", "V"]);
-const VALID_SUFFIX_NINO = new Set([
-  "A", "B", "C", "D", "F", "J", "H", "M", "N", "P", "R", "S", "T", "W", "X", "Y", "Z",
-]);
+const INVALID_SECOND_NINO = new Set(["D", "F", "I", "O", "Q", "U", "V"]);
+const UNALLOCATED_NINO_PREFIXES = new Set(["BG", "GB", "KN", "NK", "NT", "TN", "ZZ"]);
+const VALID_SUFFIX_NINO = new Set(["A", "B", "C", "D"]);
 
 const NINO_NAME_PREFIXES = new Set(["JR", "ED", "LY", "MS", "LT", "AL", "BO", "CY", "DI", "EF", "GI", "HO", "IV", "JO", "KY", "LU", "MY", "NO", "PA", "RE", "SU", "TY", "VA", "WO", "WU"]);
 
@@ -138,10 +142,10 @@ function generateNino(): string {
 
   do {
     second = faker.helpers.arrayElement("ABCDEFGHIJKLMNPQRSTUVWXYZ".split(""));
-  } while (second === "O");
+  } while (INVALID_SECOND_NINO.has(second));
 
   prefix = first + second;
-  if (NINO_NAME_PREFIXES.has(prefix)) {
+  if (NINO_NAME_PREFIXES.has(prefix) || UNALLOCATED_NINO_PREFIXES.has(prefix)) {
     return generateNino();
   }
 
@@ -392,6 +396,11 @@ function generatePersonName(): string {
   const first = faker.helpers.arrayElement(COMMON_FIRST_NAMES);
   const last = faker.helpers.arrayElement(COMMON_LAST_NAMES);
   return `${first} ${last}`;
+}
+
+/** `name` in `text`, labelled for every name detector. */
+function nameSpans(text: string, name: string): Tuple[] {
+  return NAME_RULES.map((ruleId) => spanFor(text, name, ruleId));
 }
 
 function spanFor(text: string, value: string, ruleId: string): Tuple {
@@ -721,9 +730,7 @@ function generatePersonNamePositive(): Case {
 
   const ctx = faker.helpers.arrayElement(contexts);
   const text = ctx(name);
-  const span = spanFor(text, name, "person_name_lite");
-
-  return { id, text, kind: "supported", expected: [span] };
+  return { id, text, kind: "supported", expected: nameSpans(text, name) };
 }
 
 // ---------------------------------------------------------------------------
@@ -1525,6 +1532,13 @@ function hasCrossFP(bareDigits: string): boolean {
   return false;
 }
 
+function neighbourGroup(text: string, side: "before" | "after"): string {
+  const match =
+    side === "before" ? /[a-z\d]+$/i.exec(text) : /^[a-z\d]+/i.exec(text);
+
+  return match?.[0] ?? "";
+}
+
 function postalCodeSpans(text: string): Tuple[] {
   const spans: Tuple[] = [];
   const pattern = /\d{5}(?:-\d{4})?|[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}|[A-Z]\d[A-Z] ?\d[A-Z]\d|\d{4}/gi;
@@ -1541,6 +1555,15 @@ function postalCodeSpans(text: string): Tuple[] {
       continue;
     }
 
+    // A digit-only group joined by a separator to another digit-only group
+    // (`4111 1111`, `45-6789`) is part of a longer number, not a postal code.
+    const before = /[ .-]$/.test(text.slice(0, start)) && /^\d+$/.test(neighbourGroup(text.slice(0, start - 1), "before"));
+    const after = /^[ .-]/.test(text.slice(end)) && /^\d+$/.test(neighbourGroup(text.slice(end + 1), "after"));
+
+    if (/^[\d-]+$/.test(match[0]) && (before || after)) {
+      continue;
+    }
+
     spans.push({ ruleId: "postal_code", start, end });
   }
 
@@ -1553,6 +1576,17 @@ function safeNumeric(len: number, prefix = ""): string {
 
     if (!hasCrossFP(prefix + digits) && !allSameDigit(prefix + digits)) {
       return digits;
+    }
+  }
+}
+
+/** `safeAlphanumeric` with at least one digit, for IDs that need one. */
+function alphanumericWithDigit(len: number): string {
+  while (true) {
+    const result = safeAlphanumeric(len);
+
+    if (/\d/.test(result)) {
+      return result;
     }
   }
 }
@@ -2156,7 +2190,7 @@ function generateCoNitPositive(): Case {
 }
 
 function generateFjIdPositive(): Case {
-  const value = safeAlphanumeric(faker.number.int({ min: 8, max: 10 }));
+  const value = alphanumericWithDigit(faker.number.int({ min: 8, max: 10 }));
 
   return ctxWrap(
     value,
@@ -2432,7 +2466,7 @@ function generatePhUmidPositive(): Case {
 }
 
 function generatePngIdPositive(): Case {
-  const value = safeAlphanumeric(faker.number.int({ min: 8, max: 12 }));
+  const value = alphanumericWithDigit(faker.number.int({ min: 8, max: 12 }));
 
   return ctxWrap(
     value,
@@ -2520,7 +2554,7 @@ function generateTmPassportPositive(): Case {
 }
 
 function generateToIdPositive(): Case {
-  const value = safeAlphanumeric(faker.number.int({ min: 8, max: 10 }));
+  const value = alphanumericWithDigit(faker.number.int({ min: 8, max: 10 }));
 
   return ctxWrap(
     value,
@@ -3587,7 +3621,12 @@ function generateMixedRule(): Case {
     }
 
     text += item.part;
-    spans.push(spanFor(text, item.value, item.type));
+
+    if (item.type === "person_name_lite") {
+      spans.push(...nameSpans(text, item.value));
+    } else {
+      spans.push(spanFor(text, item.value, item.type));
+    }
   }
 
   return { id, text, kind: "supported", expected: spans };
@@ -4789,9 +4828,14 @@ function main(): void {
     }
   }
 
+  // Names are labelled by construction only: adopting a name detector's
+  // matches would turn its false positives ("Plate No") into gold labels.
   const redactor = createRedactor({
     rules: Object.fromEntries(
-      RULES.map((rule) => [rule, { action: "redact" }]),
+      RULES.filter((rule) => !NAME_RULES.includes(rule)).map((rule) => [
+        rule,
+        { action: "redact" },
+      ]),
     ),
   });
 
@@ -4830,7 +4874,7 @@ function main(): void {
   const outputPath = Bun.argv[2] ?? "eval/corpus.json";
   Bun.write(outputPath, `${JSON.stringify(corpus, null, 2)}\n`);
   console.log(
-    `Generated ${cases.length} cases (${POSITIVES_PER_DETECTOR * RULES.length} positives, ${NEGATIVE_COUNT} negatives, ${DEFERRED_COUNT} deferred, ${MIXED_COUNT} mixed) -> ${outputPath}`,
+    `Generated ${cases.length} cases (${POSITIVES_PER_DETECTOR * generators.length} positives, ${NEGATIVE_COUNT} negatives, ${DEFERRED_COUNT} deferred, ${MIXED_COUNT} mixed) -> ${outputPath}`,
   );
 }
 

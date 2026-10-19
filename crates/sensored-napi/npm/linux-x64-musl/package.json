@@ -1,0 +1,35 @@
+{
+  "name": "@sensored/native-linux-x64-musl",
+  "version": "1.7.0",
+  "cpu": [
+    "x64"
+  ],
+  "main": "sensored.linux-x64-musl.node",
+  "files": [
+    "sensored.linux-x64-musl.node"
+  ],
+  "description": "Native (napi-rs) bindings for the sensored Rust core",
+  "author": "Dennis Thompson",
+  "homepage": "https://github.com/atomicpages/sensored",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomicpages/sensored.git",
+    "directory": "crates/sensored-napi"
+  },
+  "bugs": {
+    "url": "https://github.com/atomicpages/sensored/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "os": [
+    "linux"
+  ],
+  "libc": [
+    "musl"
+  ]
+}

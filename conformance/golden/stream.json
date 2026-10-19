@@ -1,0 +1,2165 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "network/redact/quiet",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": false,
+        "restore": false
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts [IPV4] and [IPV4] talk to [IPV6] via [MAC_ADDRESS]; gateway [IPV4], backup [IPV4], last seen [IPV4] again.",
+        "detections": []
+      }
+    },
+    {
+      "id": "network/redact/report",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts  and  talk to  via ; gateway , backup , last seen  again.",
+        "detections": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "replacement": "[IPV6]",
+            "matches": [
+              {
+                "start": 42,
+                "end": 53,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 58,
+            "end": 75,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 58,
+                "end": 75,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "network/redact/restore",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts  and  talk to  via ; gateway , backup , last seen  again.",
+        "detections": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "[IPV4_1]",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "[IPV4_2]",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "replacement": "[IPV6_1]",
+            "matches": [
+              {
+                "start": 42,
+                "end": 53,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 58,
+            "end": 75,
+            "replacement": "[MAC_ADDRESS_1]",
+            "matches": [
+              {
+                "start": 58,
+                "end": 75,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "[IPV4_3]",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "[IPV4_4]",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "[IPV4_5]",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[IPV4_1]": "192.0.2.10",
+          "[IPV4_2]": "198.51.100.7",
+          "[IPV6_1]": "2001:db8::1",
+          "[MAC_ADDRESS_1]": "00:00:5e:00:53:af",
+          "[IPV4_3]": "203.0.113.1",
+          "[IPV4_4]": "192.0.2.10",
+          "[IPV4_5]": "192.0.2.10"
+        }
+      }
+    },
+    {
+      "id": "network/restore-from-config",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        },
+        "restore": true
+      },
+      "options": {
+        "report": false,
+        "restore": true
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts [IPV4_1] and [IPV4_2] talk to [IPV6_1] via [MAC_ADDRESS_1]; gateway [IPV4_3], backup [IPV4_4], last seen [IPV4_5] again.",
+        "detections": [],
+        "map": {
+          "[IPV4_1]": "192.0.2.10",
+          "[IPV4_2]": "198.51.100.7",
+          "[IPV6_1]": "2001:db8::1",
+          "[MAC_ADDRESS_1]": "00:00:5e:00:53:af",
+          "[IPV4_3]": "203.0.113.1",
+          "[IPV4_4]": "192.0.2.10",
+          "[IPV4_5]": "192.0.2.10"
+        }
+      }
+    },
+    {
+      "id": "network/mask/preserve-first-last",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "mask",
+            "preserve": {
+              "first": 3,
+              "last": 2
+            }
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts  and  talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway , backup , last seen  again.",
+        "detections": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "192*****10",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "198*******.7",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "203******.1",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "192*****10",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "192*****10",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mixed-actions/report",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "mask",
+            "preserve": {
+              "last": 4
+            }
+          },
+          "phone": {
+            "action": "format-preserve"
+          },
+          "iban": {
+            "action": "token-replace"
+          },
+          "uk_nino": {
+            "action": "remove"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Paid 4111 1111 1111 1111 from 192.0.2.10; call +1 555 010 0199 or wire to GB82 WEST 1234 5698 7654 32. NINO AB123456C on file, retry from 198.51.100.7.",
+      "expected": {
+        "text": "Paid  from ; call  or wire to . NINO  on file, retry from .",
+        "detections": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "***************1111",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 30,
+            "end": 40,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 30,
+                "end": 40,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 47,
+            "end": 62,
+            "replacement": "+X XXX XXX XXXX",
+            "matches": [
+              {
+                "start": 47,
+                "end": 62,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 74,
+            "end": 101,
+            "replacement": "XX00XXXX000000000000000",
+            "matches": [
+              {
+                "start": 74,
+                "end": 101,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 108,
+            "end": 117,
+            "replacement": "",
+            "matches": [
+              {
+                "start": 108,
+                "end": 117,
+                "ruleId": "uk_nino",
+                "entityType": "uk_nino",
+                "reasons": [
+                  "uk_nino.format"
+                ],
+                "value": "AB123456C"
+              }
+            ]
+          },
+          {
+            "start": 138,
+            "end": 150,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 138,
+                "end": 150,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mixed-actions/restore",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "payment_card": {
+            "action": "mask",
+            "preserve": {
+              "last": 4
+            }
+          },
+          "phone": {
+            "action": "format-preserve"
+          },
+          "iban": {
+            "action": "token-replace"
+          },
+          "uk_nino": {
+            "action": "remove"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Paid 4111 1111 1111 1111 from 192.0.2.10; call +1 555 010 0199 or wire to GB82 WEST 1234 5698 7654 32. NINO AB123456C on file, retry from 198.51.100.7.",
+      "expected": {
+        "text": "Paid  from ; call  or wire to . NINO  on file, retry from .",
+        "detections": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "[PAYMENT_CARD_1]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 30,
+            "end": 40,
+            "replacement": "[IPV4_1]",
+            "matches": [
+              {
+                "start": 30,
+                "end": 40,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 47,
+            "end": 62,
+            "replacement": "[PHONE_1]",
+            "matches": [
+              {
+                "start": 47,
+                "end": 62,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 74,
+            "end": 101,
+            "replacement": "[IBAN_1]",
+            "matches": [
+              {
+                "start": 74,
+                "end": 101,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 108,
+            "end": 117,
+            "replacement": "[UK_NINO_1]",
+            "matches": [
+              {
+                "start": 108,
+                "end": 117,
+                "ruleId": "uk_nino",
+                "entityType": "uk_nino",
+                "reasons": [
+                  "uk_nino.format"
+                ],
+                "value": "AB123456C"
+              }
+            ]
+          },
+          {
+            "start": 138,
+            "end": 150,
+            "replacement": "[IPV4_2]",
+            "matches": [
+              {
+                "start": 138,
+                "end": 150,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[PAYMENT_CARD_1]": "4111 1111 1111 1111",
+          "[IPV4_1]": "192.0.2.10",
+          "[PHONE_1]": "+1 555 010 0199",
+          "[IBAN_1]": "GB82 WEST 1234 5698 7654 32",
+          "[UK_NINO_1]": "AB123456C",
+          "[IPV4_2]": "198.51.100.7"
+        }
+      }
+    },
+    {
+      "id": "overlap/transitive/card-digit-groups",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "token-replace"
+          },
+          "jp_my_number": {
+            "action": "mask"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Card 4111 1111 1111 1111 on file, second card 4111 1111 1111 1111 expired, zip 10001 and 94105 noted.",
+      "expected": {
+        "text": "Card  on file, second card  expired, zip  and  noted.",
+        "detections": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "0000-0000-0000-0001",
+            "matches": [
+              {
+                "start": 5,
+                "end": 19,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 65,
+            "replacement": "0000-0000-0000-0001",
+            "matches": [
+              {
+                "start": 46,
+                "end": 60,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 46,
+                "end": 65,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 79,
+            "end": 84,
+            "replacement": "*****",
+            "matches": [
+              {
+                "start": 79,
+                "end": 84,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "10001"
+              }
+            ]
+          },
+          {
+            "start": 89,
+            "end": 94,
+            "replacement": "*****",
+            "matches": [
+              {
+                "start": 89,
+                "end": 94,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "94105"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "overlap/transitive/card-digit-groups/restore",
+      "config": {
+        "rules": {
+          "payment_card": {
+            "action": "token-replace"
+          },
+          "jp_my_number": {
+            "action": "mask"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Card 4111 1111 1111 1111 on file, second card 4111 1111 1111 1111 expired, zip 10001 and 94105 noted.",
+      "expected": {
+        "text": "Card  on file, second card  expired, zip  and  noted.",
+        "detections": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "[PAYMENT_CARD_1]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 19,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 65,
+            "replacement": "[PAYMENT_CARD_2]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 60,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 46,
+                "end": 65,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 79,
+            "end": 84,
+            "replacement": "[POSTAL_CODE_1]",
+            "matches": [
+              {
+                "start": 79,
+                "end": 84,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "10001"
+              }
+            ]
+          },
+          {
+            "start": 89,
+            "end": 94,
+            "replacement": "[POSTAL_CODE_2]",
+            "matches": [
+              {
+                "start": 89,
+                "end": 94,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "94105"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[PAYMENT_CARD_1]": "4111 1111 1111 1111",
+          "[PAYMENT_CARD_2]": "4111 1111 1111 1111",
+          "[POSTAL_CODE_1]": "10001",
+          "[POSTAL_CODE_2]": "94105"
+        }
+      }
+    },
+    {
+      "id": "context/us-ssn/label-preceding",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Applicant record follows. SSN: 123-45-6789 received; spouse Social Security Number 123-45-6789 pending review by the office.",
+      "expected": {
+        "text": "Applicant record follows. SSN:  received; spouse Social Security Number  pending review by the office.",
+        "detections": [
+          {
+            "start": 31,
+            "end": 42,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 31,
+                "end": 42,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 83,
+            "end": 94,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 83,
+                "end": 94,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "context/us-ssn/label-following",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Applicant record follows. Number 123-45-6789 is the SSN on record; reference 987-65-4321 has no label at all here.",
+      "expected": {
+        "text": "Applicant record follows. Number 123-45-6789 is the SSN on record; reference 987-65-4321 has no label at all here.",
+        "detections": []
+      }
+    },
+    {
+      "id": "context/us-ssn/label-outside-window",
+      "config": {
+        "rules": {
+          "us_ssn": {
+            "action": "redact"
+          },
+          "postal_code": {
+            "action": "mask"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789 and then yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy SSN",
+      "expected": {
+        "text": "SSN xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 123-45-6789 and then yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy SSN",
+        "detections": []
+      }
+    },
+    {
+      "id": "allowlist/exact-match",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        },
+        "allowlist": [
+          "198.51.100.7"
+        ]
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts  and 198.51.100.7 talk to  via ; gateway , backup , last seen  again.",
+        "detections": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "replacement": "[IPV6]",
+            "matches": [
+              {
+                "start": 42,
+                "end": 53,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 58,
+            "end": 75,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 58,
+                "end": 75,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detect-only/network",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        },
+        "detectOnly": true
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+        "detections": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "192.0.2.10",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "198.51.100.7",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "replacement": "2001:db8::1",
+            "matches": [
+              {
+                "start": 42,
+                "end": 53,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 58,
+            "end": 75,
+            "replacement": "00:00:5e:00:53:af",
+            "matches": [
+              {
+                "start": 58,
+                "end": 75,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "203.0.113.1",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "192.0.2.10",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "192.0.2.10",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "detect-only/network/restore-option",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        },
+        "detectOnly": true
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+      "expected": {
+        "text": "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via 00:00:5e:00:53:af; gateway 203.0.113.1, backup 192.0.2.10, last seen 192.0.2.10 again.",
+        "detections": [
+          {
+            "start": 6,
+            "end": 16,
+            "replacement": "192.0.2.10",
+            "matches": [
+              {
+                "start": 6,
+                "end": 16,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "198.51.100.7",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 53,
+            "replacement": "2001:db8::1",
+            "matches": [
+              {
+                "start": 42,
+                "end": 53,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 58,
+            "end": 75,
+            "replacement": "00:00:5e:00:53:af",
+            "matches": [
+              {
+                "start": 58,
+                "end": 75,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 96,
+            "replacement": "203.0.113.1",
+            "matches": [
+              {
+                "start": 85,
+                "end": 96,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "203.0.113.1"
+              }
+            ]
+          },
+          {
+            "start": 105,
+            "end": 115,
+            "replacement": "192.0.2.10",
+            "matches": [
+              {
+                "start": 105,
+                "end": 115,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 127,
+            "end": 137,
+            "replacement": "192.0.2.10",
+            "matches": [
+              {
+                "start": 127,
+                "end": 137,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "idempotency/placeholders-untouched",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Already [IPV4] and [IPV4_1] and [REDACTED], new 192.0.2.10; then [MAC_ADDRESS_2] and 00:00:5e:00:53:af and [IPV6] end.",
+      "expected": {
+        "text": "Already [IPV4] and [IPV4_1] and [REDACTED], new ; then [MAC_ADDRESS_2] and  and [IPV6] end.",
+        "detections": [
+          {
+            "start": 48,
+            "end": 58,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 48,
+                "end": 58,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 85,
+            "end": 102,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 85,
+                "end": 102,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "offsets/astral-zwj-combining",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "mask"
+          },
+          "phone": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "😀 192.0.2.10 👨‍👩‍👧 call +1 555 010 0199 联系 é 🇯🇵 then 👩🏽‍💻192.0.2.10👩🏽‍💻 and ñö +1 555 010 0199 😀😀😀 end.",
+      "expected": {
+        "text": "😀  👨‍👩‍👧 call  联系 é 🇯🇵 then 👩🏽‍💻👩🏽‍💻 and ñö  😀😀😀 end.",
+        "detections": [
+          {
+            "start": 3,
+            "end": 13,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 3,
+                "end": 13,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 28,
+            "end": 43,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 28,
+                "end": 43,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 67,
+            "end": 77,
+            "replacement": "**********",
+            "matches": [
+              {
+                "start": 67,
+                "end": 77,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 94,
+            "end": 109,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 94,
+                "end": 109,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "offsets/rtl",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "שלום 192.0.2.10 עולם, مرحبا 00:00:5e:00:53:af شكرا, ‫192.0.2.10‬ and ‏198.51.100.7‎ done.",
+      "expected": {
+        "text": "שלום  עולם, مرحبا  شكرا, ‫‬ and ‏‎ done.",
+        "detections": [
+          {
+            "start": 5,
+            "end": 15,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 15,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 28,
+            "end": 45,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 28,
+                "end": 45,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 53,
+            "end": 63,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 53,
+                "end": 63,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 70,
+            "end": 82,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 70,
+                "end": 82,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "198.51.100.7"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/pci-dss",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {}
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Card 4111 1111 1111 1111 exp 12/30. Card 5555 5555 5555 4444 declined; retry with 4111 1111 1111 1111 later today.",
+      "expected": {
+        "text": "Card  exp 12/30. Card  declined; retry with  later today.",
+        "detections": [
+          {
+            "start": 5,
+            "end": 24,
+            "replacement": "[PAYMENT_CARD_1]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 24,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 41,
+            "end": 60,
+            "replacement": "[PAYMENT_CARD_2]",
+            "matches": [
+              {
+                "start": 41,
+                "end": 60,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "5555 5555 5555 4444"
+              }
+            ]
+          },
+          {
+            "start": 82,
+            "end": 101,
+            "replacement": "[PAYMENT_CARD_3]",
+            "matches": [
+              {
+                "start": 82,
+                "end": 101,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[PAYMENT_CARD_1]": "4111 1111 1111 1111",
+          "[PAYMENT_CARD_2]": "5555 5555 5555 4444",
+          "[PAYMENT_CARD_3]": "4111 1111 1111 1111"
+        }
+      }
+    },
+    {
+      "id": "no-matches",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Nothing sensitive in this sentence, which is long enough to flush part of the buffer early on.",
+      "expected": {
+        "text": "Nothing sensitive in this sentence, which is long enough to flush part of the buffer early on.",
+        "detections": [],
+        "map": {}
+      }
+    },
+    {
+      "id": "empty-input",
+      "config": {
+        "rules": {
+          "ipv4": {
+            "action": "redact"
+          },
+          "ipv6": {
+            "action": "redact"
+          },
+          "mac_address": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "",
+      "expected": {
+        "text": "",
+        "detections": [],
+        "map": {}
+      }
+    },
+    {
+      "id": "buffered/email/report",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Mail jane.doe@example.com or john@example.org today.",
+      "expected": {
+        "text": "Mail  or  today.",
+        "detections": [
+          {
+            "start": 5,
+            "end": 25,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 25,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 29,
+            "end": 45,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 29,
+                "end": 45,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "buffered/email/restore",
+      "config": {
+        "rules": {
+          "email": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": true
+      },
+      "input": "Mail jane.doe@example.com or john@example.org, again jane.doe@example.com.",
+      "expected": {
+        "text": "Mail  or , again .",
+        "detections": [
+          {
+            "start": 5,
+            "end": 25,
+            "replacement": "[EMAIL_1]",
+            "matches": [
+              {
+                "start": 5,
+                "end": 25,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 29,
+            "end": 45,
+            "replacement": "[EMAIL_2]",
+            "matches": [
+              {
+                "start": 29,
+                "end": 45,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "john@example.org"
+              }
+            ]
+          },
+          {
+            "start": 53,
+            "end": 73,
+            "replacement": "[EMAIL_3]",
+            "matches": [
+              {
+                "start": 53,
+                "end": 73,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          }
+        ],
+        "map": {
+          "[EMAIL_1]": "jane.doe@example.com",
+          "[EMAIL_2]": "john@example.org",
+          "[EMAIL_3]": "jane.doe@example.com"
+        }
+      }
+    },
+    {
+      "id": "buffered/url-with-auth/equal-rank-conflict",
+      "config": {
+        "rules": {
+          "url_with_auth": {
+            "action": "redact"
+          },
+          "ipv4": {
+            "action": "redact"
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "See https://user:pass@192.0.2.10/path and 192.0.2.10.",
+      "expected": {
+        "text": "See  and .",
+        "detections": [
+          {
+            "start": 4,
+            "end": 37,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 4,
+                "end": 37,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@192.0.2.10/path"
+              },
+              {
+                "start": 22,
+                "end": 32,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 42,
+            "end": 52,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 42,
+                "end": 52,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "buffered/http-auth-header/custom-headers",
+      "config": {
+        "rules": {
+          "http_auth_header": {
+            "action": "redact"
+          }
+        },
+        "detectorOptions": {
+          "http_auth_header": {
+            "customHeaders": [
+              "X-Example-Auth"
+            ]
+          }
+        }
+      },
+      "options": {
+        "report": true,
+        "restore": false
+      },
+      "input": "Authorization: Basic dXNlcjpwYXNz\nX-Example-Auth: example-value-1\n",
+      "expected": {
+        "text": "Authorization: Basic \nX-Example-Auth: \n",
+        "detections": [
+          {
+            "start": 21,
+            "end": 33,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 21,
+                "end": 33,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 50,
+            "end": 65,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 50,
+                "end": 65,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "example-value-1"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

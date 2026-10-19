@@ -504,6 +504,13 @@ export function validateConfigShape(
     invalid("restore");
   }
 
+  if (
+    config.detectOnly !== undefined &&
+    typeof config.detectOnly !== "boolean"
+  ) {
+    invalid("detectOnly");
+  }
+
   if (config.allowlist !== undefined) {
     if (!Array.isArray(config.allowlist)) {
       invalid("allowlist");
@@ -544,5 +551,36 @@ export function validateLimits(
 
   if (!isNonNegativeInteger(maxInputLength) || maxInputLength === 0) {
     invalid("limits.maxInputLength");
+  }
+}
+
+/**
+ * Every config check that runs before rule resolution, in `resolvePolicy`'s
+ * order: shape, `detectOnly` with `restore`, limits, then each detector
+ * definition. Resolution (presets, rules, duplicate ids) is left to the caller.
+ */
+export function validateConfig(
+  config: unknown,
+): asserts config is RedactorConfig {
+  validateConfigShape(config);
+
+  if (config.detectOnly === true && config.restore === true) {
+    invalid("detectOnly");
+  }
+
+  if (config.limits !== undefined) {
+    validateLimits(config.limits);
+  }
+
+  if (config.detectors === undefined) {
+    return;
+  }
+
+  if (!Array.isArray(config.detectors)) {
+    invalid("detectors");
+  }
+
+  for (const definition of config.detectors) {
+    validateDefinition(definition);
   }
 }

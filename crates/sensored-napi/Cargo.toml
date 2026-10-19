@@ -1,0 +1,22 @@
+[package]
+name = "sensored-napi"
+version = "0.1.0"
+description = "Node.js and Bun bindings for sensored-core (napi-rs)"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version = "1.88"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+indexmap = "2.14.2"
+napi = { version = "3.14.2", features = ["object_indexmap", "serde-json"] }
+napi-derive = "3.6.12"
+sensored-core = { path = "../sensored-core" }
+serde_json = "1.0.154"
+
+[build-dependencies]
+napi-build = "2.6.0"

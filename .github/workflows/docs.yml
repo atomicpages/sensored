@@ -13,6 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-rust
+        with:
+          wasm: "true"
+          cache-key: docs
       - run: bun run docs:build
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:

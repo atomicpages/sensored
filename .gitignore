@@ -50,3 +50,7 @@ docs/.vitepress/cache
 .envrc
 keys
 .agents/handoff
+conformance/golden/detectors/
+crates/target/
+# Wasm build output (bun run build:wasm), copied to dist/wasm by tsdown
+packages/sensored/wasm/

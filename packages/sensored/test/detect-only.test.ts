@@ -103,6 +103,20 @@ describe("detectOnly mode", () => {
     ).toThrow(SensoredError);
   });
 
+  test("non-boolean detectOnly throws INVALID_CONFIG at detectOnly", () => {
+    try {
+      createRedactor({
+        rules: { email: { action: "redact" } },
+        detectOnly: "yes" as never,
+      });
+      expect.unreachable();
+    } catch (error) {
+      expect(error).toBeInstanceOf(SensoredError);
+      expect((error as SensoredError).code).toBe("INVALID_CONFIG");
+      expect((error as SensoredError).path).toBe("detectOnly");
+    }
+  });
+
   test("detectOnly: false (explicit) works identically to omitting", () => {
     const r = createRedactor({
       rules: { email: { action: "redact" } },

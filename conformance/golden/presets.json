@@ -1,0 +1,1715 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "preset/pii",
+      "config": {
+        "presets": [
+          "pii"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 92,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 191,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/gdpr",
+      "config": {
+        "presets": [
+          "gdpr"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 191,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/hipaa",
+      "config": {
+        "presets": [
+          "hipaa"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [PAYMENT_CARD].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI [US_NPI].\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 155,
+            "end": 165,
+            "replacement": "[US_NPI]",
+            "matches": [
+              {
+                "start": 155,
+                "end": 165,
+                "ruleId": "us_npi",
+                "entityType": "us_npi",
+                "reasons": [
+                  "us_npi.checksum",
+                  "us_npi.format"
+                ],
+                "value": "1234567893"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 191,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/ccpa",
+      "config": {
+        "presets": [
+          "ccpa"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 92,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 191,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/pci-dss",
+      "config": {
+        "presets": [
+          "pci-dss"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card [PAYMENT_CARD].\nSSN: 123-45-6789. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/healthcare",
+      "config": {
+        "presets": [
+          "healthcare"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [PAYMENT_CARD].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI [US_NPI].\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 155,
+            "end": 165,
+            "replacement": "[US_NPI]",
+            "matches": [
+              {
+                "start": 155,
+                "end": 165,
+                "ruleId": "us_npi",
+                "entityType": "us_npi",
+                "reasons": [
+                  "us_npi.checksum",
+                  "us_npi.format"
+                ],
+                "value": "1234567893"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 191,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/finance",
+      "config": {
+        "presets": [
+          "finance"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. Jane Smith ([EMAIL], [PHONE]) paid with card [PAYMENT_CARD].\nSSN: 123-45-6789. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/education",
+      "config": {
+        "presets": [
+          "education"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card 4111 1111 1111 1111.\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/soc2",
+      "config": {
+        "presets": [
+          "soc2"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [PAYMENT_CARD].\nSSN: [US_SSN]. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer [IPV4] / [IPV6], MAC [MAC_ADDRESS].\nAuthorization: Basic [HTTP_AUTH_HEADER]\nCallback [REDACTED]",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 174,
+            "end": 184,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 174,
+                "end": 184,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 198,
+            "replacement": "[IPV6]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 198,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 204,
+            "end": 221,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 204,
+                "end": 221,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 244,
+            "end": 256,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 244,
+                "end": 256,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 266,
+            "end": 318,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 266,
+                "end": 318,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@example.com/?api_key=example-value"
+              },
+              {
+                "start": 305,
+                "end": 318,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "example-value"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset/security",
+      "config": {
+        "presets": [
+          "security"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer [IPV4] / [IPV6], MAC [MAC_ADDRESS].\nAuthorization: Basic [HTTP_AUTH_HEADER]\nCallback [REDACTED]",
+        "groups": [
+          {
+            "start": 174,
+            "end": 184,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 174,
+                "end": 184,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 198,
+            "replacement": "[IPV6]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 198,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 204,
+            "end": 221,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 204,
+                "end": 221,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 244,
+            "end": 256,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 244,
+                "end": 256,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 266,
+            "end": 318,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 266,
+                "end": 318,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@example.com/?api_key=example-value"
+              },
+              {
+                "start": 305,
+                "end": 318,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "example-value"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset-versioned/pii@1",
+      "config": {
+        "presets": [
+          "pii@1"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] ([EMAIL], [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [POSTAL_CODE]:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "[EMAIL]",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 92,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 191,
+            "replacement": "[POSTAL_CODE]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset-combined/pci-dss+security",
+      "config": {
+        "presets": [
+          "pci-dss",
+          "security"
+        ],
+        "rules": {}
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card [PAYMENT_CARD].\nSSN: 123-45-6789. IBAN [IBAN]. NPI 1234567893.\nServer [IPV4] / [IPV6], MAC [MAC_ADDRESS].\nAuthorization: Basic [HTTP_AUTH_HEADER]\nCallback [REDACTED]",
+        "groups": [
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[PAYMENT_CARD]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 174,
+            "end": 184,
+            "replacement": "[IPV4]",
+            "matches": [
+              {
+                "start": 174,
+                "end": 184,
+                "ruleId": "ipv4",
+                "entityType": "ipv4",
+                "reasons": [
+                  "ipv4.format"
+                ],
+                "value": "192.0.2.10"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 198,
+            "replacement": "[IPV6]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 198,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 204,
+            "end": 221,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 204,
+                "end": 221,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 244,
+            "end": 256,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 244,
+                "end": 256,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 266,
+            "end": 318,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 266,
+                "end": 318,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@example.com/?api_key=example-value"
+              },
+              {
+                "start": 305,
+                "end": 318,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "example-value"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "preset-override/pii-email-mask-ipv4-off",
+      "config": {
+        "presets": [
+          "pii",
+          "security"
+        ],
+        "rules": {
+          "email": {
+            "action": "mask"
+          },
+          "ipv4": "off"
+        }
+      },
+      "input": "Patient Dr. Jane Smith (jane.doe@example.com, +1 555 010 0199) paid with card 4111 1111 1111 1111.\nSSN: 123-45-6789. IBAN GB82 WEST 1234 5698 7654 32. NPI 1234567893.\nServer 192.0.2.10 / 2001:db8::1, MAC 00:00:5e:00:53:af.\nAuthorization: Basic dXNlcjpwYXNz\nCallback https://user:pass@example.com/?api_key=example-value",
+      "expected": {
+        "text": "Patient Dr. [PERSON_NAME] (********************, [PHONE]) paid with card [REDACTED].\nSSN: [US_SSN]. IBAN [IBAN]. NPI 1234567893.\nServer 192.0.2.10 / [REDACTED], MAC [MAC_ADDRESS].\nAuthorization: Basic [HTTP_AUTH_HEADER]\nCallback [REDACTED]",
+        "groups": [
+          {
+            "start": 12,
+            "end": 22,
+            "replacement": "[PERSON_NAME]",
+            "matches": [
+              {
+                "start": 12,
+                "end": 22,
+                "ruleId": "person_name_lite",
+                "entityType": "person_name_lite",
+                "reasons": [
+                  "person_name_lite.bloom"
+                ],
+                "value": "Jane Smith"
+              }
+            ]
+          },
+          {
+            "start": 24,
+            "end": 44,
+            "replacement": "********************",
+            "matches": [
+              {
+                "start": 24,
+                "end": 44,
+                "ruleId": "email",
+                "entityType": "email",
+                "reasons": [
+                  "email.ascii_dot_atom",
+                  "email.dns_domain"
+                ],
+                "value": "jane.doe@example.com"
+              }
+            ]
+          },
+          {
+            "start": 46,
+            "end": 61,
+            "replacement": "[PHONE]",
+            "matches": [
+              {
+                "start": 46,
+                "end": 61,
+                "ruleId": "phone",
+                "entityType": "phone",
+                "reasons": [
+                  "phone.format"
+                ],
+                "value": "+1 555 010 0199"
+              }
+            ]
+          },
+          {
+            "start": 78,
+            "end": 97,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 78,
+                "end": 92,
+                "ruleId": "jp_my_number",
+                "entityType": "jp_my_number",
+                "reasons": [
+                  "jp_my_number.checksum",
+                  "jp_my_number.format"
+                ],
+                "value": "4111 1111 1111"
+              },
+              {
+                "start": 78,
+                "end": 97,
+                "ruleId": "payment_card",
+                "entityType": "payment_card",
+                "reasons": [
+                  "payment_card.luhn",
+                  "payment_card.format"
+                ],
+                "value": "4111 1111 1111 1111"
+              }
+            ]
+          },
+          {
+            "start": 104,
+            "end": 115,
+            "replacement": "[US_SSN]",
+            "matches": [
+              {
+                "start": 104,
+                "end": 115,
+                "ruleId": "us_ssn",
+                "entityType": "us_ssn",
+                "reasons": [
+                  "us_ssn.structure",
+                  "us_ssn.context"
+                ],
+                "value": "123-45-6789"
+              }
+            ]
+          },
+          {
+            "start": 122,
+            "end": 149,
+            "replacement": "[IBAN]",
+            "matches": [
+              {
+                "start": 122,
+                "end": 149,
+                "ruleId": "iban",
+                "entityType": "iban",
+                "reasons": [
+                  "iban.checksum",
+                  "iban.format"
+                ],
+                "value": "GB82 WEST 1234 5698 7654 32"
+              }
+            ]
+          },
+          {
+            "start": 187,
+            "end": 198,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 187,
+                "end": 191,
+                "ruleId": "postal_code",
+                "entityType": "postal_code",
+                "reasons": [
+                  "postal_code.format"
+                ],
+                "value": "2001"
+              },
+              {
+                "start": 187,
+                "end": 198,
+                "ruleId": "ipv6",
+                "entityType": "ipv6",
+                "reasons": [
+                  "ipv6.format"
+                ],
+                "value": "2001:db8::1"
+              }
+            ]
+          },
+          {
+            "start": 204,
+            "end": 221,
+            "replacement": "[MAC_ADDRESS]",
+            "matches": [
+              {
+                "start": 204,
+                "end": 221,
+                "ruleId": "mac_address",
+                "entityType": "mac_address",
+                "reasons": [
+                  "mac_address.format"
+                ],
+                "value": "00:00:5e:00:53:af"
+              }
+            ]
+          },
+          {
+            "start": 244,
+            "end": 256,
+            "replacement": "[HTTP_AUTH_HEADER]",
+            "matches": [
+              {
+                "start": 244,
+                "end": 256,
+                "ruleId": "http_auth_header",
+                "entityType": "http_auth_header",
+                "reasons": [
+                  "http_auth_header.format"
+                ],
+                "value": "dXNlcjpwYXNz"
+              }
+            ]
+          },
+          {
+            "start": 266,
+            "end": 318,
+            "replacement": "[REDACTED]",
+            "matches": [
+              {
+                "start": 266,
+                "end": 318,
+                "ruleId": "url_with_auth",
+                "entityType": "url_with_auth",
+                "reasons": [
+                  "url_with_auth.format"
+                ],
+                "value": "https://user:pass@example.com/?api_key=example-value"
+              },
+              {
+                "start": 305,
+                "end": 318,
+                "ruleId": "url_query_key",
+                "entityType": "url_query_key",
+                "reasons": [
+                  "url_query_key.format"
+                ],
+                "value": "example-value"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

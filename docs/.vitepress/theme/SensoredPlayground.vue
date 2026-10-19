@@ -51,7 +51,6 @@ const allowlist = ref<string[]>([]);
 const allowlistDraft = ref("");
 const disabledDetectorIds = ref<Set<string>>(new Set());
 const nerEnabled = ref(false);
-const nerLoading = ref(false);
 const activeDetectors = ref<readonly DetectorDescription[]>([]);
 const activePriorities = ref<Readonly<Record<string, number | undefined>>>({});
 const details = ref<readonly MatchDetail[]>([]);
@@ -69,7 +68,6 @@ let highlighterPromise:
   | undefined;
 let observer: IntersectionObserver | undefined;
 let debounceTimer: ReturnType<typeof setTimeout> | undefined;
-let runId = 0;
 let highlightRunId = 0;
 
 const isFull = computed(() => props.mode === "full");
@@ -228,7 +226,6 @@ function scheduleRedaction(): void {
 }
 
 async function runRedaction(): Promise<void> {
-  const currentRun = ++runId;
   const validationError = validatePlaygroundInput(input.value);
 
   if (validationError !== undefined) {
@@ -248,15 +245,6 @@ async function runRedaction(): Promise<void> {
   }
 
   try {
-    if (nerEnabled.value) {
-      nerLoading.value = true;
-      await core.preloadPersonNameDetector();
-    }
-
-    if (currentRun !== runId) {
-      return;
-    }
-
     const rules = buildPlaygroundRules(
       activeDetectors.value.map((detector) => detector.id),
       currentState(),
@@ -276,12 +264,7 @@ async function runRedaction(): Promise<void> {
     details.value = createMatchDetails(inspection.groups);
     error.value = undefined;
   } catch {
-    error.value =
-      nerEnabled.value
-        ? "NER could not load. Install or refresh the optional detector and try again."
-        : "Redaction failed for this configuration.";
-  } finally {
-    nerLoading.value = false;
+    error.value = "Redaction failed for this configuration.";
   }
 }
 
@@ -528,7 +511,6 @@ async function highlightGeneratedCode(): Promise<void> {
           <input
             type="checkbox"
             :checked="nerEnabled"
-            :disabled="nerLoading"
             @change="toggleNer"
           />
           <span>
@@ -537,7 +519,6 @@ async function highlightGeneratedCode(): Promise<void> {
               Replaces person_name_lite.
             </small>
           </span>
-          <em v-if="nerLoading">Loading…</em>
         </label>
       </section>
 

@@ -33,12 +33,25 @@
   "engines": {
     "node": ">=20"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "./src/index.ts",
+    "./src/index.wasm-url.ts",
+    "./src/index.wasm-module.ts",
+    "./dist/src/index.mjs",
+    "./dist/src/index.wasm-url.mjs",
+    "./dist/src/index.wasm-module.mjs"
+  ],
   "type": "module",
   "exports": {
     "./cli": "./dist/cli/index.mjs",
     "./cli/config": "./dist/cli/config.mjs",
-    ".": "./dist/src/index.mjs",
+    ".": {
+      "worker": "./dist/src/index.wasm-module.mjs",
+      "edge-light": "./dist/src/index.wasm-module.mjs",
+      "browser": "./dist/src/index.wasm-url.mjs",
+      "deno": "./dist/src/index.wasm-url.mjs",
+      "default": "./dist/src/index.mjs"
+    },
     "./adapters/anthropic": "./dist/src/adapters/anthropic.mjs",
     "./adapters/openai": "./dist/src/adapters/openai.mjs",
     "./loggers/bunyan": "./dist/src/loggers/bunyan.mjs",
@@ -49,6 +62,12 @@
     "./loggers/winston": "./dist/src/loggers/winston.mjs",
     "./session": "./dist/src/session.mjs",
     "./vault": "./dist/src/vault/index.mjs",
+    "./vault/kms": "./dist/src/vault/kms/index.mjs",
+    "./vault/kms/aws": "./dist/src/vault/kms/aws-kms.mjs",
+    "./vault/kms/azure": "./dist/src/vault/kms/azure-key-vault.mjs",
+    "./vault/kms/gcp": "./dist/src/vault/kms/gcp-kms.mjs",
+    "./vault/kms/hashicorp": "./dist/src/vault/kms/hashicorp-vault.mjs",
+    "./vault/kms/workos": "./dist/src/vault/kms/workos-ekm.mjs",
     "./package.json": "./package.json"
   },
   "bin": {
@@ -59,19 +78,23 @@
   ],
   "scripts": {
     "bench": "bun run bench/benchmark.ts",
-    "build": "tsdown",
+    "build": "bun run build:wasm && tsdown",
+    "build:wasm": "bun scripts/build-wasm.ts",
     "eval:gate": "bun eval/cli.ts gate eval/corpus.json eval/after.json eval/baseline.json",
     "eval:generate": "bun eval/generate-corpus.ts",
     "eval:score": "bun eval/cli.ts score eval/corpus.json eval/report.json eval/baseline.json",
+    "eval:person-baseline": "bun eval/person-name-baseline.ts eval/corpus.json eval/person-name-baseline.json",
     "generate:bloom": "bun scripts/generate-bloom-filter.ts",
     "test": "bun test --randomize",
     "typecheck": "tsc --noEmit --incremental -p tsconfig.src.json",
     "typecheck:build": "tsc --noEmit --incremental",
     "typecheck:test": "tsc --noEmit --incremental -p tsconfig.test.json"
   },
+  "dependencies": {
+    "@sensored/native": "workspace:*"
+  },
   "peerDependencies": {
     "@typesafe-ai/sdk": "^1.0.0",
-    "compromise": "^14.17.0",
     "pino": "^9.0.0",
     "winston": "^3.0.0",
     "openai": "^4.0.0",
@@ -79,13 +102,17 @@
     "bunyan": "^1.8.0",
     "log4js": "^6.0.0",
     "morgan": "^1.10.0",
-    "typescript": "^7"
+    "typescript": "^7",
+    "@aws-sdk/client-kms": "^3.0.0",
+    "@azure/abort-controller": "^2.0.0",
+    "@azure/keyvault-keys": "^4.8.0",
+    "@azure/identity": "^4.0.0",
+    "@google-cloud/kms": "^4.0.0",
+    "node-vault": "^0.12.0",
+    "@workos-inc/node": "^7.0.0"
   },
   "peerDependenciesMeta": {
     "@typesafe-ai/sdk": {
-      "optional": true
-    },
-    "compromise": {
       "optional": true
     },
     "pino": {
@@ -108,6 +135,27 @@
     },
     "morgan": {
       "optional": true
+    },
+    "@aws-sdk/client-kms": {
+      "optional": true
+    },
+    "@azure/abort-controller": {
+      "optional": true
+    },
+    "@azure/keyvault-keys": {
+      "optional": true
+    },
+    "@azure/identity": {
+      "optional": true
+    },
+    "@google-cloud/kms": {
+      "optional": true
+    },
+    "node-vault": {
+      "optional": true
+    },
+    "@workos-inc/node": {
+      "optional": true
     }
   },
   "publishConfig": {
@@ -115,5 +163,16 @@
   },
   "inlinedDependencies": {
     "citty": "0.2.2"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-kms": "^3.0.0",
+    "@azure/abort-controller": "^2.0.0",
+    "@azure/identity": "^4.0.0",
+    "@azure/keyvault-keys": "^4.8.0",
+    "@google-cloud/kms": "^4.0.0",
+    "@workos-inc/node": "^7.0.0",
+    "fakecloud": "^0.48.1",
+    "node-vault": "^0.12.0",
+    "playwright-core": "^1.64.1"
   }
 }

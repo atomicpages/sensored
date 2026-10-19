@@ -16,6 +16,10 @@ export interface SemanticProvider {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_MODEL = "jev-latest";
+
+/** `systemOne` needs a state; each question carries its own candidate. */
+const STATE =
+  "PII candidates detected in a text; each question names one candidate with its surrounding context.";
 const DEFAULT_THRESHOLD = 0.5;
 
 export class JevProvider implements SemanticProvider {
@@ -60,7 +64,7 @@ export class JevProvider implements SemanticProvider {
           : instructions;
 
       questions[`q${i}`] = sdk.noul(
-        questionInstructions as EntryType,
+        questionInstructions as NonNullable<EntryType>,
         criteria
           ? {
               true: criteria.true as EntryType,
@@ -71,7 +75,7 @@ export class JevProvider implements SemanticProvider {
     }
 
     const response = await client.systemOne({
-      state: null,
+      state: STATE,
       questions,
     });
 

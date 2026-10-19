@@ -102,8 +102,8 @@ describe("StreamRestorer", () => {
 
   test("partial-looking text that is not a placeholder", () => {
     const r = new StreamRestorer(map);
-    expect(r.push("text [SOME_TEXT")).toBe("text ");
-    expect(r.push(" more text")).toBe("[SOME_TEXT more text");
+    expect(r.push("text [SOME_TEXT")).toBe("text [SOME_TEXT");
+    expect(r.push(" more text")).toBe(" more text");
   });
 
   test("placeholder at start of chunk", () => {
@@ -135,5 +135,45 @@ describe("StreamRestorer", () => {
     expect(r.push("[EMA")).toBe("");
     expect(r.push("IL_1][PHO")).toBe("alice@example.com");
     expect(r.push("NE_1]")).toBe("555-1234");
+  });
+});
+
+describe("StreamRestorer — every split point", () => {
+  function restoreSplit(input: string, split: number, m: RestorationMap) {
+    const restorer = new StreamRestorer(m);
+
+    return (
+      restorer.push(input.slice(0, split)) +
+      restorer.push(input.slice(split)) +
+      restorer.flush()
+    );
+  }
+
+  test("a chunk ending in a lone '[' still restores the placeholder", () => {
+    const input = "Mail [EMAIL_1] or call [PHONE_2] now";
+    const expected = "Mail alice@example.com or call 555-5678 now";
+
+    for (let split = 1; split < input.length; split++) {
+      expect(restoreSplit(input, split, map)).toBe(expected);
+    }
+  });
+
+  test("placeholders longer than any default entity type still restore", () => {
+    const long: RestorationMap = {
+      "[A_VERY_LONG_CUSTOM_ENTITY_TYPE_NAME_FOR_TESTING_1]": "secret",
+    };
+
+    const input = "x [A_VERY_LONG_CUSTOM_ENTITY_TYPE_NAME_FOR_TESTING_1] y";
+
+    for (let split = 1; split < input.length; split++) {
+      expect(restoreSplit(input, split, long)).toBe("x secret y");
+    }
+  });
+
+  test("text that cannot become a known placeholder is not held back", () => {
+    const restorer = new StreamRestorer(map);
+
+    expect(restorer.push("array[0")).toBe("array[0");
+    expect(restorer.push("[UNKNOWN_")).toBe("[UNKNOWN_");
   });
 });

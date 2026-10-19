@@ -72,8 +72,9 @@ redactor.redact("Call 555-123-4567 now");
 
 ## format-preserve
 
-Transforms digits to `X` and letters to `*` while preserving separators, spaces,
-and structural characters. Useful when you need to maintain the format of the
+Transforms digits to `X` and letters to `*` (any script, one symbol per
+grapheme cluster) while preserving separators, spaces, emoji, and structural
+characters. Useful when you need to maintain the format of the
 original text for downstream parsing.
 
 ```ts

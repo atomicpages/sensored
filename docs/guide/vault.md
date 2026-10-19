@@ -35,9 +35,9 @@ The `VaultProvider` interface defines four methods for envelope encryption:
   entries).
 - **`decrypt()`** — Decrypts a ciphertext string.
 
-The MIT-licensed `sensored` package ships `LocalVaultProvider`. Cloud KMS
-providers (AWS KMS, GCP KMS, Azure Key Vault, HashiCorp Vault, WorkOS EKM)
-are available in the commercial `@sensored/enterprise` package.
+The `sensored` package ships `LocalVaultProvider`. Cloud KMS providers
+(AWS KMS, GCP KMS, Azure Key Vault, HashiCorp Vault, WorkOS EKM) are included
+via the `sensored/vault/kms/*` subpath exports.
 
 ## LocalVaultProvider
 
@@ -234,12 +234,12 @@ try {
 | `VAULT_DEK_GENERATION_FAILED` | DEK generation failed |
 | `VAULT_DEK_DECRYPT_FAILED` | DEK decryption failed |
 
-## Enterprise providers
+## Cloud KMS providers
 
-Cloud KMS providers are available in `@sensored/enterprise`:
+Cloud KMS providers ship behind the `sensored/vault/kms/*` subpath exports:
 
 ```ts
-import { AwsKmsProvider } from "@sensored/enterprise";
+import { AwsKmsProvider } from "sensored/vault/kms/aws";
 
 const provider = new AwsKmsProvider({
   keyId: "arn:aws:kms:us-east-1:123456789012:key/abc-def",
@@ -256,7 +256,7 @@ Supported providers:
 | GCP KMS | `GcpKmsProvider` | Google Cloud KMS |
 | Azure Key Vault | `AzureKeyVaultProvider` | Azure Key Vault |
 | HashiCorp Vault | `HashiCorpVaultProvider` | HashiCorp Vault Transit Engine |
-| WorkOS EKM | `WorkosEkmProvider` | WorkOS Enterprise Key Manager |
+| WorkOS EKM | `WorkOsEkmProvider` | WorkOS Enterprise Key Manager |
 
 All cloud SDKs are lazy-loaded with no hard dependencies. Install the
 corresponding SDK package only when using that provider.

@@ -11,22 +11,11 @@
 bun add sensored
 ```
 
-## Optional: NER-based person name detection
+## Person name detection
 
-For higher-recall person name detection using Named Entity Recognition, install
-the optional peer dependency:
-
-```bash
-bun add compromise
-```
-
-The default `person_name_lite` detector uses a lightweight regex + bloom filter
-approach with no runtime dependencies. Use `person_name` in your rules to opt in
-to compromise.js NER.
-
-::: tip The `person_name` detector adds ~178 MiB RSS and significantly reduces
-throughput. Only use it when you need maximum recall for person names and can
-accept the performance trade-off. :::
+The default `person_name_lite` detector uses a lightweight regex + bloom filter.
+Use `person_name` in your rules to opt in to the rule-based NER; it needs no
+extra dependency.
 
 ## Optional: AI semantic confirmation
 

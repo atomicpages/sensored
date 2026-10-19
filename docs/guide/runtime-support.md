@@ -1,8 +1,38 @@
 # Runtime support
 
-sensored is designed to run anywhere JavaScript runs. The core library has zero
-runtime-specific dependencies — no `node:` imports, no Bun built-ins, no
-browser-only APIs.
+sensored is designed to run anywhere JavaScript runs. The engine is Rust: a
+native addon where one exists for the platform, a WebAssembly build
+everywhere else. Each runtime gets the right one through the package's export
+conditions, with the same API and the same output.
+
+## Engines
+
+| Runtime                         | Engine                       | Entry (`exports["."]`) |
+| ------------------------------- | ---------------------------- | ---------------------- |
+| Node.js 20+, Bun                | Native (napi), Wasm fallback | `default`              |
+| Deno                            | Wasm, loaded by URL          | `deno`                 |
+| Browser                         | Wasm, loaded by URL          | `browser`              |
+| Cloudflare Workers, Vercel Edge | Wasm, imported as a module   | `worker`, `edge-light` |
+
+- The native addon is prebuilt for macOS (arm64, x64), Linux (x64, arm64;
+  glibc 2.17+ and musl) and Windows x64, as `@sensored/native-<platform>`
+  optional dependencies that your package manager installs for your platform
+  only.
+- Node and Bun load Wasm synchronously when the native addon for the platform
+  is missing or fails to load. `SENSORED_ENGINE=wasm` forces it.
+- The standalone CLI binaries on GitHub Releases embed the native addon for
+  their platform.
+- Deno loads Wasm rather than the native addon, which would need
+  `--allow-ffi`.
+- The Wasm entries load the engine with top-level await, so `createRedactor`
+  stays synchronous. Your runtime or bundler must support top-level await in
+  ES modules (every current browser, Deno, Workers, Vite, esbuild with an
+  `esnext` or `es2022` target, webpack 5).
+- Workers and Vercel Edge compile `.wasm` imports at deploy time. Wrangler
+  handles the import as is; on Vercel Edge and other bundlers you may need a
+  Wasm plugin.
+- The Wasm binary (`dist/wasm/sensored_wasm_bg.wasm`) is 1.7 MB, 0.73 MB
+  gzipped. It redacts about a third as fast as the native addon.
 
 ## Supported runtimes
 
@@ -11,7 +41,7 @@ browser-only APIs.
 | Node.js 20+        | Yes       | Yes (smoke test)      |
 | Bun                | Yes       | Yes (full test suite) |
 | Deno               | Yes       | Yes (smoke test)      |
-| Browser            | Yes       | Yes (static analysis) |
+| Browser            | Yes       | Yes (headless Chromium smoke test) |
 | Cloudflare Workers | Yes       | Yes (static analysis) |
 | Vercel Edge        | Yes       | Yes (static analysis) |
 
@@ -43,7 +73,7 @@ Bundlers (Vite, webpack, esbuild) will pick up the ESM build automatically.
 - `redactValue()` — recursive object traversal
 - `redactor.stream()` — streaming redaction
 - `restore()` — placeholder restoration
-- All 131 built-in detectors
+- All 155 built-in detectors
 - All 10 presets
 - Custom detectors
 - Allowlist
@@ -53,22 +83,9 @@ Bundlers (Vite, webpack, esbuild) will pick up the ESM build automatically.
 
 ### person_name detector
 
-The `person_name` detector uses `compromise` for NER, which is an optional peer
-dependency. Load it explicitly before creating a redactor that enables
-`person_name`:
-
-```ts
-import { createRedactor, preloadPersonNameDetector } from "sensored";
-
-await preloadPersonNameDetector();
-
-const redactor = createRedactor({
-  rules: { person_name: { action: "redact" } },
-});
-```
-
-The dynamic import runs once, only when requested. If `compromise` is not
-installed, preloading rejects with `INVALID_CONFIG`.
+The `person_name` NER runs in the engine and needs no extra dependency.
+`preloadPersonNameDetector()` is kept for compatibility and resolves
+immediately.
 
 ### Semantic confirmation
 
@@ -83,11 +100,14 @@ runtime.
 
 ## CI verification
 
-The `runtime-smoke.yml` workflow runs on every push and pull request:
+The `ci.yml` workflow runs on every push and pull request. Each smoke test
+runs the same checks (`packages/sensored/scripts/ci/smoke-checks.mjs`: redact, restore,
+inspect, stream and a custom JS detector) against the built `dist/`:
 
 1. **Build** — builds `dist/` with Bun
-2. **Node.js** — imports `dist/src/index.mjs` in Node.js 20 and verifies
-   redaction works
-3. **Deno** — imports `dist/src/index.mjs` in Deno and verifies redaction works
-4. **Edge/Browser** — scans `dist/src/` for `node:` imports to verify
-   browser/edge compatibility
+2. **Node.js** — `dist/src/index.mjs` in Node.js 20, on the napi addon and
+   with `SENSORED_ENGINE=wasm` on the Wasm fallback
+3. **Deno** — the Wasm entry `dist/src/index.wasm-url.mjs`
+4. **Browser** — the Wasm entry in headless Chromium (Playwright)
+5. **Edge** — follows the imports of the browser and edge entries and fails
+   on any `node:` module (Workers and Vercel Edge are not run)

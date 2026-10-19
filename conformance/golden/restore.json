@@ -1,0 +1,330 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "from-render/restore/redact/multiple-entities",
+      "input": "[EMAIL_1] paid with [PAYMENT_CARD_1] from [IPV4_1]; cc [EMAIL_2] and [EMAIL_3].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[PAYMENT_CARD_1]": "4111 1111 1111 1111",
+        "[IPV4_1]": "192.0.2.10",
+        "[EMAIL_2]": "john@example.org",
+        "[EMAIL_3]": "jane.doe@example.com"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com paid with 4111 1111 1111 1111 from 192.0.2.10; cc john@example.org and jane.doe@example.com."
+    },
+    {
+      "id": "from-render/restore/redact/custom-replacement",
+      "input": "[EMAIL_1] and [EMAIL_2].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com and john@example.org."
+    },
+    {
+      "id": "from-render/restore/mask/email",
+      "input": "[EMAIL_1] and [EMAIL_2].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com and john@example.org."
+    },
+    {
+      "id": "from-render/restore/token-replace/email",
+      "input": "[EMAIL_1] and [EMAIL_2].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com and john@example.org."
+    },
+    {
+      "id": "from-render/restore/remove/email",
+      "input": "[EMAIL_1] and [EMAIL_2].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com and john@example.org."
+    },
+    {
+      "id": "from-render/restore/format-preserve/payment-card",
+      "input": "Card [PAYMENT_CARD_1] on file.",
+      "map": {
+        "[PAYMENT_CARD_1]": "4111 1111 1111 1111"
+      },
+      "streamed": true,
+      "expected": "Card 4111 1111 1111 1111 on file."
+    },
+    {
+      "id": "from-render/restore/overlap/redacted-fallback",
+      "input": "See [REDACTED_1] and [IPV4_1].",
+      "map": {
+        "[REDACTED_1]": "https://user:pass@192.0.2.10/path",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "See https://user:pass@192.0.2.10/path and 192.0.2.10."
+    },
+    {
+      "id": "from-render/restore/no-matches",
+      "input": "Nothing to see here.",
+      "map": {},
+      "streamed": true,
+      "expected": "Nothing to see here."
+    },
+    {
+      "id": "from-render/idempotency/re-redact-output/restore-placeholders",
+      "input": "[EMAIL_1] and [EMAIL_2] near [POSTAL_CODE_10001].",
+      "map": {},
+      "streamed": true,
+      "expected": "[EMAIL_1] and [EMAIL_2] near [POSTAL_CODE_10001]."
+    },
+    {
+      "id": "edge/known-placeholders",
+      "input": "From [EMAIL_1] to [EMAIL_2] via [IPV4_1].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "From jane.doe@example.com to john@example.org via 192.0.2.10."
+    },
+    {
+      "id": "edge/repeated-placeholder",
+      "input": "[EMAIL_1], again [EMAIL_1].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com, again jane.doe@example.com."
+    },
+    {
+      "id": "edge/unknown-placeholder",
+      "input": "Known [EMAIL_1], unknown [EMAIL_9] and [PHONE_1].",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "Known jane.doe@example.com, unknown [EMAIL_9] and [PHONE_1]."
+    },
+    {
+      "id": "edge/adjacent-placeholders",
+      "input": "[EMAIL_1][EMAIL_2][IPV4_1]",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.comjohn@example.org192.0.2.10"
+    },
+    {
+      "id": "edge/nested-brackets",
+      "input": "[[EMAIL_1]] and [[IPV4_1]",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "[jane.doe@example.com] and [192.0.2.10"
+    },
+    {
+      "id": "edge/partial-placeholder-at-end",
+      "input": "Trailing [EMAIL_",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "Trailing [EMAIL_"
+    },
+    {
+      "id": "edge/partial-placeholder-no-underscore",
+      "input": "Trailing [EMAIL",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "Trailing [EMAIL"
+    },
+    {
+      "id": "edge/partial-placeholder-missing-bracket",
+      "input": "Trailing [EMAIL_1",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "Trailing [EMAIL_1"
+    },
+    {
+      "id": "edge/open-bracket-at-end",
+      "input": "Trailing [",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "Trailing ["
+    },
+    {
+      "id": "edge/partial-then-text",
+      "input": "[EMAIL_ is not [EMAIL_1",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "[EMAIL_ is not [EMAIL_1"
+    },
+    {
+      "id": "edge/closing-only",
+      "input": "EMAIL_1] and IPV4_1]",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "EMAIL_1] and IPV4_1]"
+    },
+    {
+      "id": "edge/not-placeholders",
+      "input": "[email_1] [EMAIL] [EMAIL_] [_1] [1_EMAIL_1] [EMAIL_1a]",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "[email_1] [EMAIL] [EMAIL_] [_1] [1_EMAIL_1] [EMAIL_1a]"
+    },
+    {
+      "id": "edge/unnumbered-in-map",
+      "input": "[EMAIL] and [REDACTED]",
+      "map": {
+        "[EMAIL]": "jane.doe@example.com",
+        "[REDACTED]": "x"
+      },
+      "streamed": true,
+      "expected": "[EMAIL] and [REDACTED]"
+    },
+    {
+      "id": "edge/value-is-placeholder-no-recursion",
+      "input": "[A_1] then [B_1]",
+      "map": {
+        "[A_1]": "[B_1]",
+        "[B_1]": "done"
+      },
+      "streamed": true,
+      "expected": "[B_1] then done"
+    },
+    {
+      "id": "edge/value-has-replacement-patterns",
+      "input": "[A_1]",
+      "map": {
+        "[A_1]": "$& $1 $$ $`"
+      },
+      "streamed": true,
+      "expected": "$& $1 $$ $`"
+    },
+    {
+      "id": "edge/empty-map",
+      "input": "[EMAIL_1] stays.",
+      "map": {},
+      "streamed": true,
+      "expected": "[EMAIL_1] stays."
+    },
+    {
+      "id": "edge/empty-input",
+      "input": "",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": ""
+    },
+    {
+      "id": "edge/large-counter",
+      "input": "[EMAIL_1234567890]",
+      "map": {
+        "[EMAIL_1234567890]": "jane.doe@example.com"
+      },
+      "streamed": true,
+      "expected": "jane.doe@example.com"
+    },
+    {
+      "id": "edge/long-entity-type",
+      "input": "Value [AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA_1] end",
+      "map": {
+        "[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA_1]": "jane.doe@example.com"
+      },
+      "streamed": true,
+      "expected": "Value jane.doe@example.com end"
+    },
+    {
+      "id": "edge/astral-around-placeholders",
+      "input": "😀[EMAIL_1]👨‍👩‍👧[IPV4_1]🇯🇵",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "😀jane.doe@example.com👨‍👩‍👧192.0.2.10🇯🇵"
+    },
+    {
+      "id": "edge/astral-value",
+      "input": "Hi [A_1]!",
+      "map": {
+        "[A_1]": "😀 José 联系"
+      },
+      "streamed": true,
+      "expected": "Hi 😀 José 联系!"
+    },
+    {
+      "id": "edge/many-open-brackets",
+      "input": "[[[[[[[[EMAIL_2]",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": true,
+      "expected": "[[[[[[[john@example.org"
+    },
+    {
+      "id": "complete-only/long-input",
+      "input": "[EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] [EMAIL_1] end",
+      "map": {
+        "[EMAIL_1]": "jane.doe@example.com",
+        "[EMAIL_2]": "john@example.org",
+        "[IPV4_1]": "192.0.2.10"
+      },
+      "streamed": false,
+      "expected": "jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com jane.doe@example.com end"
+    }
+  ]
+}

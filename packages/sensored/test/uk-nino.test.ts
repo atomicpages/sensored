@@ -11,19 +11,19 @@ describe("uk-nino complete-string processing", () => {
     ["AB 12 34 56 C", "[UK_NINO]"],
     ["JH123456A", "[UK_NINO]"],
     ["CE123456D", "[UK_NINO]"],
-    ["BG123456F", "[UK_NINO]"],
-    ["KT123456J", "[UK_NINO]"],
-    ["NP123456H", "[UK_NINO]"],
-    ["RW123456M", "[UK_NINO]"],
-    ["SN123456N", "[UK_NINO]"],
-    ["TP123456P", "[UK_NINO]"],
-    ["WL123456R", "[UK_NINO]"],
-    ["YM123456S", "[UK_NINO]"],
-    ["ZP123456T", "[UK_NINO]"],
-    ["AC123456W", "[UK_NINO]"],
-    ["EA123456X", "[UK_NINO]"],
-    ["GH123456Y", "[UK_NINO]"],
-    ["JK123456Z", "[UK_NINO]"],
+    ["BH123456A", "[UK_NINO]"],
+    ["KT123456B", "[UK_NINO]"],
+    ["NP123456C", "[UK_NINO]"],
+    ["RW123456D", "[UK_NINO]"],
+    ["SN123456A", "[UK_NINO]"],
+    ["TP123456B", "[UK_NINO]"],
+    ["WL123456C", "[UK_NINO]"],
+    ["YM123456D", "[UK_NINO]"],
+    ["ZP123456A", "[UK_NINO]"],
+    ["AC123456A", "[UK_NINO]"],
+    ["EA123456D", "[UK_NINO]"],
+    ["GH123456C", "[UK_NINO]"],
+    ["JK123456B", "[UK_NINO]"],
     ["ab123456c", "[UK_NINO]"],
     ["NINO: AB123456C", "NINO: [UK_NINO]"],
     ["NINO: AB 12 34 56 C", "NINO: [UK_NINO]"],
@@ -144,5 +144,31 @@ describe("uk-nino complete-string processing", () => {
         rules: { uk_nino: { action: "invalid" as never } },
       }),
     ).toThrow(SensoredError);
+  });
+});
+
+describe("uk_nino HMRC rules (NIM39110)", () => {
+  const redactor = createRedactor({ rules: { uk_nino: { action: "redact" } } });
+
+  test.each(["AB123456A", "AB123456D", "CE123456B"])("accepts %s", (nino) => {
+    expect(redactor.redact(`NINO ${nino}`)).toBe("NINO [UK_NINO]");
+  });
+
+  test.each([
+    ["QA123456C", "Q is not a valid first letter"],
+    ["AD123456C", "D is not a valid second letter"],
+    ["AF123456C", "F is not a valid second letter"],
+    ["AQ123456C", "Q is not a valid second letter"],
+    ["BG123456C", "BG is not allocated"],
+    ["GB123456C", "GB is not allocated"],
+    ["NK123456C", "NK is not allocated"],
+    ["KN123456C", "KN is not allocated"],
+    ["TN123456C", "TN is not allocated"],
+    ["NT123456C", "NT is not allocated"],
+    ["ZZ123456C", "ZZ is not allocated"],
+    ["AB123456E", "the suffix is always A-D"],
+    ["AB123456M", "the suffix is always A-D"],
+  ])("rejects %s (%s)", (nino) => {
+    expect(redactor.redact(`NINO ${nino}`)).toBe(`NINO ${nino}`);
   });
 });

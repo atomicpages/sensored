@@ -1,8 +1,14 @@
+import { segment } from "../grapheme";
+
+const letter = /\p{L}/u;
+const digit = /\p{Nd}/u;
+
 /**
- * Render a format-preserving replacement: digits become `X`, letters become
- * `*`, all other characters (separators, punctuation, structure) are kept.
+ * Render a format-preserving replacement, one symbol per grapheme cluster:
+ * clusters with a letter become `*`, clusters with a decimal digit become `X`,
+ * and everything else (separators, punctuation, emoji) is kept.
  *
- * Example: `123-45-6789` → `XXX-XX-XXXX`, `john@example.com` → `****@*******.***`
+ * Example: `123-45-6789` → `XXX-XX-XXXX`, `josé@example.com` → `****@*******.***`
  */
 export function renderFormatPreserve(
   text: string,
@@ -11,13 +17,13 @@ export function renderFormatPreserve(
 ): string {
   const result: string[] = [];
 
-  for (const char of text.slice(start, end)) {
-    if (char >= "0" && char <= "9") {
-      result.push("X");
-    } else if ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z")) {
+  for (const { segment: cluster } of segment(text.slice(start, end))) {
+    if (letter.test(cluster)) {
       result.push("*");
+    } else if (digit.test(cluster)) {
+      result.push("X");
     } else {
-      result.push(char);
+      result.push(cluster);
     }
   }
 

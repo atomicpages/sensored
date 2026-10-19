@@ -119,11 +119,11 @@ export const PLAYGROUND_SAMPLE = PLAYGROUND_TEMPLATES.pii;
 
 export const PLAYGROUND_SAMPLE_OUTPUT = `Customer: [PERSON_NAME].
 Email: [EMAIL]
-Phone: [REDACTED]
-Card: [REDACTED]
+Phone: [PHONE]
+Card: [PAYMENT_CARD]
 IP: 203.0.113.42
 Authorization: Bearer ghp_1234567890abcdefghijklmnopqrstuvwxyz
-SSN: [REDACTED]`;
+SSN: [US_SSN]`;
 
 export function createPlaygroundState(
   handoff?: PlaygroundHandoff,
@@ -231,20 +231,12 @@ export function generatePlaygroundCode(
 ): string {
   const rules = buildPlaygroundRules(activeDetectorIds, state, priorities);
 
-  const imports = state.nerEnabled
-    ? 'import { createRedactor, preloadPersonNameDetector } from "sensored";'
-    : 'import { createRedactor } from "sensored";';
-
-  const preload = state.nerEnabled
-    ? "\n\nawait preloadPersonNameDetector();"
-    : "";
-
   const allowlist =
     state.allowlist.length > 0
       ? `,\n  allowlist: ${JSON.stringify(state.allowlist)}`
       : "";
 
-  return `${imports}${preload}
+  return `import { createRedactor } from "sensored";
 
 const redactor = createRedactor({
   presets: [${JSON.stringify(state.preset)}],

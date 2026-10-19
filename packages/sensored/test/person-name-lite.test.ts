@@ -151,3 +151,18 @@ describe("person-name-lite semanticConfirm", () => {
     expect(result).toBeUndefined();
   });
 });
+
+describe("person_name_lite suffixes", () => {
+  const redactor = createRedactor({
+    rules: { person_name_lite: { action: "redact" } },
+  });
+
+  test("III is matched whole, not as II plus a stray I", () => {
+    expect(redactor.redact("Signed by John Smith III today")).toBe(
+      "Signed by [PERSON_NAME] today",
+    );
+    expect(redactor.redact("Signed by John Smith II today")).toBe(
+      "Signed by [PERSON_NAME] today",
+    );
+  });
+});

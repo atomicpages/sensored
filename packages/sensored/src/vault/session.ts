@@ -1,5 +1,4 @@
 import { createSharedRedactor } from "../adapters/shared";
-import { resolvePolicy } from "../policy";
 import { restore } from "../restore";
 import { StreamRestorer } from "../stream-restore";
 import { SESSION_BRAND } from "../symbols";
@@ -19,7 +18,10 @@ export async function createEncryptedSession(
     );
   }
 
-  const { rules, allowlist } = resolvePolicy(config.redactorConfig);
+  let shared = createSharedRedactor(config.redactorConfig, {
+    dedup: true,
+    initialMap: config.existingMap,
+  });
 
   const { plaintext: dekPlaintext } = await config.provider.generateDataKey();
   const dek = Buffer.from(dekPlaintext, "base64");
@@ -32,11 +34,6 @@ export async function createEncryptedSession(
       encryptedMap.set(placeholder, entry);
     }
   }
-
-  let shared = createSharedRedactor(rules, allowlist, {
-    dedup: true,
-    initialMap: config.existingMap,
-  });
 
   function getDecryptedMap(): RestorationMap {
     const result: Record<string, string> = {};
@@ -80,7 +77,7 @@ export async function createEncryptedSession(
 
     reset(): void {
       encryptedMap.clear();
-      shared = createSharedRedactor(rules, allowlist, {
+      shared = createSharedRedactor(config.redactorConfig, {
         dedup: true,
         initialMap: config.existingMap,
       });

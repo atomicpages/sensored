@@ -3,8 +3,11 @@ import llmstxt, {
   copyOrDownloadAsMarkdownButtons,
 } from "vitepress-plugin-llms";
 
+// The browser entry: the Rust core as Wasm, initialised with top-level await.
+// `bun run build:wasm` (run by the docs scripts) must have built
+// `packages/sensored/wasm/` first.
 const sensoredEntry = new URL(
-  "../../packages/sensored/src/index.ts",
+  "../../packages/sensored/src/index.wasm-url.ts",
   import.meta.url,
 ).pathname;
 
@@ -29,6 +32,8 @@ export default defineConfig({
         "@sensored-core": sensoredEntry,
       },
     },
+    // The Wasm entry uses top-level await.
+    build: { target: "esnext" },
   },
   markdown: {
     config(md) {
@@ -59,6 +64,7 @@ export default defineConfig({
             { text: "Installation", link: "/guide/getting-started" },
             { text: "Quick Start", link: "/guide/quick-start" },
             { text: "Runtime Support", link: "/guide/runtime-support" },
+            { text: "Migrating to v2", link: "/guide/migrating-to-v2" },
           ],
         },
         {
@@ -84,6 +90,7 @@ export default defineConfig({
             { text: "Vault", link: "/guide/vault" },
             { text: "Flag Mode", link: "/guide/flag-mode" },
             { text: "Errors", link: "/guide/errors" },
+            { text: "Rust", link: "/guide/rust" },
           ],
         },
         {

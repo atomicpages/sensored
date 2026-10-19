@@ -158,6 +158,38 @@ describe("allowlist — streaming", () => {
 
     expect(events.join("")).toBe("Contact [EMAIL] today");
   });
+
+  test("flush never splits an allowlisted value, at any chunk boundary", async () => {
+    const redactor = createRedactor({
+      rules: {
+        ipv4: { action: "redact" },
+        ipv6: { action: "redact" },
+      },
+      allowlist: ["198.51.100.7"],
+    });
+
+    const input =
+      "Hosts 192.0.2.10 and 198.51.100.7 talk to 2001:db8::1 via the gateway 203.0.113.1 today.";
+
+    const expected = redactor.redact(input);
+
+    for (let split = 1; split < input.length; split++) {
+      async function* chunks() {
+        yield input.slice(0, split);
+        yield input.slice(split);
+      }
+
+      const parts: string[] = [];
+
+      for await (const event of redactor.stream(chunks())) {
+        if (event.type === "text") {
+          parts.push(event.text);
+        }
+      }
+
+      expect(parts.join("")).toBe(expected);
+    }
+  });
 });
 
 describe("allowlist — validation", () => {

@@ -12,6 +12,7 @@ dek.ts             DEK management: generateDek(), encryptWithDek(), decryptWithD
 local-provider.ts  LocalVaultProvider class + LocalVaultProviderOptions
 seal.ts            seal(), open(), serializeSealedBlob(), deserializeSealedBlob() + type guards
 session.ts         createEncryptedSession()
+kms/               Cloud KMS providers (see kms/CONTEXT.md)
 index.ts           Barrel exports
 ```
 
@@ -28,13 +29,13 @@ for `local-provider.ts` which needs to slice the combined buffer.
 
 A DEK (data encryption key) encrypts data; the provider's master key encrypts
 the DEK. `LocalVaultProvider` uses a local key or passphrase-derived key as the
-master key. Enterprise providers use cloud KMS.
+master key. KMS providers in `kms/` use cloud KMS.
 
 ### VaultProvider interface
 
 Four methods + `name` property: `encrypt()`, `decrypt()`,
-`generateDataKey()`, `decryptDataKey()`. The MIT-licensed package ships
-`LocalVaultProvider`. Cloud KMS providers live in `@sensored/enterprise`.
+`generateDataKey()`, `decryptDataKey()`. Ships `LocalVaultProvider`; cloud
+KMS providers live in `kms/` (see `kms/CONTEXT.md`).
 
 ### LocalVaultProvider
 

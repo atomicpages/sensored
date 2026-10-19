@@ -17,8 +17,11 @@ export function renderTokenReplace(
   const entityType = matches[0]?.rule.detector.entityType ?? "REDACTED";
 
   for (const { rule } of matches) {
-    if (rule.setting.action === "token-replace" && rule.setting.tokens) {
-      const custom = rule.setting.tokens[entityType];
+    const tokens =
+      rule.setting.action === "token-replace" ? rule.setting.tokens : undefined;
+
+    if (tokens && Object.hasOwn(tokens, entityType)) {
+      const custom = tokens[entityType];
 
       if (custom !== undefined) {
         return custom;
@@ -26,7 +29,9 @@ export function renderTokenReplace(
     }
   }
 
-  const generator = DEFAULT_TOKEN_GENERATORS[entityType];
+  const generator = Object.hasOwn(DEFAULT_TOKEN_GENERATORS, entityType)
+    ? DEFAULT_TOKEN_GENERATORS[entityType]
+    : undefined;
 
   if (generator !== undefined) {
     return generator(originalText);

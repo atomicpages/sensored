@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import { MAX_INPUT_LENGTH } from "../src/index";
 import { createSession } from "../src/session";
 import type { RedactorConfig } from "../src/types";
 
@@ -18,6 +19,19 @@ describe("createSession", () => {
 
     expect(result).toBe("contact [EMAIL_1]");
     expect(session.map["[EMAIL_1]"]).toBe("john@example.com");
+  });
+
+  it("ignores the input limit unless the config sets one", () => {
+    const padding = " ".repeat(MAX_INPUT_LENGTH);
+
+    expect(createSession(baseConfig).redact(`${padding}john@example.com`)).toBe(
+      `${padding}[EMAIL_1]`,
+    );
+    expect(() =>
+      createSession({ ...baseConfig, limits: { maxInputLength: 10 } }).redact(
+        "john@example.com",
+      ),
+    ).toThrow();
   });
 
   it("restores placeholders back to originals", () => {

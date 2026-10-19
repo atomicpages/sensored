@@ -29,39 +29,106 @@ jobs:
   typecheck:
     name: Typecheck (src)
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
       - run: bun run --filter sensored typecheck
 
   typecheck-build:
     name: Typecheck (build)
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
       - run: bun run --filter sensored typecheck:build
 
   typecheck-test:
     name: Typecheck (test)
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
       - run: bun run --filter sensored typecheck:test
 
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-rust
+        with:
+          targets: wasm32-unknown-unknown
+          cache-key: check
+      - run: cargo fmt --all --check
+        working-directory: crates
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+        working-directory: crates
+      - run: cargo clippy -p sensored-wasm --target wasm32-unknown-unknown --locked -- -D warnings
+        working-directory: crates
+      # Per-detector golden fixtures come from the eval corpus and are gitignored.
+      - name: Generate detector fixtures
+        run: |
+          bun run --filter sensored eval:generate
+          bun run conformance:generate
+      - run: cargo test --workspace --locked
+        working-directory: crates
+
+  # The napi addon (host only, linux-x64-gnu) and the Wasm build. Downstream
+  # jobs download the `build` artifact at the repo root.
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-rust
+        with:
+          wasm: "true"
+          cache-key: build
+      - run: bun run --filter @sensored/native build
       - run: bun run --filter sensored build
+      - name: Smoke the compiled CLI
+        run: |
+          bun packages/sensored/scripts/build-cli.ts --outfile "$RUNNER_TEMP/sensored"
+          echo "a@b.co" | "$RUNNER_TEMP/sensored" --rule email:redact --no-config | grep -Fx "[EMAIL]"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: dist
-          path: packages/sensored/dist/
+          name: build
+          path: |
+            packages/sensored/dist/
+            packages/sensored/wasm/
+            crates/sensored-napi/index.js
+            crates/sensored-napi/sensored.*.node
           include-hidden-files: true
+          if-no-files-found: error
+
+  bindings:
+    name: Binding tests (napi, Wasm)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - run: bun test
+        working-directory: crates/sensored-napi
+      - run: bun test
+        working-directory: crates/sensored-wasm
 
   test:
     name: Test
@@ -72,112 +139,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: dist
-          path: packages/sensored/dist/
-      - run: bun run --filter sensored test
-
-  node:
-    name: Node.js
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: packages/sensored/dist/
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: "20"
-      - run: node packages/sensored/scripts/ci/smoke-node.mjs
-
-  deno:
-    name: Deno
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: packages/sensored/dist/
-      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
-        with:
-          deno-version: lts
-      - run: deno run --allow-read packages/sensored/scripts/ci/smoke-deno.ts
-
-  edge-check:
-    name: Edge/Browser (static analysis)
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: packages/sensored/dist/
-      - run: bash packages/sensored/scripts/ci/smoke-edge.sh
-
-  eval:
-    name: Eval Gate
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - run: |
-          bun run --filter sensored eval:generate
-          rm -f packages/sensored/eval/after.json
-          bun run --filter sensored eval:gate
-
-  bench:
-    name: Benchmark
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - run: bun run --filter sensored bench
-
-  enterprise-lint:
-    name: Enterprise Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - run: bun run --filter @sensored/enterprise lint
-
-  enterprise-typecheck:
-    name: Enterprise Typecheck
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - run: bun run --filter @sensored/enterprise typecheck
-
-  enterprise-build:
-    name: Enterprise Build
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: packages/sensored/dist/
-      - run: bun run --filter @sensored/enterprise build
-
-  enterprise-test:
-    name: Enterprise Test
-    runs-on: ubuntu-latest
-    needs: enterprise-build
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: packages/sensored/dist/
+          name: build
       - name: Install fakecloud
         run: curl -fsSL https://fakecloud.dev/install.sh | bash
       - name: Start fakecloud
@@ -190,4 +152,92 @@ jobs:
           done
           echo "fakecloud did not start"
           exit 1
-      - run: ENTERPRISE_INTEGRATION=1 bun run --filter @sensored/enterprise test
+      - run: KMS_INTEGRATION=1 bun run --filter sensored test
+
+  node:
+    name: Node.js
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Links packages/sensored/node_modules/@sensored/native to the addon.
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "20"
+      - run: node packages/sensored/scripts/ci/smoke-node.mjs
+      - run: node packages/sensored/scripts/ci/smoke-node.mjs
+        env:
+          SENSORED_ENGINE: wasm
+
+  deno:
+    name: Deno
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: lts
+      - run: deno run --allow-read packages/sensored/scripts/ci/smoke-deno.ts
+
+  edge-check:
+    name: Edge/Browser (static analysis)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - run: bun packages/sensored/scripts/ci/smoke-edge.ts
+
+  browser:
+    name: Browser
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - run: bunx playwright-core install --with-deps chromium
+        working-directory: packages/sensored
+      - run: bun packages/sensored/scripts/ci/smoke-browser.ts
+
+  eval:
+    name: Eval Gate
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - run: |
+          bun run --filter sensored eval:generate
+          rm -f packages/sensored/eval/after.json
+          bun run --filter sensored eval:gate
+
+  bench:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    needs: build
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build
+      - run: bun run --filter sensored bench
+

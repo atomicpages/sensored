@@ -26,6 +26,14 @@ describe("email complete-string processing", () => {
     ["a@example.com\u0301", "a@example.com\u0301"],
     [`${"a".repeat(65)}@example.com`, `${"a".repeat(65)}@example.com`],
     [`a@${"b".repeat(64)}.com`, `a@${"b".repeat(64)}.com`],
+    [
+      "https://example.com/?email=jane@example.com",
+      "https://example.com/?email=[EMAIL]",
+    ],
+    ["/users/jane@example.com/profile", "/users/[EMAIL]/profile"],
+    ["?a=1&to=jane@example.com", "?a=1&to=[EMAIL]"],
+    ["联系jane.doe@example.com谢谢", "联系[EMAIL]谢谢"],
+    ["メールjane@example.comまで", "メール[EMAIL]まで"],
   ])("%s", (input, expected) => {
     expect(redactor.redact(input)).toBe(expected);
     expect(redactor.inspect(input).text).toBe(expected);

@@ -2,7 +2,7 @@
 export const EVAL_RULES: readonly string[] = [
   "email", "payment_card", "us_ssn", "phone", "uk_nino",
   "ca_sin", "au_tfn", "jp_my_number", "eu_vat", "iban",
-  "passport", "drivers_license", "person_name_lite",
+  "passport", "drivers_license", "person_name_lite", "person_name",
   "ipv4", "ipv6", "mac_address", "url_with_auth",
   "aws_access_key", "google_api_key", "stripe_api_key", "slack_token",
   "github_token", "jwt_token", "private_key", "generic_api_key",
@@ -326,6 +326,13 @@ export async function evaluate(
   };
 }
 /** Baselines are previous reports from this tool, stored in owner-controlled review history. */
+/**
+ * Scored and held to the baseline (any new FP or FN blocks), but not to the
+ * precision/recall bar: a capitalised-pair heuristic whose true precision is
+ * about 0.25. `person_name` is the gated name detector.
+ */
+const BAR_EXEMPT: ReadonlySet<string> = new Set(["person_name_lite"]);
+
 export function releaseGate(report: Report, baseline?: Report): string[] {
   const failures: string[] = [];
 
@@ -338,6 +345,10 @@ export function releaseGate(report: Report, baseline?: Report): string[] {
   }
 
   for (const rule of EVAL_RULES) {
+    if (BAR_EXEMPT.has(rule)) {
+      continue;
+    }
+
     const score = Object.hasOwn(report.rules, rule)
       ? report.rules[rule]
       : undefined;

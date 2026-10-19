@@ -1,0 +1,3 @@
+# Build outputs of `napi build`. index.d.ts is committed as the API contract.
+*.node
+index.js

@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "FormatPreserveRule": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "format-preserve",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "type": "object"
+    },
+    "MaskRule": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "mask",
+          "type": "string"
+        },
+        "preserve": {
+          "additionalProperties": false,
+          "properties": {
+            "first": {
+              "type": "number"
+            },
+            "last": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "type": "object"
+    },
+    "RedactRule": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "redact",
+          "type": "string"
+        },
+        "priority": {
+          "type": "number"
+        },
+        "replacement": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "type": "object"
+    },
+    "RemoveRule": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "remove",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "type": "object"
+    },
+    "RuleSetting": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/RedactRule"
+        },
+        {
+          "$ref": "#/definitions/FormatPreserveRule"
+        },
+        {
+          "$ref": "#/definitions/TokenReplaceRule"
+        },
+        {
+          "$ref": "#/definitions/MaskRule"
+        },
+        {
+          "$ref": "#/definitions/RemoveRule"
+        }
+      ]
+    },
+    "TokenReplaceRule": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "token-replace",
+          "type": "string"
+        },
+        "tokens": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "The JSON-only subset of `RedactorConfig`: what crosses the FFI boundary.\n\nExcluded because they hold functions or JS regexes, and stay in TS: `detectors` (custom definitions) and `semantic`. `customHeaders` keeps only its string form; `RegExp` entries are resolved on the TS side.",
+  "properties": {
+    "allowlist": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "customPresets": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetting"
+            },
+            {
+              "const": "off",
+              "type": "string"
+            }
+          ]
+        },
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "detectOnly": {
+      "type": "boolean"
+    },
+    "detectorOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "http_auth_header": {
+          "additionalProperties": false,
+          "properties": {
+            "customHeaders": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "limits": {
+      "additionalProperties": false,
+      "properties": {
+        "maxInputLength": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "presets": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "restore": {
+      "type": "boolean"
+    },
+    "rules": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/RuleSetting"
+          },
+          {
+            "const": "off",
+            "type": "string"
+          }
+        ]
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "rules"
+  ],
+  "type": "object"
+}

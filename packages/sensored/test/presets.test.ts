@@ -121,6 +121,35 @@ describe("preset conflicts", () => {
     }
   });
 
+  test("an explicit rule resolves a preset conflict on that rule", () => {
+    const redactor = createRedactor({
+      customPresets: {
+        a: { email: { action: "redact" }, phone: { action: "redact" } },
+        b: { email: { action: "mask" } },
+      },
+      presets: ["a", "b"],
+      rules: { email: { action: "remove" } },
+    });
+
+    expect(redactor.policy).toEqual({
+      email: { action: "remove" },
+      phone: { action: "redact" },
+    });
+  });
+
+  test("an explicit 'off' also resolves a preset conflict", () => {
+    const redactor = createRedactor({
+      customPresets: {
+        a: { email: { action: "redact" }, phone: { action: "redact" } },
+        b: { email: { action: "mask" } },
+      },
+      presets: ["a", "b"],
+      rules: { email: "off" },
+    });
+
+    expect(redactor.policy).toEqual({ phone: { action: "redact" } });
+  });
+
   test("two custom presets with same rule and same action do not conflict", () => {
     const redactor = createRedactor({
       customPresets: {
@@ -575,6 +604,47 @@ describe("compliance preset conflicts", () => {
     } catch (error) {
       expect(error).toBeInstanceOf(SensoredError);
       expect(error).toMatchObject({ code: "POLICY_CONFLICT", path: "presets" });
+    }
+  });
+});
+
+describe("prototype-named keys", () => {
+  test("an inherited name is not a preset", () => {
+    for (const config of [
+      { presets: ["constructor"], rules: {} },
+      { presets: ["toString"], customPresets: { team: {} }, rules: {} },
+    ]) {
+      expect(() => createRedactor(config)).toThrow(SensoredError);
+
+      try {
+        createRedactor(config);
+      } catch (error) {
+        expect(error).toMatchObject({ code: "UNKNOWN_RULE", path: "presets" });
+      }
+    }
+  });
+
+  test("a __proto__ rule id is an unknown rule", () => {
+    const rules = JSON.parse('{"__proto__": {"action": "redact"}}');
+
+    try {
+      createRedactor({ rules });
+      expect.unreachable();
+    } catch (error) {
+      expect(error).toMatchObject({ code: "UNKNOWN_RULE", path: "rules" });
+    }
+  });
+
+  test("a custom preset rule named constructor does not conflict", () => {
+    const customPresets = JSON.parse(
+      '{"team": {"constructor": {"action": "redact"}}}',
+    );
+
+    try {
+      createRedactor({ presets: ["team"], customPresets, rules: {} });
+      expect.unreachable();
+    } catch (error) {
+      expect(error).toMatchObject({ code: "UNKNOWN_RULE", path: "rules" });
     }
   });
 });
