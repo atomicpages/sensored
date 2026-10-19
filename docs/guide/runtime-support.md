@@ -101,7 +101,7 @@ runtime.
 ## CI verification
 
 The `ci.yml` workflow runs on every push and pull request. Each smoke test
-runs the same checks (`scripts/ci/smoke-checks.mjs`: redact, restore,
+runs the same checks (`packages/sensored/scripts/ci/smoke-checks.mjs`: redact, restore,
 inspect, stream and a custom JS detector) against the built `dist/`:
 
 1. **Build** — builds `dist/` with Bun

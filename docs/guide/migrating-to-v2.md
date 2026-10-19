@@ -37,7 +37,7 @@ bun remove compromise
 - The browser entry loads Wasm with top-level await, so it needs a bundler
   that supports it (Vite, webpack 5, esbuild with an `es2022` or `esnext`
   target).
-- Browser bundles grow by the Wasm binary: about 1.7 MB raw, 0.75 MB gzipped.
+- Browser bundles grow by the Wasm binary: about 1.7 MB raw, 0.73 MB gzipped.
   See [Runtime Support](./runtime-support.md) for the measured size.
 
 ## person_name

@@ -1,7 +1,7 @@
 # sensored-core
 
-Pure-Rust redaction engine, no FFI. The napi and Wasm bindings wrap it, and it
-is published to crates.io. Plan: `docs/internal/plans/rust-core-rewrite.md`.
+Pure-Rust redaction engine, no FFI. The napi and Wasm bindings wrap it.
+Not yet on crates.io (see Publishing). Plan: `docs/internal/plans/rust-core-rewrite.md`.
 The TS engine in `packages/sensored/src/` is the reference; the golden fixtures
 in `conformance/golden/` define parity.
 
@@ -31,8 +31,8 @@ per call (`utf8_to_utf16`, `utf16_to_utf8`).
   detectors with required context should use it). The label pre-check runs
   lowercase literals on `Input::ascii_lower` instead of `(?i)`, which keeps
   the regex crate's literal prefilter (15x faster on labels); results are
-  identical, and texts with K or ſ fall back to `(?i)`. and the table-driven `ContextDetector`,
-  `ChecksumDetector` and `KeywordDetector`. `ExternalDetector` carries the
+  identical, and texts with K or ſ fall back to `(?i)`. Also the
+  table-driven `ContextDetector`, `ChecksumDetector` and `KeywordDetector`. `ExternalDetector` carries the
   metadata of a caller's JS detector; its matches arrive via collect/render.
 - `checksum.rs`: Luhn and NPI.
 - `detectors/`: the `Registry` and one module per family (`contact/`,
@@ -119,8 +119,8 @@ against recorded matches before detectors are ported. Run `cargo test` from
 
 ## Publishing
 
-Published to crates.io as `sensored-core` (`release.yml`, opt-in `crate`
-input; see `.github/RELEASING.md`). `Cargo.toml` `include` ships `src/` (with
+Not yet published. `release.yml` publishes it to crates.io as `sensored-core`
+when its opt-in `crate` input is set (see `.github/RELEASING.md`). `Cargo.toml` `include` ships `src/` (with
 `person/bloom.bin`) and `README.md` only: tests and examples read
 `conformance/` and the eval corpus outside the crate, so `cargo package`
 warns that it ignores them. Check with `cargo package -p sensored-core --list`.

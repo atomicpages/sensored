@@ -1,7 +1,9 @@
 # sensored
 
 Portable deterministic text-redaction library, developed and tested with Bun.
-The first complete-string email engine is implemented in `packages/sensored/src/`.
+The runtime engine is the Rust core (`crates/sensored-core`), loaded through
+the napi addon or Wasm. `packages/sensored/src/` is the TypeScript API over it
+and the frozen TS reference engine (`reference.ts`).
 
 ## Sources of truth
 
@@ -13,12 +15,10 @@ more. All built-in and trusted custom detectors share one contract. Published
 code uses standard APIs; Bun-specific APIs belong in development tooling only.
 This library has no HTTP server or database component.
 
-`packages/sensored/src/index.ts` exposes complete-string orchestration;
-`packages/sensored/src/policy.ts` resolves explicit rules and registrations;
-`packages/sensored/src/engine.ts` resolves overlap transformations.
-`packages/sensored/src/email.ts` owns email candidate validation.
-`packages/sensored/src/types.ts` and `packages/sensored/src/detectors.ts`
-define the registered detector/report seam. `packages/sensored/test/` contains
+`packages/sensored/src/index.ts` loads the engine and exports the API
+(`api.ts`); `native/` holds the engine seam. `crates/sensored-core` owns
+policy resolution, detection, overlap resolution and rendering;
+`conformance/golden/` pins it to the TS reference. `packages/sensored/test/` contains
 Bun regression tests. Each meaningful logic directory has a CONTEXT.md.
 
 ## Monorepo structure
