@@ -17,6 +17,9 @@ interface Case {
 
 const RULES = [...EVAL_RULES];
 
+/** Both name detectors are scored against the same constructed spans. */
+const NAME_RULES: readonly string[] = ["person_name_lite", "person_name"];
+
 const POSITIVES_PER_DETECTOR = 220;
 const NEGATIVE_COUNT = 1050;
 const DEFERRED_COUNT = 50;
@@ -395,6 +398,11 @@ function generatePersonName(): string {
   return `${first} ${last}`;
 }
 
+/** `name` in `text`, labelled for every name detector. */
+function nameSpans(text: string, name: string): Tuple[] {
+  return NAME_RULES.map((ruleId) => spanFor(text, name, ruleId));
+}
+
 function spanFor(text: string, value: string, ruleId: string): Tuple {
   const start = text.indexOf(value);
 
@@ -722,9 +730,7 @@ function generatePersonNamePositive(): Case {
 
   const ctx = faker.helpers.arrayElement(contexts);
   const text = ctx(name);
-  const span = spanFor(text, name, "person_name_lite");
-
-  return { id, text, kind: "supported", expected: [span] };
+  return { id, text, kind: "supported", expected: nameSpans(text, name) };
 }
 
 // ---------------------------------------------------------------------------
@@ -3615,7 +3621,12 @@ function generateMixedRule(): Case {
     }
 
     text += item.part;
-    spans.push(spanFor(text, item.value, item.type));
+
+    if (item.type === "person_name_lite") {
+      spans.push(...nameSpans(text, item.value));
+    } else {
+      spans.push(spanFor(text, item.value, item.type));
+    }
   }
 
   return { id, text, kind: "supported", expected: spans };
@@ -4817,9 +4828,14 @@ function main(): void {
     }
   }
 
+  // Names are labelled by construction only: adopting a name detector's
+  // matches would turn its false positives ("Plate No") into gold labels.
   const redactor = createRedactor({
     rules: Object.fromEntries(
-      RULES.map((rule) => [rule, { action: "redact" }]),
+      RULES.filter((rule) => !NAME_RULES.includes(rule)).map((rule) => [
+        rule,
+        { action: "redact" },
+      ]),
     ),
   });
 
@@ -4839,12 +4855,6 @@ function main(): void {
     );
 
     for (const d of detected) {
-      // Names are labelled by construction only: adopting person_name_lite's
-      // matches would turn its false positives ("Plate No") into gold labels.
-      if (d.ruleId === "person_name_lite") {
-        continue;
-      }
-
       const key = `${d.ruleId}:${d.start}:${d.end}`;
       if (!existing.has(key)) {
         c.expected.push(d);
@@ -4864,7 +4874,7 @@ function main(): void {
   const outputPath = Bun.argv[2] ?? "eval/corpus.json";
   Bun.write(outputPath, `${JSON.stringify(corpus, null, 2)}\n`);
   console.log(
-    `Generated ${cases.length} cases (${POSITIVES_PER_DETECTOR * RULES.length} positives, ${NEGATIVE_COUNT} negatives, ${DEFERRED_COUNT} deferred, ${MIXED_COUNT} mixed) -> ${outputPath}`,
+    `Generated ${cases.length} cases (${POSITIVES_PER_DETECTOR * generators.length} positives, ${NEGATIVE_COUNT} negatives, ${DEFERRED_COUNT} deferred, ${MIXED_COUNT} mixed) -> ${outputPath}`,
   );
 }
 

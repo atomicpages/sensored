@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import {
+  type Corpus,
   evaluate,
   parseBaseline,
   parseCorpus,
   releaseGate,
   EVAL_RULES,
+  type Tuple,
 } from "./evaluator.ts";
 
 function first<T>(items: T[]): T {
@@ -159,7 +161,8 @@ test("new errors are regressions even when counts stay unchanged", async () => {
   );
 });
 
-test("synthetic gate simulation verifies the success path, not independent evidence", async () => {
+/** 1000 negatives and 200 positives per gated rule, each text its rule id. */
+function gateCorpus(): Corpus {
   const cases = Array.from({ length: 1000 }, (_, index) => ({
     id: `n-${index}`,
     text: "ordinary",
@@ -175,15 +178,42 @@ test("synthetic gate simulation verifies the success path, not independent evide
       expected: [{ ruleId, start: 0, end: ruleId.length }],
     })),
   );
-  const corpus = parseCorpus({
+  return parseCorpus({
     revision: "synthetic-gate-simulation",
     provenance: "independent",
     reviewed: true,
     rules,
     cases: [...cases, ...positives],
   });
-  const report = await evaluate(corpus, (text) =>
-    rules.includes(text) ? [{ ruleId: text, start: 0, end: text.length }] : [],
-  );
+}
+
+/** Every positive found exactly. */
+function perfect(text: string): Tuple[] {
+  return EVAL_RULES.includes(text)
+    ? [{ ruleId: text, start: 0, end: text.length }]
+    : [];
+}
+
+test("synthetic gate simulation verifies the success path, not independent evidence", async () => {
+  const report = await evaluate(gateCorpus(), perfect);
   expect(releaseGate(report, parseBaseline(report))).toEqual([]);
+});
+
+test("person_name_lite is held to the baseline, not to the precision bar", async () => {
+  const corpus = gateCorpus();
+  const lite = { ruleId: "person_name_lite", start: 0, end: 4 };
+  // A false positive on every negative: precision 200/1200.
+  const noisy = (text: string) =>
+    text === "ordinary" ? [lite] : perfect(text);
+
+  const baseline = await evaluate(corpus, noisy);
+  expect(baseline.rules.person_name_lite?.precision).toBeLessThan(0.99);
+  expect(releaseGate(baseline, parseBaseline(baseline))).toEqual([]);
+
+  const after = await evaluate(corpus, (text) =>
+    text === "email" ? [...perfect(text), lite] : noisy(text),
+  );
+  expect(releaseGate(after, parseBaseline(baseline))).toContain(
+    "Regression: email-0",
+  );
 });

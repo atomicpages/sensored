@@ -19,6 +19,13 @@ export const CORPUS_PATH = join(
 
 const NEGATIVES_PER_RULE = 100;
 
+/**
+ * Rules whose TS behaviour is not the contract: `person_name` wraps
+ * compromise in TS and is a new rule-based NER in Rust, judged by the eval
+ * gate instead (`NOT_GOLDEN` in `crates/sensored-core/tests/detectors.rs`).
+ */
+const NOT_GOLDEN: ReadonlySet<string> = new Set(["person_name"]);
+
 export interface DetectorFixtures {
   /** File name under `golden/detectors/` to serialized contents. */
   readonly files: ReadonlyMap<string, string>;
@@ -51,6 +58,10 @@ export async function buildDetectorFixtures(
   const manifestFiles: Record<string, DetectorManifest["files"][string]> = {};
 
   for (const rule of [...corpus.rules].sort()) {
+    if (NOT_GOLDEN.has(rule)) {
+      continue;
+    }
+
     const config = { rules: { [rule]: { action: "redact" as const } } };
 
     const positives = corpus.cases.filter(

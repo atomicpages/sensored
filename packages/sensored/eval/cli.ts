@@ -1,4 +1,5 @@
 import { takeEngine, useEngine } from "../bench/engine.ts";
+import { preloadPersonNameDetector } from "../src/reference.ts";
 import {
   evaluate,
   parseBaseline,
@@ -8,6 +9,12 @@ import {
 
 const { engine, rest: args } = takeEngine(Bun.argv.slice(2));
 const createRedactor = useEngine(engine);
+
+// The TS reference `person_name` (compromise) loads asynchronously.
+if (engine === "ts") {
+  await preloadPersonNameDetector();
+}
+
 const configIndex = args.indexOf("--config");
 let configPath: string | undefined;
 let remainingArgs: string[];
