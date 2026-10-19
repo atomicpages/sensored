@@ -206,3 +206,35 @@ fn caller_detections_must_name_a_stream_rule() {
 
     assert_eq!(error.code, ErrorCode::DetectorContract);
 }
+
+/// Stream metadata at `usize::MAX` saturates the holdback instead of wrapping
+/// (reachable on wasm32), so nothing flushes before `finish`.
+#[test]
+fn huge_stream_metadata_holds_everything_back() {
+    use std::sync::Arc;
+
+    use sensored_core::detector::{ExternalDetector, StreamMeta};
+    use sensored_core::stream::{StreamCore, StreamOptions};
+    use sensored_core::types::{ActiveRule, RuleSetting};
+
+    let detector = ExternalDetector {
+        id: "huge".into(),
+        entity_type: "huge".into(),
+        replacement: "[HUGE]".into(),
+        stream: Some(StreamMeta {
+            max_match_length: usize::MAX,
+            left_context: usize::MAX,
+            right_context: usize::MAX,
+            boundary_lookaround: usize::MAX,
+        }),
+        context_hint: None,
+    };
+    let rule = ActiveRule {
+        detector: Arc::new(detector),
+        setting: RuleSetting::FormatPreserve,
+    };
+    let mut core = StreamCore::new(vec![rule], StreamOptions::default()).expect("stream");
+
+    assert!(core.push(&"x".repeat(1000)).expect("push").is_empty());
+    assert!(!core.finish().is_empty());
+}

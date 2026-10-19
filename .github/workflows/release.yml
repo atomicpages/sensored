@@ -290,9 +290,21 @@ jobs:
           - bun: bun-linux-arm64
             native: aarch64-unknown-linux-gnu
             artifact: sensored-linux-arm64
+          - bun: bun-linux-x64-musl
+            native: x86_64-unknown-linux-musl
+            artifact: sensored-linux-x64-musl
+          - bun: bun-linux-arm64-musl
+            native: aarch64-unknown-linux-musl
+            artifact: sensored-linux-arm64-musl
           - bun: bun-darwin-arm64
             native: aarch64-apple-darwin
             artifact: sensored-darwin-arm64
+          - bun: bun-darwin-x64
+            native: x86_64-apple-darwin
+            artifact: sensored-darwin-x64
+          - bun: bun-windows-x64
+            native: x86_64-pc-windows-msvc
+            artifact: sensored-windows-x64.exe
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 

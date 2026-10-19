@@ -35,7 +35,11 @@
   },
   "sideEffects": [
     "./src/index.ts",
-    "./dist/src/index.mjs"
+    "./src/index.wasm-url.ts",
+    "./src/index.wasm-module.ts",
+    "./dist/src/index.mjs",
+    "./dist/src/index.wasm-url.mjs",
+    "./dist/src/index.wasm-module.mjs"
   ],
   "type": "module",
   "exports": {

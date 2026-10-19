@@ -44,6 +44,9 @@ impl OffsetMap {
     }
 
     /// Looks up an offset that was passed to the constructor.
+    ///
+    /// # Panics
+    /// If `offset` was not passed to the constructor.
     pub fn get(&self, offset: usize) -> usize {
         let index = self
             .from

@@ -4,7 +4,10 @@
 `@sensored/native-<platform>` packages (`napi pre-publish`), then
 `@sensored/native`, `sensored` and the other public `packages/*`
 (`scripts/publish.ts`, which skips versions already on npm), then a GitHub
-release `sensored@<version>` with the compiled CLI binaries. `sensored` and
+release `sensored@<version>` with the compiled CLI binaries for the same 7
+platforms. Bun cross-compiles them on Linux, and only `linux-x64` is
+smoke-tested; the other 6 haven't been run yet, so check them after the first
+release. `sensored` and
 `@sensored/native` share one version (changesets `fixed` group).
 
 ## `sensored@next` (prereleases, until parity)

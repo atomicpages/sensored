@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use super::{number, regex};
+use super::{regex, two_digits};
 use crate::detector::{ContextDetector, ContextMatcher, StreamMeta};
 
 const LABELS: &str = "(?:Egypt|Egyptian|National ID|Identity)";
@@ -12,8 +12,8 @@ const WINDOW: (usize, usize) = (35, 20);
 /// 8-9. The pattern guarantees fourteen ASCII digits.
 fn validate(candidate: &str) -> Option<&'static [&'static str]> {
     let digits = candidate.as_bytes();
-    let month = number(&digits[5..7]);
-    let day = number(&digits[7..9]);
+    let month = two_digits(digits, 5);
+    let day = two_digits(digits, 7);
 
     ((1..=12).contains(&month) && (1..=31).contains(&day)).then_some(&["eg_id.structure"])
 }

@@ -72,10 +72,11 @@ impl StreamCore {
                 return Err(SensoredError::new(ErrorCode::StreamUnsupported));
             };
 
+            // Saturating: caller metadata can reach `usize::MAX` on wasm32.
             holdback = holdback.max(
                 meta.max_match_length
-                    + meta.left_context.max(meta.right_context)
-                    + meta.boundary_lookaround,
+                    .saturating_add(meta.left_context.max(meta.right_context))
+                    .saturating_add(meta.boundary_lookaround),
             );
             max_left_context = max_left_context.max(meta.left_context);
         }

@@ -84,7 +84,8 @@ export function createNativeRedactor(config: unknown) {
   );
 
   const detectors = jsDetectors(split, policy);
-  const fast = detectors.length === 0;
+  /** No JS detectors: every call is one engine call, with no JS seam. */
+  const coreOnly = detectors.length === 0;
   const streamable = descriptions.every((description) => description.stream);
   const ruleOrder = new Map(descriptions.map(({ id }, index) => [id, index]));
 
@@ -158,7 +159,7 @@ export function createNativeRedactor(config: unknown) {
   function collect(text: string): NativeDetection[] {
     const detections = [...core.collect(text), ...detectJs(text)];
 
-    if (fast) {
+    if (coreOnly) {
       return detections;
     }
 
@@ -174,6 +175,11 @@ export function createNativeRedactor(config: unknown) {
     // strings, so a trailing high surrogate waits for the next chunk.
     let pending = "";
 
+    const push = (text: string) =>
+      coreOnly ? stream.push(text) : stream.pushWith(text, detectJs);
+    const end = () =>
+      coreOnly ? stream.finish() : stream.finishWith(detectJs);
+
     return {
       push(chunk: string): StreamEvent[] {
         let text = pending + chunk;
@@ -184,27 +190,14 @@ export function createNativeRedactor(config: unknown) {
           text = text.slice(0, -1);
         }
 
-        const events = engineCall(() =>
-          fast ? stream.push(text) : stream.pushWith(text, detectJs),
-        );
+        const events = engineCall(() => push(text));
 
         return events.map(toStreamEvent);
       },
       finish(): StreamEvent[] {
-        const events = engineCall(() => {
-          if (pending !== "") {
-            const tail = fast
-              ? stream.push(pending)
-              : stream.pushWith(pending, detectJs);
-
-            return [
-              ...tail,
-              ...(fast ? stream.finish() : stream.finishWith(detectJs)),
-            ];
-          }
-
-          return fast ? stream.finish() : stream.finishWith(detectJs);
-        });
+        const events = engineCall(() =>
+          pending === "" ? end() : [...push(pending), ...end()],
+        );
 
         return events.map(toStreamEvent);
       },
@@ -310,14 +303,14 @@ export function createNativeRedactor(config: unknown) {
 
       if (!split.restore) {
         return engineCall(() =>
-          fast
+          coreOnly
             ? core.redact(text)
             : renderCore(text, collect(text), false).text,
         );
       }
 
       const result = engineCall(() =>
-        fast
+        coreOnly
           ? core.redactWithMap(text)
           : renderCore(text, collect(text), false),
       );
@@ -331,7 +324,7 @@ export function createNativeRedactor(config: unknown) {
       checkInput(text);
 
       return engineCall(() =>
-        fast ? inspectCore(text) : renderCore(text, collect(text), true),
+        coreOnly ? inspectCore(text) : renderCore(text, collect(text), true),
       );
     },
     stream(

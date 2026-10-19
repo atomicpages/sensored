@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use super::{number, regex};
+use super::{regex, two_digits};
 use crate::detector::{ContextDetector, ContextMatcher, StreamMeta};
 
 const LABELS: &str = "(?:Ecuador|Ecuadorian|Cédula|Cedula|Identidad)";
@@ -12,7 +12,7 @@ const WINDOW: (usize, usize) = (35, 20);
 /// guarantees ten ASCII digits.
 fn validate(candidate: &str) -> Option<&'static [&'static str]> {
     let digits = candidate.as_bytes();
-    let province = number(&digits[..2]);
+    let province = two_digits(digits, 0);
     let third = digits[2] - b'0';
 
     let third_valid = third <= 6 || third == 9;

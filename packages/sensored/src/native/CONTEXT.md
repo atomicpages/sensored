@@ -11,8 +11,8 @@ or the Wasm build (`crates/sensored-wasm`). Plan:
   `setBinding`/`getBinding`. Offsets are UTF-16 code units. Engine errors are
   `Error`s with the core's `code`, `path` and `info`.
 - Each package entry loads one build and calls `setBinding` in its own body
-  (not a side-effect-only import, which `sideEffects: false` lets bundlers
-  drop). The API module never loads a build itself, so `createRedactor` stays
+  (not a side-effect-only import from another module, which bundlers may
+  drop; `package.json` `sideEffects` lists the three entries). The API module never loads a build itself, so `createRedactor` stays
   synchronous:
   - `../index.ts` (Node, Bun): napi, falling back to `loadWasmSync()` when the
     addon cannot load. `SENSORED_ENGINE=wasm` forces Wasm.

@@ -7,9 +7,9 @@ The public API runs on the Rust core (plan:
 
 - `index.ts` (package `.` entry, Node and Bun) loads the engine
   (`native/node.ts`: napi, Wasm fallback) and calls `setBinding` in its own
-  body, then `export * from "./api"`. `package.json` `sideEffects` lists it,
-  so bundlers (and our own build) keep `import "../index"` in the sub-path
-  entries (`session`, `vault`, adapters, loggers, CLI) that use the engine.
+  body, then `export * from "./api"`. `package.json` `sideEffects` lists it
+  (and the Wasm entries), so bundlers (and our own build) keep
+  `import "../index"` in the sub-path entries (`session`, `vault`, adapters, loggers, CLI) that use the engine.
 - `api.ts` is the public API over `getBinding()`; it never loads a build.
   `createRedactor` lives in `native/redactor.ts` (see `native/CONTEXT.md`).
   `preloadPersonNameDetector()` is a no-op (always the same resolved promise).

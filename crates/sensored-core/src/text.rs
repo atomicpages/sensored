@@ -27,6 +27,9 @@ pub fn utf16_len(text: &str) -> usize {
 
 /// The longest suffix of `text[..end]` that is at most `units` UTF-16 units.
 /// Mirrors `text.slice(Math.max(0, end - units), end)`.
+///
+/// # Panics
+/// If `end` is out of bounds or not on a char boundary.
 pub fn window_before(text: &str, end: usize, units: usize) -> &str {
     let mut start = end;
     let mut used = 0;
@@ -46,6 +49,9 @@ pub fn window_before(text: &str, end: usize, units: usize) -> &str {
 
 /// The longest prefix of `text[start..]` that is at most `units` UTF-16 units.
 /// Mirrors `text.slice(start, start + units)`.
+///
+/// # Panics
+/// If `start` is out of bounds or not on a char boundary.
 pub fn window_after(text: &str, start: usize, units: usize) -> &str {
     let mut end = start;
     let mut used = 0;

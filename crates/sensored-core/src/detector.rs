@@ -196,7 +196,7 @@ fn reasons(list: &[&'static str]) -> Vec<Label> {
 /// `label` as a `&'static str`, leaked once per distinct value, for reasons
 /// derived from a built-in id (`<id>.format`). Built-ins are finite, so the
 /// set is bounded; callers intern once per `detect_in`, not per match.
-pub fn intern(label: String) -> &'static str {
+fn intern(label: String) -> &'static str {
     static LABELS: LazyLock<Mutex<HashSet<&'static str>>> = LazyLock::new(Mutex::default);
 
     let mut labels = LABELS.lock().unwrap_or_else(PoisonError::into_inner);
@@ -617,7 +617,7 @@ pub struct KeywordDetector {
     pub entity_type: &'static str,
     pub replacement: &'static str,
     pub pattern: LazyLock<Regex>,
-    /// Compared case-insensitively.
+    /// Lowercase; compared with the lowercased window.
     pub keywords: &'static [&'static str],
     pub stream: StreamMeta,
 }
@@ -642,6 +642,8 @@ impl Detector for KeywordDetector {
     }
 
     fn detect_in(&self, input: &Input<'_>, out: &mut Vec<Detection>) {
+        debug_assert!(self.keywords.iter().all(|k| *k == k.to_lowercase()));
+
         let text = input.text();
 
         let mut candidates = Vec::new();
@@ -662,10 +664,7 @@ impl Detector for KeywordDetector {
             )
             .to_lowercase();
 
-            let has_keyword = self
-                .keywords
-                .iter()
-                .any(|keyword| window.contains(&keyword.to_lowercase()));
+            let has_keyword = self.keywords.iter().any(|keyword| window.contains(keyword));
 
             if !has_keyword {
                 continue;
