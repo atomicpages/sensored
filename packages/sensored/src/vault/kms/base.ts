@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { VaultError, type VaultProvider } from "sensored/vault";
+import { VaultError, type VaultProvider } from "../types";
 
 export abstract class BaseKmsProvider<T> implements VaultProvider {
   abstract readonly name: string;

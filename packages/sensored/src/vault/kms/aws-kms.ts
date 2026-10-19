@@ -1,4 +1,4 @@
-import { VaultError } from "sensored/vault";
+import { VaultError } from "../types";
 import { BaseKmsProvider } from "./base";
 
 interface KmsResponse {

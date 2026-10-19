@@ -1,6 +1,6 @@
 import { describe, expect, it, mock } from "bun:test";
-import { VaultError } from "sensored/vault";
-import { BaseKmsProvider } from "../src/providers/base";
+import { VaultError } from "../../../src/vault";
+import { BaseKmsProvider } from "../../../src/vault/kms/base";
 
 class StubProvider extends BaseKmsProvider<{ call(): string }> {
   readonly name = "stub";

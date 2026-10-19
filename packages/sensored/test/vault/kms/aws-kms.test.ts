@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it } from "bun:test";
 import { CreateKeyCommand, KMSClient } from "@aws-sdk/client-kms";
 import { FakeCloud } from "fakecloud";
-import { AwsKmsProvider } from "../src/providers/aws-kms";
+import { AwsKmsProvider } from "../../../src/vault/kms/aws-kms";
 
 const FAKECLOUD_URL = "http://localhost:4533";
 const REGION = "us-east-1";
 
-const INTEGRATION = process.env.ENTERPRISE_INTEGRATION === "1";
+const INTEGRATION = process.env.KMS_INTEGRATION === "1";
 const describeOrSkip = INTEGRATION ? describe : describe.skip;
 
 describeOrSkip("AwsKmsProvider (integration with fakecloud)", () => {
@@ -27,7 +27,7 @@ describeOrSkip("AwsKmsProvider (integration with fakecloud)", () => {
     });
 
     const result = await kmsClient.send(
-      new CreateKeyCommand({ description: "redactme-test-key" }),
+      new CreateKeyCommand({ Description: "redactme-test-key" }),
     );
 
     keyArn = result.KeyMetadata!.Arn!;

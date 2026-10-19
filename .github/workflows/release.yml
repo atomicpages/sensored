@@ -248,7 +248,6 @@ jobs:
           fi
 
       - run: bun run --filter sensored build
-      - run: bun run --filter @sensored/enterprise build
 
       # Publishes @sensored/native-<platform> and writes their versions into
       # @sensored/native's optionalDependencies before it is packed.

@@ -1,28 +1,28 @@
-# Enterprise package
+# Vault KMS providers
 
-Commercial `@sensored/enterprise` — cloud KMS vault providers for sensored.
-Ships on npm under a commercial EULA (not MIT). Honor-system 30-day trial. No
-runtime gates; enforcement is legal only.
+Cloud KMS `VaultProvider` implementations behind `sensored/vault/kms/*`
+subpath exports. MIT-licensed, formerly the separate `@sensored/enterprise`
+package. All cloud SDKs are optional peer deps, lazy-loaded via
+`await import()` with no hard dependencies.
 
 ## Module structure
 
 ```
-src/
-  index.ts                        Barrel exports
-  providers/
-    base.ts                       BaseKmsProvider<T> abstract base class
-    aws-kms.ts                    AwsKmsProvider
-    gcp-kms.ts                    GcpKmsProvider
-    azure-key-vault.ts            AzureKeyVaultProvider
-    hashicorp-vault.ts            HashiCorpVaultProvider
-    workos-ekm.ts                 WorkOsEkmProvider
+kms/
+  index.ts                        Barrel exports (5 providers)
+  base.ts                         BaseKmsProvider<T> abstract base class
+  aws-kms.ts                      AwsKmsProvider
+  gcp-kms.ts                      GcpKmsProvider
+  azure-key-vault.ts              AzureKeyVaultProvider
+  hashicorp-vault.ts              HashiCorpVaultProvider
+  workos-ekm.ts                   WorkOsEkmProvider
 ```
 
 ## Design
 
 ### BaseKmsProvider<T>
 
-Abstract base class implementing `VaultProvider` from `sensored/vault`. Generic
+Abstract base class implementing `VaultProvider` from `../types`. Generic
 `T` is the cloud SDK client type — eliminates `client: unknown`.
 
 Template method pattern: providers implement `encryptRaw()` / `decryptRaw()`
@@ -44,8 +44,8 @@ their own try/catch wrapping with `VAULT_DEK_GENERATION_FAILED` /
 `VAULT_DEK_DECRYPT_FAILED` codes.
 
 Each provider defines a minimal client interface matching the SDK methods it
-uses. SDKs are lazy-loaded via `await import()` with no hard dependencies. All
-cloud SDKs are optional peer deps.
+uses. SDKs are lazy-loaded via `await import()`. `Buffer` and `node:crypto`
+types come from `"types": ["bun"]` in `tsconfig.src.json`.
 
 ### Providers
 
@@ -62,7 +62,17 @@ cloud SDKs are optional peer deps.
 - **WorkOsEkmProvider** — uses base defaults. Options: `apiKey`, `ekmId`,
   `keyId`.
 
-## Dependencies
+## Exports
 
-`sensored/vault` is the only hard dependency (workspace link). All cloud SDKs
-are optional peer deps, lazy-loaded at runtime.
+Per-provider subpaths only — providers are never re-exported from `./vault` or
+the root entry, so those stay browser-safe:
+
+- `sensored/vault/kms` — barrel
+- `sensored/vault/kms/aws` / `/gcp` / `/azure` / `/hashicorp` / `/workos`
+
+## Tests
+
+`test/vault/kms/`. One test per provider. Azure/GCP/HashiCorp/WorkOS use
+`mock.module()` and run always; AWS runs against
+[fakecloud](https://fakecloud.dev) and is gated behind `KMS_INTEGRATION=1`
+(CI starts fakecloud; locally skipped unless the env var is set).

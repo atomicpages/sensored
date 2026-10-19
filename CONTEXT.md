@@ -26,7 +26,6 @@ Bun regression tests. Each meaningful logic directory has a CONTEXT.md.
 This is a Bun workspace monorepo:
 
 - `packages/sensored/` — the `sensored` npm package (MIT)
-- `packages/enterprise/` — the `@sensored/enterprise` npm package (commercial EULA)
 - `example/` — usage examples (not published)
 - `docs/` — VitePress documentation site
 

@@ -6,6 +6,15 @@ const conditions: Record<string, string[]> = {
   "./src/index.wasm-url": ["browser", "deno"],
 };
 
+/** Remaps stripped keys like `./vault/kms/aws-kms` to clean sub-paths. */
+const kmsMap: Record<string, string> = {
+  "./vault/kms/aws-kms": "./vault/kms/aws",
+  "./vault/kms/gcp-kms": "./vault/kms/gcp",
+  "./vault/kms/azure-key-vault": "./vault/kms/azure",
+  "./vault/kms/hashicorp-vault": "./vault/kms/hashicorp",
+  "./vault/kms/workos-ekm": "./vault/kms/workos",
+};
+
 export default defineConfig({
   entry: [
     "src/index.ts",
@@ -13,6 +22,12 @@ export default defineConfig({
     "src/index.wasm-module.ts",
     "src/session.ts",
     "src/vault/index.ts",
+    "src/vault/kms/index.ts",
+    "src/vault/kms/aws-kms.ts",
+    "src/vault/kms/gcp-kms.ts",
+    "src/vault/kms/azure-key-vault.ts",
+    "src/vault/kms/hashicorp-vault.ts",
+    "src/vault/kms/workos-ekm.ts",
     "src/adapters/openai.ts",
     "src/adapters/anthropic.ts",
     "src/loggers/bunyan.ts",
@@ -43,7 +58,9 @@ export default defineConfig({
           main = value;
           clean["."] = root;
         } else if (key.startsWith("./src/")) {
-          clean[`./${key.slice(6)}`] = value;
+          const stripped = `./${key.slice(6)}`;
+
+          clean[kmsMap[stripped] ?? stripped] = value;
         } else {
           clean[key] = value;
         }

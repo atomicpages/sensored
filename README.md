@@ -291,8 +291,8 @@ session.dispose(); // zeroes the DEK from memory
 ```
 
 Requires Node.js 20+ or Bun. Cloud KMS providers (AWS KMS, GCP KMS, Azure Key
-Vault, HashiCorp Vault, WorkOS EKM) available in `@sensored/enterprise`. See
-the [Vault guide](https://atomicpages.github.io/sensored/guide/vault) for
+Vault, HashiCorp Vault, WorkOS EKM) are built in via `sensored/vault/kms/*`.
+See the [Vault guide](https://atomicpages.github.io/sensored/guide/vault) for
 details.
 
 ## Presets

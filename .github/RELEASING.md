@@ -31,7 +31,7 @@ packages" PR; merging it publishes as `latest` (or run the workflow with
 ## Secrets and settings
 
 - Environment `npm`: npm trusted publishing (OIDC, no token) for every
-  package: `sensored`, `@sensored/enterprise`, `@sensored/native` and the 7
+  package: `sensored`, `@sensored/native` and the 7
   `@sensored/native-<platform>`, each with this repo and `release.yml`. A
   trusted publisher can only be added to a package that exists, so for the
   first release set an `NPM_TOKEN` secret (granular, publish rights on the

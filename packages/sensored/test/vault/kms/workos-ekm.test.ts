@@ -1,5 +1,5 @@
-import { beforeAll, describe, expect, it, mock } from "bun:test";
-import { WorkOsEkmProvider } from "../src/providers/workos-ekm";
+import { beforeAll, beforeEach, describe, expect, it, mock } from "bun:test";
+import { WorkOsEkmProvider } from "../../../src/vault/kms/workos-ekm";
 
 const API_KEY = "test-api-key";
 const EKM_ID = "ekm_123";
@@ -26,16 +26,19 @@ describe("WorkOsEkmProvider", () => {
   let client: ReturnType<typeof createMockClient>;
 
   beforeAll(() => {
-    client = createMockClient();
-
     mock.module("@workos-inc/node", () => {
       class WorkOS {
         constructor(_apiKey: string) {}
+
         vault = client.vault;
       }
 
       return { WorkOS };
     });
+  });
+
+  beforeEach(() => {
+    client = createMockClient();
   });
 
   it("round-trips plaintext through encrypt and decrypt", async () => {
@@ -56,8 +59,6 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("passes ekmId and keyId in encrypt context", async () => {
-    client.vault.encrypt.mockClear();
-
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
       ekmId: EKM_ID,
@@ -67,15 +68,13 @@ describe("WorkOsEkmProvider", () => {
     await provider.encrypt("test");
 
     expect(client.vault.encrypt).toHaveBeenCalledTimes(1);
-    expect(client.vault.encrypt.mock.calls[0][1]).toEqual({
+    expect(client.vault.encrypt.mock.calls[0]?.[1]).toEqual({
       ekmId: EKM_ID,
       keyId: KEY_ID,
     });
   });
 
   it("base64-encodes plaintext before sending to WorkOS", async () => {
-    client.vault.encrypt.mockClear();
-
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
       ekmId: EKM_ID,
@@ -84,7 +83,7 @@ describe("WorkOsEkmProvider", () => {
 
     await provider.encrypt("hello workos");
 
-    const sentData = client.vault.encrypt.mock.calls[0][0] as string;
+    const sentData = client.vault.encrypt.mock.calls[0]?.[0] as string;
 
     expect(Buffer.from(sentData, "base64").toString("utf8")).toBe(
       "hello workos",
@@ -92,18 +91,8 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("wraps SDK errors as VAULT_ENCRYPT_FAILED", async () => {
-    const failingClient = createMockClient();
-    failingClient.vault.encrypt.mockImplementation(async () => {
+    client.vault.encrypt.mockImplementation(async () => {
       throw new Error("encrypt failed");
-    });
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        constructor(_apiKey: string) {}
-        vault = failingClient.vault;
-      }
-
-      return { WorkOS };
     });
 
     const provider = new WorkOsEkmProvider({
@@ -118,18 +107,8 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("wraps SDK errors as VAULT_DECRYPT_FAILED", async () => {
-    const failingClient = createMockClient();
-    failingClient.vault.decrypt.mockImplementation(async () => {
+    client.vault.decrypt.mockImplementation(async () => {
       throw new Error("decrypt failed");
-    });
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        constructor(_apiKey: string) {}
-        vault = failingClient.vault;
-      }
-
-      return { WorkOS };
     });
 
     const provider = new WorkOsEkmProvider({
@@ -144,17 +123,6 @@ describe("WorkOsEkmProvider", () => {
   });
 
   it("generateDataKey returns 32-byte DEK and encrypted DEK", async () => {
-    const roundTripClient = createMockClient();
-
-    mock.module("@workos-inc/node", () => {
-      class WorkOS {
-        constructor(_apiKey: string) {}
-        vault = roundTripClient.vault;
-      }
-
-      return { WorkOS };
-    });
-
     const provider = new WorkOsEkmProvider({
       apiKey: API_KEY,
       ekmId: EKM_ID,

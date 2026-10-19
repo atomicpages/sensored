@@ -744,10 +744,10 @@ vault/
 
 Four methods + `name` property: `encrypt()`, `decrypt()`,
 `generateDataKey()`, `decryptDataKey()`. Uses envelope encryption: a DEK
-encrypts data, the provider's master key encrypts the DEK. The MIT-licensed
-package ships `LocalVaultProvider`. Cloud KMS providers (AWS KMS, GCP KMS,
-Azure Key Vault, HashiCorp Vault, WorkOS EKM) live in the commercial
-`@sensored/enterprise` package with lazy SDK imports and no hard deps.
+encrypts data, the provider's master key encrypts the DEK. Ships
+`LocalVaultProvider` plus cloud KMS providers (AWS KMS, GCP KMS, Azure Key
+Vault, HashiCorp Vault, WorkOS EKM) behind `sensored/vault/kms/*` subpath
+exports with lazy SDK imports and no hard deps.
 
 ### LocalVaultProvider
 
@@ -799,18 +799,8 @@ entry. `tsdown.config.ts` has `src/vault/index.ts` entry. `tsconfig.src.json`
 uses `"types": ["bun"]` to provide `Buffer` and `node:crypto` globals needed
 by the vault module.
 
-### Enterprise package
+### KMS providers (`vault/kms/`)
 
-`enterprise/` is a Bun workspace at the repo root. Ships as
-`@sensored/enterprise` on npm with a commercial EULA (not MIT). Provider stubs
-in `enterprise/src/providers/`: `base.ts` (`BaseKmsProvider<T>` base class),
-`aws-kms.ts`, `gcp-kms.ts`, `azure-key-vault.ts`, `hashicorp-vault.ts`,
-`workos-ekm.ts`. All cloud SDKs are lazy-loaded with no hard dependencies.
-`BaseKmsProvider<T>` uses a template method pattern: providers implement
-`encryptRaw()` / `decryptRaw()` (protected abstract); the base class provides
-concrete `encrypt()` / `decrypt()` that wrap calls in try/catch and rethrow
-as `VaultError`. Provides `getClient()` (lazy init via `createClient()`),
-`generateDataKey()` (local DEK + encrypt), and `decryptDataKey()` (decrypt).
-AWS KMS overrides `generateDataKey()` / `decryptDataKey()` to use the native
-`GenerateDataKey` API, with its own try/catch wrapping. Each provider defines
-a minimal client interface instead of `client: unknown`.
+Cloud KMS providers live in `vault/kms/` behind `sensored/vault/kms/*`
+subpath exports (formerly the separate `@sensored/enterprise` package, now
+MIT-licensed). See `vault/kms/CONTEXT.md` for the design.
